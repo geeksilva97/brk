@@ -1,0 +1,16 @@
+# Node
+node_modules/
+
+# Per-dojo runtime state created in a learner's project dir (belt-and-suspenders;
+# each dojo also ignores these in its own subdir).
+.demonkey/
+.c10k-dojo/
+.reactor-dojo/
+workspace/
+vendor/
+
+# Cross-compiled holder load-generator binaries (built per-host at runtime)
+**/env/bench/.holder_*
+
+# OS / editor
+.DS_Store

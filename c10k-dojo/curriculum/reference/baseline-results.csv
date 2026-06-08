@@ -1,0 +1,7 @@
+server,model,budget,max_conns,fail_reason,req_s,p50_ms,p99_ms,peak_rss_mb,oom_killed
+echo.rb,local-jailed,cpuset0/256m,1000,none,na,na,na,7.414,false
+fork_echo.rb,local-jailed,cpuset0/256m,1000,none,na,na,na,0,true
+rack_server.rb,local-jailed,cpuset0/256m,996,reset,5902.90,5045,9905,9.191,false
+puma_like.rb,local-jailed,cpuset0/256m,5140,timeout,5787.83,821,881,9.461,false
+falcon_like.rb,local-jailed,cpuset0/256m,9500,oom-edge,na,na,na,158.1,true
+falcon_like.rb,local-jailed,cpuset0/512m,10000,none,9570.37,86,93,347.7,false

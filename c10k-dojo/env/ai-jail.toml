@@ -1,0 +1,34 @@
+# OPTIONAL: ai-jail (akitaonrails) template for OS-level isolation.
+# https://github.com/akitaonrails/ai-jail
+#
+# The plugin's PreToolUse hooks already enforce "no web" + "don't touch the spine".
+# This adds filesystem isolation + a network kill at the OS level (Seatbelt on macOS).
+# Copy to .ai-jail in the learner's project and edit the absolute paths.
+#
+# IMPORTANT — the model/network decision:
+#   - local-jailed mode (default): Claude Code points at a LOCAL model (Ollama/llama.cpp).
+#     Keep allow_tcp_ports = [] for a true air-gap IF the model runs inside the jail.
+#     If Ollama runs on the HOST, allow only its port: allow_tcp_ports = [11434].
+#   - anthropic-api mode: the agent needs api.anthropic.com, so a full network jail is
+#     not possible; rely on the plugin hooks for the "no web" constraint instead.
+
+command = ["claude"]
+
+# Read-WRITE: only the learner's scratch dir.
+rw_maps = ["./workspace"]
+
+# Read-ONLY: the offline docs bundle + the system Ruby/C references.
+ro_maps = [
+  "./docs",
+  "/usr/share/man",
+  "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/share/man",
+]
+
+# Hide noisy / secret dotdirs from the agent's view.
+hide_dotdirs = [".git", ".ssh", ".aws", ".config"]
+
+# Mask specific secret files even inside otherwise-readable maps.
+mask = []
+
+# Network: default deny. See the note above for which (if any) port to open.
+allow_tcp_ports = [11434]

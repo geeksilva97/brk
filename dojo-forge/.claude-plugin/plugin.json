@@ -1,0 +1,9 @@
+{
+  "name": "dojo-forge",
+  "description": "Meta-plugin that generates tutored coding-dojo plugins for workshops on any topic. Run /dojo-forge:new, answer an interview (topic, spine progression, jail/constraint, win-condition), and it scaffolds a complete, loadable dojo plugin — same shape as c10k-dojo — with a Socratic tutor, hooks-as-jail, per-project state, and a topic-tailored curriculum.",
+  "version": "0.1.0",
+  "author": { "name": "Antonio Barbosa" },
+  "keywords": ["workshop", "tutor", "scaffold", "generator", "meta-plugin", "dojo"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

@@ -1,0 +1,17 @@
+# Per-project dojo state (created in the learner's working dir at runtime)
+.demonkey/
+
+# The learner's writable code dir and vendored gems (created by /demonkey:setup)
+workspace/
+vendor/
+
+# Vendored bundle config + generated docs bundle (built locally per project)
+.bundle/
+docs/
+
+# Runtime artifacts
+*.heartbeat
+
+# Cross-compiled holder load-generator binary (built per-host by env/bench/run.sh
+# for the Docker VM arch; runs in a sibling netns container)
+env/bench/.holder_*

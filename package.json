@@ -1,0 +1,17 @@
+{
+  "name": "dojos-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The `dojo` CLI — install or start tutored coding-dojo plugins for Claude Code. Not published; run from a clone.",
+  "type": "module",
+  "bin": {
+    "dojo": "bin/dojo.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "coverage": "node --test --experimental-test-coverage"
+  }
+}

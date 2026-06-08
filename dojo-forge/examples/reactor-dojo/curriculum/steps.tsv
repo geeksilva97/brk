@@ -1,0 +1,6 @@
+1	Blocking accept loop	workspace/blocking_echo.rb	build
+2	Nonblocking accept with IO.select	workspace/select_accept.rb	build
+3	The reactor: one loop, many clients	workspace/reactor.rb	build
+4	Per-connection state and partial reads	workspace/reactor.rb	build
+5	Backpressure: writes that would block	workspace/reactor_writes.rb	build
+6	Load it: thousands of idle connections	-	check

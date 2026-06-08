@@ -1,0 +1,9 @@
+{
+  "name": "c10k-dojo",
+  "description": "Tutored, constrained build of Ruby web servers from raw sockets to C10K. Claude Code acts as a Socratic tutor: it quizzes you, reasons about your answers, and makes you type the load-bearing code yourself while it handles glue and review. Graded against a cgroup-constrained benchmark.",
+  "version": "0.1.0",
+  "author": { "name": "Antonio Barbosa" },
+  "keywords": ["ruby", "concurrency", "sockets", "c10k", "workshop", "tutor"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

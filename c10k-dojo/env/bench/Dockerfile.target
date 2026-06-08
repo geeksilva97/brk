@@ -1,0 +1,23 @@
+# Constrained benchmark target. Debian-based ruby:4.0 (NOT slim/alpine) so the
+# glibc default ~8MB thread stack is predictable — the thread-exhaustion lesson
+# depends on it. Gems are baked from the pinned Gemfile; the learner's server
+# file is bind-mounted at /app/workspace at run time.
+FROM ruby:4.0
+
+WORKDIR /app
+COPY Gemfile ./
+RUN bundle install
+
+# The shared Rack app, available to servers that load it.
+COPY config.ru ./
+
+# Mount point for the learner's code (read-only volume at run time).
+RUN mkdir -p /app/workspace
+
+EXPOSE 4000
+
+# Bind to all interfaces inside the container; servers read HOST/PORT from env.
+ENV HOST=0.0.0.0 PORT=4000
+
+# CMD is overridden at `docker run` with: ruby /app/workspace/<server_file>
+CMD ["ruby", "-e", "puts 'c10k-target image ready; pass a server file as the command'"]

@@ -1,0 +1,9 @@
+{
+  "name": "reactor-dojo",
+  "description": "Tutored, constrained build of a single-threaded reactor (event-loop) server in Ruby, from a blocking accept loop to a nonblocking IO.select reactor that juggles thousands of connections. Claude Code acts as a Socratic tutor: it quizzes you, reasons about your answers, and makes you type the load-bearing code yourself while it handles glue and review. Offline by design.",
+  "version": "0.1.0",
+  "author": { "name": "Antonio Barbosa" },
+  "keywords": ["ruby", "reactor", "event-loop", "io-multiplexing", "select", "nonblocking", "workshop", "tutor"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

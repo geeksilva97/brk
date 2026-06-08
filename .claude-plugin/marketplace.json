@@ -1,0 +1,11 @@
+{
+  "name": "dojos",
+  "owner": { "name": "Antonio Barbosa" },
+  "description": "Tutored, constrained coding-dojo plugins for Claude Code — build real systems the hard way, with a Socratic tutor and an offline jail.",
+  "plugins": [
+    { "name": "demonkey", "source": "./demonkey", "category": "workshop" },
+    { "name": "c10k-dojo", "source": "./c10k-dojo", "category": "workshop" },
+    { "name": "reactor-dojo", "source": "./dojo-forge/examples/reactor-dojo", "category": "workshop" },
+    { "name": "dojo-forge", "source": "./dojo-forge", "category": "meta" }
+  ]
+}

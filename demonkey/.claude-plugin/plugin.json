@@ -1,0 +1,9 @@
+{
+  "name": "demonkey",
+  "description": "Tutored, constrained build of Ruby web servers through the PROCESS family only — from a raw TCP socket up to a Unicorn-like preforking server with heartbeats, graceful shutdown, and zero-downtime USR2 restart. Claude Code acts as a Socratic tutor: it teaches the mechanisms, makes you type the load-bearing code yourself, then quizzes you to consolidate once it's built and running — handling glue and review along the way. Verification is local and lightweight (nc, ps, lsof, kill -SIGNAL) — the emphasis is building and the signal protocol, not load testing. A focused pilot of c10k-dojo.",
+  "version": "0.1.0",
+  "author": { "name": "Antonio Barbosa" },
+  "keywords": ["ruby", "processes", "fork", "preforking", "unicorn", "signals", "sockets", "workshop", "tutor"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

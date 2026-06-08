@@ -1,0 +1,7 @@
+1	Raw TCP echo server	workspace/echo.rb	tcp
+2	Rack app over a raw socket	workspace/rack_server.rb	http
+3	Why one server is not enough	-	demo
+4	Fork-per-connection	workspace/fork_echo.rb	tcp
+5	Preforking N workers	workspace/prefork.rb	tcp
+6	Master process: signals and reaping	workspace/master.rb	tcp
+7	Production-grade preforking	workspace/unicorn_like.rb	http

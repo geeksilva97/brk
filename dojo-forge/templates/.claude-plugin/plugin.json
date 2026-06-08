@@ -1,0 +1,9 @@
+{
+  "name": "{{PLUGIN_NAME}}",
+  "description": "{{TOPIC_DESCRIPTION}}",
+  "version": "0.1.0",
+  "author": { "name": "{{AUTHOR}}" },
+  "keywords": {{KEYWORDS}},
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

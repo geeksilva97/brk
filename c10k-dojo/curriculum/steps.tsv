@@ -1,0 +1,17 @@
+1	Raw TCP echo server	workspace/echo.rb	tcp
+2	Rack app over a raw socket	workspace/rack_server.rb	http
+3	Why one server isn't enough	-	bench
+4	Fork-per-connection	workspace/fork_echo.rb	tcp
+5	Preforking N workers	workspace/prefork.rb	tcp
+6	Master process: signals & reaping	workspace/master.rb	tcp
+7	Production-grade preforking	workspace/unicorn_like.rb	http
+8	Threads and the GVL	workspace/thread_echo.rb	http
+9	Puma-like thread pool	workspace/puma_like.rb	http
+10	When threads bite	workspace/thread_race.rb	http
+11	Fibers from scratch	workspace/fibers.rb	demo
+12	The Fiber scheduler	workspace/scheduler.rb	demo
+13	Falcon-like async server	workspace/falcon_like.rb	http
+14	When fibers win, when they don't	workspace/falcon_like.rb	http
+15	Ractors	workspace/ractor_pool.rb	demo
+16	Ractor-based server	workspace/ractor_server.rb	http
+17	Benchmark everything	-	bench

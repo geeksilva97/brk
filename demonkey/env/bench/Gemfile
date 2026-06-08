@@ -1,0 +1,9 @@
+# Pinned gem set for demonkey. The dojo builds ONLY from stdlib + these.
+# (The guard hook blocks ad-hoc `gem install`.) The process family needs no
+# async/falcon — fibers are out of scope for this pilot — so the set is just
+# Rack plus Samuel Williams' HTTP/1 parser, used as a black box from Step 2 on.
+source "https://rubygems.org"
+
+gem "rack", "~> 3.2"
+gem "protocol-http1", "~> 0.39"
+gem "protocol-http", "~> 0.62"
