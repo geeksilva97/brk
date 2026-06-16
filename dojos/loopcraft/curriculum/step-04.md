@@ -83,15 +83,14 @@ Run with: `node --experimental-strip-types workspace/agent.ts`
 
 The learner must explain *why the assistant's tool-call message must be in the history* before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — Diagnose:**
-Why do we send the tool result as a user message instead of a special "tool" message type? (Angle: in prompt emulation there's no formal tool_result type — the conversation is just user/assistant turns. We format it as a user message so the model reads it naturally. It's not about priority or the model being unable to read assistant messages.)
+**Question 1:** Why do we send the tool result as a user message instead of a special "tool" message type?
+A good answer covers: in prompt emulation there's no formal tool_result type, the conversation is just user/assistant turns; we format it as a user message so the model reads it naturally; it's not about priority or the model being unable to read assistant messages.
 
-**Quiz topic 2 — Reflect:**
-What would happen if you sent the tool result but didn't include the assistant's original tool-call message in the history? (Angle: the model would see a user question then a random piece of JSON with no context for why — it would be confused. The tool-call message is essential context, not optional. The model needs to see its own request to understand what the result is answering.)
+**Question 2:** What would happen if you sent the tool result but didn't include the assistant's original tool-call message in the history?
+A good answer covers: the model would see a user question then a random piece of JSON with no context for why — it would be confused; the tool-call message is essential context, not optional; the model needs to see its own request to understand what the result is answering.
 
-**Quiz topic 3 — Connect:**
-Steps 2–4 form a manual sequence: define tools → parse and execute → inject and re-prompt. How does this relate to a real agent loop? (Angle: this manual sequence IS the loop body. A real agent just wraps these three steps in a `while` loop. You've already built the core logic — the loop just automates it. Step 5 will do exactly that.)
+**Question 3:** Steps 2–4 form a manual sequence: define tools → parse and execute → inject and re-prompt. How does this relate to a real agent loop?
+A good answer covers: this manual sequence IS the loop body; a real agent just wraps these three steps in a `while` loop; you've already built the core logic — the loop just automates it; Step 5 will do exactly that.

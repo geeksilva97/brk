@@ -5,7 +5,7 @@ to one that beats the **C10K problem** — under a deliberate constraint (no web
 from a mounted Ruby + C docs bundle and first principles).
 
 Claude Code acts as a **Socratic tutor**: it frames each problem, quizzes you with
-`AskUserQuestion`, reasons about whether your answer is right, and makes **you type the load-bearing
+free-text questions (scored 1–5), reasons about whether your explanation covers the key concepts, and makes **you type the load-bearing
 code** while it handles boilerplate and review. Every server is graded against a cgroup-constrained
 benchmark, so you *feel* where fork, threads, and fibers each live and die.
 

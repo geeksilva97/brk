@@ -14,26 +14,7 @@ the kernel "is the listening socket ready?" via `IO.select`, and only call `acce
 says yes. The listener is just another fd that becomes "readable" when a client is waiting — that
 realization is the whole trick.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** `IO.select([server], nil, nil)` returns. What does it mean that `server` is in the
-returned readable array?
-- ✅ **A connection is waiting in the backlog, so `accept_nonblock` will return immediately without
-  blocking.** The listener is "readable" exactly when there's a client to accept.
-- ❌ "There's data to `read` from the server socket." → No — a *listening* socket carries no data;
-  readiness means an inbound connection, which you take with `accept`.
-- ❌ "The server is ready to send a response." → No — that would be writability, and listeners don't
-  send anything; they only hand you client sockets.
 
-## Design-quiz  (AskUserQuestion)
-**Question:** Why call `accept_nonblock` instead of plain `accept` here, even though `IO.select` just
-told us a client is waiting?
-- ✅ **So the loop never blocks: select is the single wait point, and `accept_nonblock` either returns
-  a socket or signals "nothing right now" without sleeping.** Keeping every op nonblocking is what
-  lets us add many fds later.
-- ❌ "`accept` doesn't work after `IO.select`." → It does work, but a stray blocking `accept` would
-  reintroduce the freeze we just removed.
-- ❌ "`accept_nonblock` is faster." → Not about speed — it's about *never sleeping* anywhere but in
-  `IO.select`.
 
 ## Spine  (the learner types `workspace/select_accept.rb`, ~14 lines)
 Type the wait-then-accept core:
@@ -61,14 +42,20 @@ and `docs/man/README.md` (no epoll on macOS — use `IO.select`).
 `ruby workspace/select_accept.rb`, then `printf 'hi\n' | nc 127.0.0.1 3000` → echoes `hi`. The
 learner should confirm the process is asleep in `IO.select` (not spinning) when idle.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** We can now wait on the listener without blocking. What's the minimal change to also
-watch *connected clients* for incoming data?
-- ✅ **Put every client socket into the same `IO.select` readers array alongside the listener, and
-  react to whichever fds come back ready.** One select call watching all of them.
-- ❌ "Open a thread per client to read them." → That abandons the reactor model; we keep one thread.
-- ❌ "Poll each client with a separate `IO.select` in turn." → That serializes the waiting again —
-  the point is one select over the whole set.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+
+**Question 1:** `IO.select([server], nil, nil)` returns. What does it mean that `server` is in the returned readable array?
+
+A good answer covers: a connection is waiting in the backlog, so `accept_nonblock` will return immediately without blocking; the listener is "readable" exactly when there's a client to accept — a listening socket carries no data, readiness means an inbound connection.
+
+**Question 2:** Why call `accept_nonblock` instead of plain `accept` here, even though `IO.select` just told us a client is waiting?
+
+A good answer covers: so the loop never blocks — `IO.select` is the single wait point, and `accept_nonblock` either returns a socket or signals "nothing right now" without sleeping; keeping every operation nonblocking is what lets us add many fds later.
+
+**Question 3:** We can now wait on the listener without blocking. What's the minimal change to also watch *connected clients* for incoming data?
+
+A good answer covers: put every client socket into the same `IO.select` readers array alongside the listener, and react to whichever fds come back ready — one select call watching all of them.
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance. Say: *"Now we widen the select set from just the

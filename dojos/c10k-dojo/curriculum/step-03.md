@@ -15,15 +15,17 @@ No new code this step. We make the single-threaded server's limitation *measurab
 harness that will grade every server you build from here on. You're going to try to clear the Bronze
 tier (1,000 concurrent held connections) with the Step-2 server, and watch it fail.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Before we run it — what do you predict happens when 1,000 clients connect at once to the
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Before we run it — what do you predict happens when 1,000 clients connect at once to the
 single-threaded Rack server and each holds its connection open?
-- ✅ "It serves the first, and the other 999 queue/stall — most time out." Confirm; this is the cost
-  of one-at-a-time.
-- ❌ "It handles them, just slowly." → Only true if each request is instant; held connections pin the
-  one process entirely.
-- ❌ "It crashes / OOMs." → Not yet — a single process holding sockets is cheap on memory; the failure
-  here is *throughput/latency*, not memory. (Memory failure is Step 4's lesson.)
+
+A good answer covers: it serves the first, and the other 999 queue/stall — most time out. Only true
+if each request is instant would it "just be slow"; held connections pin the one process entirely.
+It doesn't crash or OOM — a single process holding sockets is cheap on memory; the failure is
+*throughput/latency*, not memory.
 
 ## The run  (no spine; drive the harness)
 1. Confirm `/c10k-dojo:setup` has built the docs bundle + the `c10k-target` image.
@@ -39,11 +41,14 @@ This establishes the baseline row and the four-models framing. (The held-connect
 later at Silver — 10k connections exceed the ~4k backlog, so single-thread/thread-pool get refused
 while async holds them all. See `reference/DRY-RUN-FINDINGS.md`.)
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** Which model is the right fit for **thousands of idle/slow held connections** — the
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Which model is the right fit for **thousands of idle/slow held connections** — the
 C10K shape we just failed?
-- ✅ **Fibers** — cheap per connection, idle ≈ free (the C10K win; Steps 11–14).
-- ❌ "Fork (a process per connection)." → A whole process each → OOMs in the hundreds.
-- ❌ "A thread pool." → Bounded workers; held connections back up at the pool + backlog.
-(The other shapes map too: CPU-parallel work → processes/Ractors; I/O-bound → threads or fibers.)
+
+A good answer covers: fibers — cheap per connection, idle ≈ free (the C10K win; Steps 11–14).
+Fork (a process per connection) means a whole process each → OOMs in the hundreds. A thread pool
+has bounded workers; held connections back up at the pool + backlog.
 **Next:** Step 4 — start the process family with fork. `/c10k-dojo:next`.

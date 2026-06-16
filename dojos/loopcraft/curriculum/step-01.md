@@ -62,15 +62,14 @@ No `npm install`, no `package.json`, no build step — Node 22+ runs TypeScript 
 
 The learner must explain *why* the model can't give real-time weather before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — Diagnose:**
-Why can't the model tell you the current weather? (Angle: frozen knowledge vs. real-time access — the model generates text from patterns, not live data. This is why tools exist.)
+**Question 1:** Why can't the model tell you the current weather?
+A good answer covers: frozen training data vs. real-time access, the model generates text from patterns not live data, this is why tools exist.
 
-**Quiz topic 2 — Reflect:**
-What does `chat()` in `utils.ts` actually do under the hood? (Angle: it wraps a `fetch` POST to Ollama's `/api/chat` endpoint. The learner called a 5-line script but the mechanism is HTTP-in, JSON-out. Understanding that `chat()` is just a convenience wrapper over raw HTTP is key — when you know what the helper does, you can debug when it breaks.)
+**Question 2:** What does `chat()` in `utils.ts` actually do under the hood?
+A good answer covers: it wraps a fetch POST to Ollama's /api/chat endpoint, the full conversation is sent each time, it's a convenience wrapper over raw HTTP.
 
-**Quiz topic 3 — Connect:**
-What would the model need to give real-time weather? (Angle: a way to call an external tool and inject the result back — the model can't fetch data itself but it can *ask for* data if we teach it how. Bigger models don't solve this.)
+**Question 3:** What would the model need to give real-time weather?
+A good answer covers: a way to call an external tool and inject the result back, the model can't fetch data itself but can request data if we teach it how, bigger models don't solve this.

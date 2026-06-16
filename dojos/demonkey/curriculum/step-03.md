@@ -31,25 +31,22 @@ We run the demo *first*, then talk about why it happened. Don't predict; watch.
 (Optional second demo: hold a raw `nc 127.0.0.1 4000` open without sending a full request, then try
 `curl /` — it hangs until you close the `nc`. A single idle client can wedge the whole server.)
 
-## Consolidate — quizzes AFTER you've watched it  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Now that the timings are on screen, run these as comprehension checks about what just happened.
 
-### Concept check  (AskUserQuestion)
-**Question:** You just watched it: the `/slow` request sleeps 3s, and the instant `/` request fired a
+**Question 1:** You just watched it: the `/slow` request sleeps 3s, and the instant `/` request fired a
 split second later *also* took ~3 seconds. Why did the fast one wait?
-- ✅ "The one process is stuck in `app.call` for client 1; client 2's connection sits in the kernel
-  backlog until `accept` is reached again." Confirm: service collapses under a single slow request.
-- ❌ "They're independent connections, so both should be instant." → No; one process, one request at
-  a time. The TCP connection is accepted, but it can't be *served* until the first finishes.
-- ❌ "The second was refused / errored." → No — it was queued (backlog), not rejected. It just waited.
+A good answer covers: the one process is stuck in `app.call` for client 1; client 2's connection sits
+in the kernel backlog until `accept` is reached again; service collapses under a single slow request;
+the TCP connection is accepted, but it can't be *served* until the first finishes.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** We saw one process serialize everything. What's the *first, oldest* Unix answer to
+**Question 2:** We saw one process serialize everything. What's the *first, oldest* Unix answer to
 "serve more than one client at once"?
-- ✅ **Give each connection its own process — `fork`.** It's the simplest model to reason about, and
-  where the process family begins (Step 4).
-- ❌ "Make `accept` non-blocking and spin." → That doesn't get you a second worker; you'd still serve
-  one request at a time on one CPU of attention.
-- ❌ "Buy a bigger machine." → A faster core still serves requests one at a time; the limit is
-  structural, not hardware.
+A good answer covers: give each connection its own process — `fork`; it's the simplest model to
+reason about, and where the process family begins; non-blocking `accept` alone doesn't give you a
+second worker; a faster core still serves requests one at a time — the limit is structural.
+
 **Next:** Step 4 — fork a process per connection. `/demonkey:next`.

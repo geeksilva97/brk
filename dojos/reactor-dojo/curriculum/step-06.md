@@ -14,17 +14,6 @@ your `reactor_writes.rb` and watch a single-threaded process hold them all — t
 would force a thread-per-connection server to spawn thousands of threads (and a fork server thousands
 of processes). No new spine here: this is the win-condition for the whole course.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** A thread-per-connection server and your reactor both face 5,000 idle-but-open
-connections. What's the structural difference in what each holds?
-- ✅ **The reactor holds 5,000 *file descriptors* and 5,000 small buffers in one thread; the
-  thread-per-connection server holds 5,000 *OS threads*, each with its own stack (~MBs) and scheduler
-  overhead.** Same fds, wildly different memory/scheduling cost.
-- ❌ "They're equivalent; both keep 5,000 sockets." → The sockets are equal, but a thread per socket
-  costs stack + context-switching the reactor never pays.
-- ❌ "The reactor needs 5,000 threads too, just hidden." → No — it's genuinely one thread; readiness,
-  not threads, is how it waits.
-
 ## (No spine this step)
 This is a measurement/check step. There is no file to type — you run a load generator against the
 server from Step 5 and read the result together.
@@ -50,14 +39,16 @@ server from Step 5 and read the result together.
 3. The learner explains, out loud, why one thread can hold thousands of connections and what the
    actual ceiling is (open fds, not threads).
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** You've held thousands of connections on one thread. What is the reactor's true scaling
-ceiling, and how would you go *past* it?
-- ✅ **Open file descriptors per process (`ulimit -n`) and the single core a lone reactor uses — you
-  go past it by running multiple reactors (one per core / process) behind the same listening socket.**
-  Capacity is fd-bound, throughput is core-bound.
-- ❌ "Number of threads." → The reactor uses one thread on purpose; threads aren't the limit.
-- ❌ "There is no ceiling." → There is: fds per process and a single core's CPU.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+
+**Question 1:** A thread-per-connection server and your reactor both face 5,000 idle-but-open connections. What's the structural difference in what each holds?
+
+A good answer covers: the reactor holds 5,000 *file descriptors* and 5,000 small buffers in one thread; the thread-per-connection server holds 5,000 *OS threads*, each with its own stack (~MBs) and scheduler overhead; same fds, wildly different memory/scheduling cost.
+
+**Question 2:** You've held thousands of connections on one thread. What is the reactor's true scaling ceiling, and how would you go *past* it?
+
+A good answer covers: open file descriptors per process (`ulimit -n`) and the single core a lone reactor uses — you go past it by running multiple reactors (one per core / process) behind the same listening socket; capacity is fd-bound, throughput is core-bound.
 
 ## Course complete
 This is the last step — there is no next step. Congratulate the learner: they built a single-threaded

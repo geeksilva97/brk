@@ -84,7 +84,7 @@ The same battle-tested wiring as c10k-dojo:
 - **Manifest has no `"hooks"` field** (hooks/hooks.json auto-loads; referencing it errors).
 - **Per-project state** in `<project>/<STATE_DIR>/progress.json` — a new folder starts fresh at Step 1.
 - **Title sync** via `SessionStart` (seed) + `UserPromptSubmit` (re-title only when the step changed).
-- **Quizzes are `AskUserQuestion` calls** (✅ correct + ❌ misconception distractors), never prose.
+- **Consolidation questions are free-text** — the learner types their understanding in their own words; the tutor scores 1–5, gives feedback, retries once if below 3.
 - **Fixed linear path** — the tutor always points to the one next step, never a menu.
 - **Type-the-spine guard** — a `PreToolUse` hook denies the agent writing the current spine file.
 - **Offline jail** — a `PreToolUse` hook denies WebFetch/WebSearch + external Bash egress + ad-hoc

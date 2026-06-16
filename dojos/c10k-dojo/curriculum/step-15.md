@@ -16,12 +16,16 @@ on its own core. The catch is isolation — Ractors can't freely share mutable o
 communicate by copying or moving, and most objects must be frozen/shareable. This is why most Ruby
 code (and Rack) can't drop into a Ractor unchanged. Ties directly to your RubyConf talk.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** You try to pass a mutable `Hash` into a Ractor and use it from both sides. What happens?
-- ✅ **A sharing error — Ractors don't share mutable state; you must freeze/make-shareable, copy, or
-  move it.** Confirm; the isolation is the feature *and* the friction.
-- ❌ "It works, threads do it." → That's the danger threads allow; Ractors forbid it by design.
-- ❌ "It silently copies." → Only for explicitly shareable/`move:`-d objects; otherwise it raises.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** You try to pass a mutable `Hash` into a Ractor and use it from both sides. What happens?
+
+A good answer covers: a sharing error — Ractors don't share mutable state; you must freeze/make-shareable,
+copy, or move it. The isolation is the feature *and* the friction. Threads allow sharing mutable state
+but that's the danger; Ractors forbid it by design. It doesn't silently copy — only for explicitly
+shareable/`move:`-d objects; otherwise it raises.
 
 ## Spine  (`workspace/ractor_pool.rb`, ~15 lines)
 Spawn 2 Ractors that each run a CPU-bound job (e.g. `fib(32)`) and send results back via
@@ -42,10 +46,14 @@ Then deliberately try to share a mutable object and observe the error.
 Two Ractors finish CPU work in ~half the sequential time on a multi-core host (run this one outside
 the 1-CPU cage). The sharing attempt raises a clear error.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** Given Ractor isolation (no shared mutable state), what would a Ractor-based web server
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Given Ractor isolation (no shared mutable state), what would a Ractor-based web server
 need from Rack + middleware?
-- ✅ **Everything crossing the boundary must be shareable/frozen or copied — most middleware isn't, today.**
-- ❌ "Nothing — Rack is already Ractor-safe." → It largely isn't.
-- ❌ "Just more Ractors." → Count doesn't solve the sharing constraint.
+
+A good answer covers: everything crossing the boundary must be shareable/frozen or copied — most
+middleware isn't, today. Rack is largely not Ractor-safe. Just adding more Ractors doesn't solve the
+sharing constraint.
 **Next:** Step 16 — a Ractor server (honest demo). `/c10k-dojo:next`.

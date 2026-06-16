@@ -14,25 +14,7 @@ single `IO.select`, then react to whichever fds are ready: accept on the listene
 One thread, no fork, no blocking — yet two `nc` sessions stay live at the same time. The hang from
 Step 1 is gone.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** In `readable, _, _ = IO.select([server, *clients], nil, nil)`, the returned `readable`
-array can contain the listener and several clients at once. How should the loop treat that array?
-- ✅ **Iterate it and branch per fd: if it's the listener, `accept`; otherwise read/echo that client
-  — handling every ready fd before calling `IO.select` again.** Select reports *all* currently-ready
-  fds; you service them, then wait again.
-- ❌ "Handle only the first ready fd, then call `IO.select` again." → Wasteful and can starve fds;
-  service everything select reported.
-- ❌ "Call `IO.select` once per fd to find out which is ready." → That defeats the purpose — one
-  select reports the whole ready set.
 
-## Design-quiz  (AskUserQuestion)
-**Question:** When a client disconnects (you read EOF), what must happen *before* the next
-`IO.select`?
-- ✅ **Close the socket AND remove it from the clients set, so it isn't passed to `IO.select` again.**
-  A closed/EOF fd left in the set makes select report it ready forever and you spin.
-- ❌ "Just close it; select will skip closed sockets." → No — passing a closed fd to `IO.select`
-  raises (or busy-loops); you must drop it from the array.
-- ❌ "Nothing — let it time out." → It won't time out; it'll be reported ready every iteration.
 
 ## Spine  (the learner types `workspace/reactor.rb`, ~22 lines)
 Type the reactor core (copy the *shape* from the cheatsheet, write the logic yourself):
@@ -70,15 +52,20 @@ they don't feel they're missing prerequisite knowledge.
 independently and neither hangs. Close one; the other keeps working. The learner explains why the
 Step-1 hang is gone.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** A client sends `"hel"` then pauses, then sends `"lo\n"`. With our current per-read echo,
-what happens — and what does that tell us we're missing?
-- ✅ **We echo `"hel"` then later `"lo\n"` as two separate reads — fine for echo, but we have nowhere
-  to *accumulate* a partial message, so any protocol that needs a full line/frame is broken. We need
-  per-connection state.** That's the next step.
-- ❌ "`read_nonblock` waits for the whole message." → No — it returns whatever bytes are available
-  right now, possibly a fragment.
-- ❌ "The fragments are lost." → No — we read both, just with no buffer tying them together.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+
+**Question 1:** In `readable, _, _ = IO.select([server, *clients], nil, nil)`, the returned `readable` array can contain the listener and several clients at once. How should the loop treat that array?
+
+A good answer covers: iterate it and branch per fd — if it's the listener, `accept`; otherwise read/echo that client; handle every ready fd before calling `IO.select` again; select reports *all* currently-ready fds, so service them all then wait again.
+
+**Question 2:** When a client disconnects (you read EOF), what must happen *before* the next `IO.select`?
+
+A good answer covers: close the socket AND remove it from the clients set, so it isn't passed to `IO.select` again; a closed/EOF fd left in the set makes select report it ready forever and you spin.
+
+**Question 3:** A client sends `"hel"` then pauses, then sends `"lo\n"`. With our current per-read echo, what happens — and what does that tell us we're missing?
+
+A good answer covers: we echo `"hel"` then later `"lo\n"` as two separate reads — fine for echo, but we have nowhere to *accumulate* a partial message, so any protocol that needs a full line/frame is broken; we need per-connection state (a buffer).
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance. Say: *"Echo survives fragmentation by luck. Real

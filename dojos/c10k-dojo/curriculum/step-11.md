@@ -16,13 +16,16 @@ Cooperative, not preemptive — a fiber runs until *it* decides to yield. They'r
 thread, tiny stack), which is exactly what will let one thread juggle 10,000 connections in Step 13.
 First, build intuition with no sockets at all.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Two fibers, one event loop. Fiber A enters an infinite CPU loop without ever yielding.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Two fibers, one event loop. Fiber A enters an infinite CPU loop without ever yielding.
 What happens to Fiber B?
-- ✅ **B never runs — cooperative scheduling means a fiber that doesn't yield starves the others.**
-  Confirm; this is the key difference from threads.
-- ❌ "The scheduler preempts A after a time slice." → No; fibers are not preemptive.
-- ❌ "They run in parallel." → No; one thread, one fiber at a time.
+
+A good answer covers: B never runs — cooperative scheduling means a fiber that doesn't yield starves
+the others. This is the key difference from threads. The scheduler does not preempt A after a time
+slice; fibers are not preemptive. They don't run in parallel; it's one thread, one fiber at a time.
 
 ## Spine  (`workspace/fibers.rb`, ~15 lines)
 Build a generator with `Fiber.new`/`Fiber.yield`/`#resume` (e.g. an infinite naturals generator).
@@ -43,10 +46,14 @@ in turn — see cooperative interleaving by hand.
 The generator yields successive values across `resume` calls; the two demo fibers interleave under
 manual scheduling.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** We had to `resume` fibers by hand. Who can call `resume` automatically when a socket
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** We had to `resume` fibers by hand. Who can call `resume` automatically when a socket
 becomes readable?
-- ✅ **A Fiber scheduler — it parks blocked fibers and resumes them on I/O readiness.**
-- ❌ "The OS scheduler." → That schedules threads/processes, not Ruby fibers.
-- ❌ "You always resume manually." → Ruby 3+ added the scheduler hook so you don't.
+
+A good answer covers: a Fiber scheduler — it parks blocked fibers and resumes them on I/O readiness.
+The OS scheduler schedules threads/processes, not Ruby fibers. Ruby 3+ added the scheduler hook so
+you don't always have to resume manually.
 **Next:** Step 12 — the Fiber scheduler. `/c10k-dojo:next`.

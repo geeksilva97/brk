@@ -79,12 +79,11 @@ Run with: `node --experimental-strip-types workspace/agent.ts`
 
 The learner must explain *how the model knows to output JSON* before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — Diagnose:**
-What determines whether the model outputs JSON (a tool call) or plain text? (Angle: the question + tool descriptions + RULES block. If the question matches a tool's description, the model follows the RULES and outputs JSON. If it can answer from its own knowledge, plain text. It's not random and there's no formal API deciding — it's text instructions in the prompt.)
+**Question 1:** What determines whether the model outputs JSON (a tool call) or plain text?
+A good answer covers: the question combined with tool descriptions and the RULES block, if the question matches a tool's description the model follows the RULES and outputs JSON, if it can answer from its own knowledge it outputs plain text, it's not random and there's no formal API deciding — it's text instructions in the prompt.
 
-**Quiz topic 2 — Reflect:**
-This is "prompt emulation" — the model emulates tool calling through text instructions. What's the advantage of understanding this? (Angle: it reveals what's really happening — tool calls are structured text the model generates, which an orchestrator parses and executes. Formal APIs add validation and convenience, but the mechanism is the same — text in, text out. Understanding the mechanism makes you a better agent builder.)
+**Question 2:** This is "prompt emulation" — the model emulates tool calling through text instructions. What's the advantage of understanding this?
+A good answer covers: it reveals what's really happening — tool calls are structured text the model generates that an orchestrator parses and executes, formal APIs add validation and convenience but the mechanism is the same (text in, text out), understanding the mechanism makes you a better agent builder.

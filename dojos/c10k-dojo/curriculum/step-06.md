@@ -16,19 +16,22 @@ spawns workers, replaces them when they die, and translates Unix signals into ac
 (`TERM`/`INT`/`QUIT` shut down, `HUP` reloads, `TTIN`/`TTOU` add/remove workers). This step is about
 the supervisor and the signal protocol.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** A worker dies. How does the master find out and replace it without busy-polling?
-- ✅ **The kernel sends the master `SIGCHLD`; the handler reaps with `Process.wait(-1, WNOHANG)` in a
-  loop and forks a replacement.** Confirm.
-- ❌ "The master loops calling `Process.wait` constantly." → Wasteful; signal-driven is the point.
-- ❌ "Workers tell the master over a pipe before dying." → They can't reliably signal their own crash;
-  `SIGCHLD` is the mechanism.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
 
-## Design-quiz  (AskUserQuestion)
-**Question:** Why can't you do real work (fork, log, allocate) directly inside a signal trap?
-- ✅ **Signal handlers run at unsafe moments; do the minimum and defer. The self-pipe trick turns a
-  signal into a readable fd the main loop handles safely.** Confirm.
-- ❌ "You can do anything in a trap." → Async-signal-unsafe calls can deadlock/corrupt.
+**Question 1:** A worker dies. How does the master find out and replace it without busy-polling?
+
+A good answer covers: the kernel sends the master `SIGCHLD`; the handler reaps with
+`Process.wait(-1, WNOHANG)` in a loop and forks a replacement. Busy-polling with `Process.wait`
+constantly is wasteful; signal-driven is the point. Workers can't reliably signal their own crash
+over a pipe; `SIGCHLD` is the mechanism.
+
+**Question 2:** Why can't you do real work (fork, log, allocate) directly inside a signal trap?
+
+A good answer covers: signal handlers run at unsafe moments; do the minimum and defer. The self-pipe
+trick turns a signal into a readable fd the main loop handles safely. You cannot do anything in a
+trap — async-signal-unsafe calls can deadlock or corrupt.
 
 ## Spine  (`workspace/master.rb`, ~20 lines)
 From `workspace/prefork.rb`: add a master loop that traps `CHLD`/`TERM`/`TTIN`/`TTOU` (write a byte
@@ -51,9 +54,13 @@ adjusts worker count on `TTIN`/`TTOU`.
 Run it; `kill -TTIN <master>` adds a worker, `-TTOU` removes one (watch `ps`). `kill -9` a worker →
 master respawns it within a moment. `kill -TERM <master>` → clean shutdown of all workers.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** The master can reap and respawn dead workers. What's still missing for production?
-- ✅ **Stuck-worker recovery + zero-downtime restart — heartbeats/timeouts and USR2.**
-- ❌ "Nothing — this is production-ready." → A worker wedged on a bad request still hangs forever.
-- ❌ "Just more workers." → Count fixes neither a stuck worker nor a deploy that drops connections.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** The master can reap and respawn dead workers. What's still missing for production?
+
+A good answer covers: stuck-worker recovery + zero-downtime restart — heartbeats/timeouts and USR2.
+A worker wedged on a bad request still hangs forever. Just adding more workers fixes neither a stuck
+worker nor a deploy that drops connections.
 **Next:** Step 7 — production-grade preforking. `/c10k-dojo:next`.

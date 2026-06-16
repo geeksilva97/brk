@@ -62,15 +62,14 @@ Every agent — from a simple weather bot to AutoGPT to Claude Code — is this 
 
 The learner must explain **why the loop is what makes this an agent and not a chatbot** before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — The loop IS the agent:**
-What makes an "agent" different from a "chatbot"? (Angle: a chatbot responds once and stops. An agent *loops* — it calls a tool, gets a result, decides if it needs more, and goes again. The while-loop is the only structural difference. Without it, you have a script. With it, you have an autonomous system that decides its own path through tool calls. The model's intelligence is the same in both cases — the loop is what gives it agency.)
+**Question 1:** What makes an "agent" different from a "chatbot"?
+A good answer covers: a chatbot responds once and stops, an agent loops — it calls a tool, gets a result, decides if it needs more, and goes again; the while-loop is the only structural difference; without it you have a script, with it you have an autonomous system that decides its own path through tool calls; the model's intelligence is the same in both cases — the loop is what gives it agency.
 
-**Quiz topic 2 — Diagnose a broken loop:**
-You remove the `while` and replace it with a single if/else. What can the system no longer do? (Angle: it can only handle zero or one tool call. If the model calls a tool, gets a result, and realizes it needs *another* tool call — it can't. The if/else runs once and stops. The loop is what enables multi-step reasoning: call → observe → decide → call again.)
+**Question 2:** You remove the `while` and replace it with a single if/else. What can the system no longer do?
+A good answer covers: it can only handle zero or one tool call; if the model calls a tool, gets a result, and realizes it needs another tool call — it can't; the if/else runs once and stops; the loop is what enables multi-step reasoning: call → observe → decide → call again.
 
-**Quiz topic 3 — Why the guard:**
-Why does the loop need a max iteration guard? (Angle: the model can get stuck in a cycle — calling a tool, getting a result, deciding it needs more, calling again, forever. This is a *logical* infinite loop, not an API limit. The guard is the difference between a runaway process and a bounded one. 10 is generous for this dojo; in production, you might use smaller limits or smarter heuristics.)
+**Question 3:** Why does the loop need a max iteration guard?
+A good answer covers: the model can get stuck in a cycle — calling a tool, getting a result, deciding it needs more, calling again, forever; this is a logical infinite loop, not an API limit; the guard is the difference between a runaway process and a bounded one; 10 is generous for this dojo; in production you might use smaller limits or smarter heuristics.

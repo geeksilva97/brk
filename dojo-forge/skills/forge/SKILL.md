@@ -240,10 +240,10 @@ later if you want graded measurement").
 2. State is **per-project** in `${CLAUDE_PROJECT_DIR:-$PWD}/<STATE_DIR>/progress.json` — never global.
 3. Title sync: `SessionStart` seeds the title + cache; `UserPromptSubmit` re-titles **only when the
    step changed**; no-op outside the project. Only those two events set the title.
-4. All quizzes are **dynamic AskUserQuestion calls** — the tutor composes them at runtime based on
-   what the learner built, where they struggled, and what they observed. The step file provides
-   quiz **topics and angles** (e.g. "Why does X happen when Y?"), not verbatim questions with
-   fixed options. Distractors are drawn from the step's gotchas and the learner's actual mistakes.
+4. All consolidation questions are **free-text** — the tutor asks open-ended questions, the learner
+   types their understanding in their own words, and the tutor scores 1–5 based on whether the answer
+   covers the key concepts. If the score is below 3, the tutor re-explains and asks again (one retry).
+   The step file provides the **core question and what a good answer covers**, not multiple-choice options.
 5. Fixed linear path — the tutor never offers a "pick what to build" menu; always one next step.
 6. Type-the-spine `PreToolUse` guard denies writing the current step's spine file; glue/scaffold ok.
 7. Offline jail `PreToolUse` guard denies WebFetch/WebSearch + external Bash egress.

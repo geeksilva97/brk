@@ -76,31 +76,27 @@ provisioned a pinned `Gemfile` + `config.ru` and vendored them (`vendor/bundle`)
 `HTTP/1.1 200`, exactly **one** `content-length`, body `hello from rack`.
 Reference (instructor): `curriculum/reference/rack_server.rb` + `rack_env.rb`.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Only now, with a working server, run these as comprehension checks about the code they just wrote.
 
-### Concept check — framing  (AskUserQuestion)
-**Question:** In your spine you had to *strip* `content-length`/`transfer-encoding`/`connection` from
+**Question 1:** In your spine you had to *strip* `content-length`/`transfer-encoding`/`connection` from
 the app's headers before `write_response`. Who actually writes the framing header on the wire — and
 why did stripping matter?
-- ✅ **The server/parser layer — not the app.** Confirm: that's why you strip those headers before
-  `write_response`, or you'll emit them twice (app's + parser's) → broken response.
-- ❌ "The app sets Content-Length." → No — the app returns a body; framing is the server's job. Pass
-  the app's framing headers through AND let the parser frame, and you get duplicates → malformed.
-- ❌ "Ruby's socket adds it automatically." → No, a raw socket writes exactly the bytes you give it.
+A good answer covers: the server/parser layer writes the framing header, not the app; if you pass
+the app's framing headers through AND let the parser frame, you emit them twice → broken/malformed
+response.
 
-### Concept check — env split  (AskUserQuestion)
-**Question:** Your `build_env` split `/search?q=ruby` into `PATH_INFO` and `QUERY_STRING`. Why does
+**Question 2:** Your `build_env` split `/search?q=ruby` into `PATH_INFO` and `QUERY_STRING`. Why does
 Rack need them as separate keys?
-- ✅ **`PATH_INFO="/search"` and `QUERY_STRING="q=ruby"` — split on the first `?`.** Rack apps read
-  the two keys independently; routing matches on `PATH_INFO`.
-- ❌ "`PATH_INFO="/search?q=ruby"`" → No, the query string is a separate key; many apps break otherwise.
-- ❌ "`REQUEST_URI` only" → Rack apps read `PATH_INFO`/`QUERY_STRING`; don't skip the split.
+A good answer covers: `PATH_INFO="/search"` and `QUERY_STRING="q=ruby"` — split on the first `?`;
+Rack apps read the two keys independently; routing matches on `PATH_INFO`.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** When we add concurrency next (with processes), what changes in this server?
-- ✅ **Only the accept-loop / how we dispatch — the app and the env adapter stay identical.** That
-  orthogonality is the whole point of the rest of the course.
-- ❌ "The Rack app gets rewritten per model." → No — the same app runs under every server.
-- ❌ "The HTTP parsing changes." → No — protocol-http1 stays a black box throughout.
+**Question 3:** When we add concurrency next (with processes), what changes in this server?
+A good answer covers: only the accept-loop / how we dispatch — the app and the env adapter stay
+identical; that orthogonality is the whole point of the rest of the course; the HTTP parsing doesn't
+change.
+
 **Next:** Step 3 — make the single-server limit *visible* before we fix it. `/demonkey:next`.

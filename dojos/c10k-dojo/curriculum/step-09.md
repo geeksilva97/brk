@@ -15,12 +15,16 @@ Unbounded threads die on stack memory. The fix is the reactor + pool pattern Pum
 thread pushes connections onto a bounded queue; a fixed pool of worker threads pops and serves them.
 Bounded concurrency = predictable memory + backpressure.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Why a *bounded* queue between the acceptor and the worker pool, not an unbounded one?
-- ✅ **Backpressure: an unbounded queue under overload grows until OOM; a bounded queue makes the
-  acceptor block/refuse, shedding load instead of crashing.** Confirm.
-- ❌ "Bounded is just simpler." → It's about survival under overload, not simplicity.
-- ❌ "It doesn't matter at these sizes." → It does the moment held connections exceed the pool.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Why a *bounded* queue between the acceptor and the worker pool, not an unbounded one?
+
+A good answer covers: backpressure — an unbounded queue under overload grows until OOM; a bounded
+queue makes the acceptor block/refuse, shedding load instead of crashing. It's not about simplicity;
+it's about survival under overload. It does matter at these sizes — the moment held connections
+exceed the pool, an unbounded queue grows without bound.
 
 ## Spine  (`workspace/puma_like.rb`, ~18 lines)
 One acceptor thread: `loop { queue << server.accept }` (bounded `Thread::Queue` / `SizedQueue`).
@@ -46,10 +50,14 @@ sleep). A thread-*per*-connection variant fails differently: OOM on stacks in th
 *Footnote:* real Puma cheats here — an NIO "reactor" buffers slow clients off the pool, so it holds
 more than this naive teaching pool. (Numbers: `reference/DRY-RUN-FINDINGS.md`.)
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** The pool shares one Rack app across worker threads. What can go wrong if the app
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** The pool shares one Rack app across worker threads. What can go wrong if the app
 mutates shared state?
-- ✅ **A data race — interleaved read-modify-write corrupts the state.**
-- ❌ "Nothing — the GVL makes it safe." → The GVL can switch threads mid-operation; `+=` isn't atomic.
-- ❌ "The pool serializes everything anyway." → Workers run concurrently across requests.
+
+A good answer covers: a data race — interleaved read-modify-write corrupts the state. The GVL doesn't
+make it safe; it can switch threads mid-operation, and `+=` isn't atomic. The pool doesn't serialize
+everything; workers run concurrently across requests.
 **Next:** Step 10 — when threads bite (races + `Mutex`). `/c10k-dojo:next`.

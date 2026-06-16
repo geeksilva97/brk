@@ -36,11 +36,15 @@ to render the comparison table and the connections-vs-survival curve. Expect, on
 - **What we didn't build (Ch20):** HTTP/2, TLS termination, `rack.hijack`, websockets, request
   streaming — and where to read next (the real Unicorn/Puma/Falcon source, now legible).
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Looking at your own results table, why did async win C10K while fork couldn't clear
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Looking at your own results table, why did async win C10K while fork couldn't clear
 Bronze, despite both being "concurrent"?
-- ✅ "Per-connection cost: fork = a whole process (RAM cliff); async = a cheap fiber on one thread
-  (flat). C10K is about cheap idle concurrency, which only the fiber model delivers here."
+
+A good answer covers: per-connection cost: fork = a whole process (RAM cliff); async = a cheap fiber
+on one thread (flat). C10K is about cheap idle concurrency, which only the fiber model delivers here.
 
 ## Wrap
 Congratulate the learner: they beat C10K from raw sockets, understanding every layer — and they felt

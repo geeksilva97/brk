@@ -82,39 +82,35 @@ Run `bundle exec ruby workspace/unicorn_like.rb` (the setup `config.ru` has `/`,
 
 Reference (instructor): `curriculum/reference/unicorn_like.rb`.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Run these as comprehension checks once the matching capability is built and watched (per pass, or all
 at the end).
 
-### Concept check — stuck-worker recovery  (AskUserQuestion)
-**Question:** You watched the master `SIGKILL` and respawn the worker wedged on `/wedge` — even though
+**Question 1:** You watched the master `SIGKILL` and respawn the worker wedged on `/wedge` — even though
 it was *alive*, so `SIGCHLD` never fired. How did the master notice?
-- ✅ **Workers touch a heartbeat (mtime of a per-worker file) each request; the master checks the
-  mtimes on a timer and SIGKILLs + respawns any worker whose heartbeat is older than a timeout.**
-  Confirm.
-- ❌ "The master inspects the worker's CPU usage." → Indirect and unreliable; heartbeats are explicit.
-- ❌ "It can't — that's why you need a load balancer." → The master can and should time workers out.
+A good answer covers: workers touch a heartbeat (mtime of a per-worker file) each request; the master
+checks the mtimes on a timer and SIGKILLs + respawns any worker whose heartbeat is older than a
+timeout; inspecting CPU usage is indirect and unreliable; the master can and should time workers out.
 
-### Concept check — USR2 fd inheritance  (AskUserQuestion)
-**Question:** You fired `kill -USR2` during an in-flight `/slow`, and a NEW master served `/`
+**Question 2:** You fired `kill -USR2` during an in-flight `/slow`, and a NEW master served `/`
 immediately — no EADDRINUSE. How did the new master serve on the same port while the old one drained?
-- ✅ **The listening socket fd is inherited across the exec, so the new master accepts on the SAME
-  socket; the old master finishes in-flight requests then exits.** Confirm — fd inheritance is the
-  trick, and the hard part. (Clear close-on-exec, then hand the fd number to the new process.)
-- ❌ "It opens a new socket on the same port." → Would fail with EADDRINUSE; the point is to *share*
-  the existing fd.
-- ❌ "It kills the old workers first, then rebinds." → That's a window of dropped connections — the
-  opposite of zero-downtime.
+A good answer covers: the listening socket fd is inherited across the exec, so the new master accepts
+on the SAME socket; the old master finishes in-flight requests then exits; fd inheritance is the trick
+and the hard part — clear close-on-exec, then hand the fd number to the new process; opening a new
+socket on the same port would fail with EADDRINUSE; killing old workers first then rebinding is a
+window of dropped connections — the opposite of zero-downtime.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** You've built a Unicorn-like preforking server: a supervising master, heartbeats with
-timeout-kill, graceful shutdown, and USR2 zero-downtime restart. What does this model still *not*
-give you, that motivates the next family of servers (a different course)?
-- ✅ **Many concurrent requests *inside one process* — preforking gives bulletproof isolation, but
-  each worker still serves one request at a time, so a slow request ties up a whole process.** That's
-  what threads (and then fibers) address — a separate course.
-- ❌ "Nothing — preforking handles every workload optimally." → It's great for isolation and CPU work,
-  but a process per concurrent request is heavy for I/O-bound, high-concurrency loads.
-- ❌ "More USR2 restarts." → Restarts are about deploys, not per-request concurrency.
+**Question 3:** You've built a Unicorn-like preforking server: a supervising master, heartbeats with
+timeout-kill, graceful shutdown, and USR2 zero-downtime restart. What does this model still *not* give
+you, that motivates the next family of servers (a different course)?
+A good answer covers: many concurrent requests *inside one process* — preforking gives bulletproof
+isolation, but each worker still serves one request at a time, so a slow request ties up a whole
+process; that's what threads (and then fibers) address — a separate course; it's great for isolation
+and CPU work, but a process per concurrent request is heavy for I/O-bound, high-concurrency loads;
+more USR2 restarts doesn't address per-request concurrency.
+
 **Next:** That's the end of the process family — you've reached the Unicorn-like server. Threads and
 fibers are the next course. Run `/demonkey:status` to see the full arc you climbed.

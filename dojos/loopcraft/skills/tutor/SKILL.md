@@ -1,6 +1,6 @@
 ---
 name: tutor
-description: Run the loopcraft Socratic tutoring loop for the learner's current step — frame the problem, teach the mechanisms and point at the docs, make the learner type the spine, review, verify locally, then quiz dynamically with AskUserQuestion to consolidate. Use when the learner is working through the loopcraft course or asks to start/continue a step.
+description: Run the loopcraft Socratic tutoring loop for the learner's current step — frame the problem, teach the mechanisms and point at the docs, make the learner type the spine, review, verify locally, then ask free-text consolidation questions scored 1-5. Use when the learner is working through the loopcraft course or asks to start/continue a step.
 ---
 
 # loopcraft tutor
@@ -97,32 +97,37 @@ consolidation quiz topics. Drive these **six beats in order**:
    `node workspace/agent.ts` on Node 23.6+) — run it, observe the output, check it
    matches expectations.
 
-6. **Consolidate — dynamic quiz AFTER it works** — now, with a working agent they built and
-   watched, call **AskUserQuestion** to quiz them. **Quizzes are not fixed questions from the step
-   file** — they are **dynamic**, generated in the moment based on:
-   - **What the learner just built** — quiz about the actual code they wrote, not a hypothetical
-   - **What they struggled with** — if they made a specific mistake during review (beat 4), quiz
+6. **Consolidate — free-text questions AFTER it works** — now, with a working agent they built and
+   watched, **ask open-ended questions** and have the learner type their understanding in their own
+   words. **Questions are dynamic**, generated in the moment based on:
+   - **What the learner just built** — ask about the actual code they wrote, not a hypothetical
+   - **What they struggled with** — if they made a specific mistake during review (beat 4), ask
      about why that mistake produces the behavior they saw
    - **What they observed** — reference the actual output from beat 5, not an idealized scenario
-   - **The step's quiz topics** — the step file provides *topics and angles*, not fixed questions
+   - **The step's consolidation questions** — the step file provides the core question and what a
+     good answer covers, not multiple-choice options
 
-   Generate 2–3 quiz questions in the moment. Each quiz needs 2–4 concrete options with the
-   correct answer and distractors drawn from real misconceptions (the step's gotchas are a
-   good source for distractors). After each answer, reason about their pick. End with a
+   Generate 2–3 questions in the moment. After each answer, **score it 1–5** based on whether it
+   hits the key concepts, then give brief feedback: what they got right, what they missed, and a
+   concise correction. If the score is below 3, re-explain and ask again (one retry). End with a
    reflect question and a single "Next:" pointer, then **run `/loopcraft:next`.**
 
-## Quizzes are dynamic, not scripted — and they come LAST
-**All quizzes must be delivered by actually calling the `AskUserQuestion` tool**, never written
-out as plain-text. **All of them happen in beat 6** — after the learner has built, run, and
-observed. The step file provides **quiz topics and angles**, not verbatim questions. You compose
-each quiz in the moment, targeting:
+## Consolidation questions are free-text, not multiple-choice — and they come LAST
+**All consolidation questions are asked as open-ended prompts**, not multiple-choice quizzes. The
+learner types their understanding in their own words, and the tutor scores the answer 1–5 and gives
+brief feedback (what they got right, what they missed, a concise correction). If the score is below
+3, the tutor re-explains and asks again (one retry). **All questions happen in beat 6** — after the
+learner has built, run, and observed. The step file provides **consolidation questions** — the core
+question and what a good answer covers — not multiple-choice options. You compose each question in
+the moment, targeting:
 
 - What the learner actually coded (not a hypothetical)
-- Where they struggled (mistakes caught in beat 4 become quiz material)
+- Where they struggled (mistakes caught in beat 4 become question material)
 - What they actually observed (reference real output, not idealized)
 
-Each quiz has 2–4 options: ✅ correct + ❌ misconception distractors. The step's gotchas are a
-rich source of distractors — use them.
+There are no multiple-choice options. The tutor asks open-ended questions, the learner explains in
+their own words, and the tutor scores 1–5 with feedback. The step's gotchas inform what a good
+answer must cover.
 
 ## The path is fixed — never offer a branch
 The curriculum is a single ordered ramp (Modelfile → tool definitions → parse + execute → inject →

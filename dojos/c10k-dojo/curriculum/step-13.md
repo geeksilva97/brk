@@ -16,13 +16,17 @@ Idle connections cost almost nothing (a fiber is KBs), so the same Rack app you'
 now holds **ten thousand** concurrent connections inside one thread. Same app, same env adapter, new
 shape. This is the step that beats C10K.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Why does the async server hold 10k idle/slow connections on 256 MB when the thread pool
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Why does the async server hold 10k idle/slow connections on 256 MB when the thread pool
 choked at a couple thousand?
-- ✅ **Each connection is a cheap fiber multiplexed on one thread (no per-connection kernel stack);
-  idle fibers parked by the scheduler cost almost nothing.** Confirm.
-- ❌ "It uses more cores." → No; still one thread. It's about per-connection cost, not parallelism.
-- ❌ "It drops idle connections." → No; it holds them — that's the point.
+
+A good answer covers: each connection is a cheap fiber multiplexed on one thread (no per-connection
+kernel stack); idle fibers parked by the scheduler cost almost nothing. It doesn't use more cores —
+still one thread. It's about per-connection cost, not parallelism. And it doesn't drop idle
+connections — it holds them; that's the point.
 
 ## Spine  (`workspace/falcon_like.rb`, ~15 lines)
 Inside `Async do ... end`: accept in a loop and, for each connection, spawn a subtask
@@ -48,9 +52,13 @@ runs at 512 MB; at 256 MB async tops out ~9.5k (a great "so close" demo of the b
 Contrast on the same cage: fork OOM'd ~1k, thread-pool capped ~5,140. (`reference/DRY-RUN-FINDINGS.md`.)
 **This is the moment** — show the learner the flat memory curve next to fork's cliff (`/c10k-dojo:status`).
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** Did fibers make *everything* faster, or just concurrent I/O cheaper?
-- ✅ **Just concurrent I/O — CPU work is still GVL-bound on one thread.**
-- ❌ "Everything — fibers are faster across the board." → No; a CPU-bound handler still blocks the loop.
-- ❌ "They added parallelism." → One thread, no parallelism — they overlap *waiting*, not computing.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Did fibers make *everything* faster, or just concurrent I/O cheaper?
+
+A good answer covers: just concurrent I/O — CPU work is still GVL-bound on one thread. Fibers are not
+faster across the board; a CPU-bound handler still blocks the loop. They didn't add parallelism —
+one thread, no parallelism; they overlap *waiting*, not computing.
 **Next:** Step 14 — when fibers win, when they don't. `/c10k-dojo:next`.

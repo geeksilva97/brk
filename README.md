@@ -157,7 +157,7 @@ To create a dojo from scratch:
 
 ### Key conventions
 
-- **Quizzes are `AskUserQuestion` calls** — ✅ correct answer + ❌ misconception distractors, never prose
+- **Consolidation questions are free-text** — the learner types their understanding in their own words; the tutor scores 1–5, gives feedback, retries once if below 3
 - **Fixed linear path** — the tutor always points to the one next step, never a menu
 - **Type-the-spine guard** — a `PreToolUse` hook denies the agent writing the current spine file
 - **Offline jail** — blocks `WebFetch`/`WebSearch` + external Bash egress; points at the `docs/` bundle

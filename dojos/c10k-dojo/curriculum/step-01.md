@@ -16,16 +16,16 @@ and reads and writes bytes. Before HTTP, before Rack, before concurrency — the
 build the smallest possible server: an echo server that serves exactly one client at a time. By the
 end you'll *feel* its fatal limitation, and that limitation is the reason the other 16 steps exist.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** You start the server, connect with one `nc`, and it echoes fine. You open a *second*
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** You start the server, connect with one `nc`, and it echoes fine. You open a *second*
 `nc` while the first is still connected — and it just hangs. Why?
-- ✅ **The process is busy in the read loop for client 1 and never returns to `accept`.** Confirm,
-  then add: the 2nd connection isn't rejected — the kernel holds it in the *listen backlog* until
-  someone calls `accept` again. That never happens while client 1 is connected.
-- ❌ "`accept` only returns once." → Correct them: `accept` is called in a loop and returns a *new*
-  socket each time; the problem is we don't *get back* to it.
-- ❌ "The OS refuses the second connection." → No — it's queued in the backlog (the `listen(n)`
-  number). It will be served the instant we call `accept` again.
+
+A good answer covers: the process is busy in the read loop for client 1 and never returns to
+`accept`; the 2nd connection isn't rejected — the kernel holds it in the *listen backlog* until
+someone calls `accept` again, which never happens while client 1 is connected.
 
 ## Spine  (the learner types `workspace/echo.rb`, ~12 lines)
 Type it by hand — this whole spine is the lesson:
@@ -57,14 +57,15 @@ Type it by hand — this whole spine is the lesson:
 
 The learner must explain *why* it hangs before the step counts as done.
 
-## Reflect-quiz  (AskUserQuestion)
-A comprehension check — **not** a "pick your path" menu. The course order is fixed; your job is to
-confirm the learner sees *what kind of problem* the hang is, then point them to the next step.
-**Question:** Is the second client hanging a *protocol* problem or a *concurrency* problem?
-- ✅ **Concurrency** — the single process is busy serving client 1; HTTP/parsing has nothing to do
-  with it. Confirm.
-- ❌ "Protocol" → No — we're not even speaking HTTP yet, and it still hangs. It's about doing two
-  things at once.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Is the second client hanging a *protocol* problem or a *concurrency* problem?
+
+A good answer covers: it's a concurrency problem — the single process is busy serving client 1;
+HTTP/parsing has nothing to do with it. We're not even speaking HTTP yet, and it still hangs.
+It's about doing two things at once.
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance — never offer a branch among fork/threads/

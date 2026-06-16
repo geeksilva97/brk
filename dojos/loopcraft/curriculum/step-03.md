@@ -47,15 +47,14 @@ The model asked for the weather — now you need to act on it. In Step 2 the mod
 
 The learner must explain *why the parser needs to handle messy output* and *how the wiring connects model output to tool execution* before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — Diagnose:**
-Why can't you just `JSON.parse` the model's response? (Angle: the model wraps JSON in markdown backticks, adds explanatory text, or outputs a single object instead of an array. A robust parser handles all these cases — it's not about performance or YAML, it's about robustness against messy LLM output. The provided `parseToolCalls` handles this so you don't have to.)
+**Question 1:** Why can't you just `JSON.parse` the model's response?
+A good answer covers: the model wraps JSON in markdown backticks, adds explanatory text, or outputs a single object instead of an array; a robust parser handles all these cases; it's about robustness against messy LLM output; the provided `parseToolCalls` handles this so you don't have to.
 
-**Quiz topic 2 — Reflect:**
-What happens when the model asks for a city not in the COORDINATES table? (Angle: `getWeather` returns a clear error message. The agent loop injects this as a tool result and the model responds honestly. A crash means missing error handling — graceful degradation is part of building a robust agent. You don't need to add every city — the error propagates naturally through the loop.)
+**Question 2:** What happens when the model asks for a city not in the COORDINATES table?
+A good answer covers: `getWeather` returns a clear error message, the agent loop injects this as a tool result and the model responds honestly, a crash would mean missing error handling, graceful degradation is part of building a robust agent, you don't need to add every city — the error propagates naturally through the loop.
 
-**Quiz topic 3 — Connect:**
-How does this step's wiring relate to the full agent loop you'll build later? (Angle: this is the first half of the loop — call model → parse → execute. The missing piece is what happens after execution: sending the result back to the model for a natural-language answer. That's Step 4. The loop pattern is: call → parse → if tool call, execute → inject result → call again. You just built the first three steps.)
+**Question 3:** How does this step's wiring relate to the full agent loop you'll build later?
+A good answer covers: this is the first half of the loop — call model → parse → execute; the missing piece is sending the result back to the model for a natural-language answer (Step 4); the full loop pattern is call → parse → if tool call, execute → inject result → call again; you just built the first three steps.

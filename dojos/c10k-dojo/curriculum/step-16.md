@@ -16,13 +16,16 @@ finding: it works for trivial apps, but the ecosystem (Rack, common middleware, 
 shared mutable state, so a real Rails app won't run unchanged. This step is a frank demonstration of
 the frontier, not a C10K contender.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** What's the *first* thing that breaks when you try to serve a normal Rack middleware
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** What's the *first* thing that breaks when you try to serve a normal Rack middleware
 stack from inside a Ractor?
-- ✅ **Shared, mutable global state — middleware/config/loggers that aren't Ractor-shareable raise on
-  access.** Confirm; this is the ecosystem gap.
-- ❌ "Performance." → It's correctness/sharing first; performance is secondary.
-- ❌ "Nothing — Rack is Ractor-safe." → It largely isn't, today.
+
+A good answer covers: shared, mutable global state — middleware/config/loggers that aren't
+Ractor-shareable raise on access. This is the ecosystem gap. It's not about performance —
+correctness/sharing comes first. And Rack is largely not Ractor-safe today.
 
 ## Spine  (`workspace/ractor_server.rb`, ~20 lines)
 A minimal Ractor-per-request (or a small Ractor pool fed accepted connection fds): accept in the main
@@ -43,11 +46,14 @@ exactly what breaks when you reach for anything shared.
 Serves simple requests in parallel across Ractors; the moment you add shared middleware it raises.
 The learner can articulate *why* this isn't production-ready in 2026 (the talk's punchline).
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** You've built all four models. For a typical I/O-bound Rails app on a multi-core box,
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** You've built all four models. For a typical I/O-bound Rails app on a multi-core box,
 which would you reach for?
-- ✅ **Threads or fibers (often processes×threads, like Puma) — I/O work overlaps cheaply; Ractors
-  aren't ready for shared-state Rails.** This is a judgment call — accept a well-reasoned pick.
-- ❌ "Ractors — they're the newest." → Newest ≠ ready; Rails' shared state breaks Ractor isolation.
-- ❌ "Fork-per-connection — simplest." → Dies on memory under real load.
+
+A good answer covers: threads or fibers (often processes×threads, like Puma) — I/O work overlaps
+cheaply; Ractors aren't ready for shared-state Rails. Fork-per-connection would die on memory under
+real load. This is a judgment call — accept a well-reasoned pick.
 **Next:** Step 17 — benchmark everything + the decision tree. `/c10k-dojo:next`.

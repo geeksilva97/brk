@@ -17,21 +17,22 @@ The parser is a solved problem — we use `protocol-http1` as a black box. The *
 you control, and the *concurrency model* (the rest of the course) is orthogonal to both. Today: serve
 a real Rack app over the raw socket from Step 1.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** A Rack app returns `[200, {"content-type"=>"text/plain"}, ["hi"]]`. Who is responsible
-for writing the `Content-Length` (or chunked `Transfer-Encoding`) header on the wire?
-- ✅ **The server/parser layer — not the app.** Confirm: that's why you must *strip*
-  `content-length`/`transfer-encoding`/`connection` from the app's headers before calling
-  `write_response`, or you'll emit them twice.
-- ❌ "The app sets Content-Length." → No — the app returns a body; framing is the server's job. If you
-  pass the app's framing headers through AND let the parser frame, you get duplicates → broken response.
-- ❌ "Ruby's socket adds it automatically." → No, a raw socket writes exactly the bytes you give it.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
 
-## Design-quiz  (AskUserQuestion)
-**Question:** The parser hands you `path` as `/search?q=ruby`. What does the Rack `env` need?
-- ✅ **`PATH_INFO="/search"` and `QUERY_STRING="q=ruby"` — split on the first `?`.**
-- ❌ "`PATH_INFO="/search?q=ruby"`" → No, the query string is a separate key; many apps break otherwise.
-- ❌ "`REQUEST_URI` only" → Rack apps read `PATH_INFO`/`QUERY_STRING`; don't skip the split.
+**Question 1:** A Rack app returns `[200, {"content-type"=>"text/plain"}, ["hi"]]`. Who is responsible
+for writing the `Content-Length` (or chunked `Transfer-Encoding`) header on the wire?
+
+A good answer covers: the server/parser layer, not the app. That's why you must *strip*
+`content-length`/`transfer-encoding`/`connection` from the app's headers before calling
+`write_response`, or you'll emit them twice.
+
+**Question 2:** The parser hands you `path` as `/search?q=ruby`. What does the Rack `env` need?
+
+A good answer covers: `PATH_INFO="/search"` and `QUERY_STRING="q=ruby"` — split on the first `?`.
+The query string is a separate key; many apps break otherwise. Rack apps read
+`PATH_INFO`/`QUERY_STRING`; don't skip the split.
 
 ## protocol-http1 is GIVEN, not assumed
 The learner is **not expected to know `protocol-http1`** — HTTP parsing is explicitly out of scope
@@ -80,10 +81,12 @@ provisioned a pinned `Gemfile` + `config.ru` and vendored them (`vendor/bundle`)
 `HTTP/1.1 200`, exactly **one** `content-length`, body `hello from rack`.
 Reference (instructor): `curriculum/reference/rack_server.rb` + `rack_env.rb`.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** When we add concurrency next, what changes in this server?
-- ✅ **Only the accept-loop / how we dispatch — the app and the env adapter stay identical.** That
-  orthogonality is the whole point of the rest of the course.
-- ❌ "The Rack app gets rewritten per model." → No — the same app runs under all four servers.
-- ❌ "The HTTP parsing changes." → No — protocol-http1 stays a black box throughout.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** When we add concurrency next, what changes in this server?
+
+A good answer covers: only the accept-loop / how we dispatch — the app and the env adapter stay
+identical. That orthogonality is the whole point of the rest of the course.
 **Next:** Step 3 — make the single-server limit measurable. `/c10k-dojo:next`.

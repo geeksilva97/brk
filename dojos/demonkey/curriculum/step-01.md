@@ -57,28 +57,22 @@ Type it by hand — this whole spine is the lesson:
 
 The learner must explain *why* it hangs before the step counts as done.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Only now, with the hang seen first-hand, run these as comprehension checks — phrase them about what
 the learner just watched, never as a prediction.
 
-### Concept check  (AskUserQuestion)
-**Question:** You just watched it: the first `nc` echoes fine, and a second `nc` opened while the
+**Question 1:** You just watched it: the first `nc` echoes fine, and a second `nc` opened while the
 first is still connected *hangs* with no echo. Why?
-- ✅ **The process is busy in the read loop for client 1 and never returns to `accept`.** Confirm,
-  then add: the 2nd connection isn't rejected — the kernel holds it in the *listen backlog* until
-  someone calls `accept` again. That never happens while client 1 is connected.
-- ❌ "`accept` only returns once." → Correct them: `accept` is called in a loop and returns a *new*
-  socket each time; the problem is we don't *get back* to it.
-- ❌ "The OS refuses the second connection." → No — it's queued in the backlog (the `listen(n)`
-  number). It will be served the instant we call `accept` again.
+A good answer covers: the process is busy in the read loop for client 1 and never returns to
+`accept`; the 2nd connection isn't rejected — the kernel holds it in the listen backlog until
+someone calls `accept` again.
 
-### Reflect-quiz  (AskUserQuestion)
-A comprehension check — **not** a "pick your path" menu. Confirm the learner sees *what kind of
-problem* the hang is, then point them to the next step.
-**Question:** Is the second client hanging a *protocol* problem or a *concurrency* problem?
-- ✅ **Concurrency** — the single process is busy serving client 1; HTTP/parsing has nothing to do
-  with it. Confirm.
-- ❌ "Protocol" → No — we're not even speaking HTTP yet, and it still hangs. It's about doing two
-  things at once.
+**Question 2:** Is the second client hanging a *protocol* problem or a *concurrency* problem?
+A good answer covers: concurrency — the single process is busy serving client 1; HTTP/parsing has
+nothing to do with it; it's about doing two things at once.
+
 **Next:** before we attack the hang, real servers speak HTTP — Step 2 wraps this socket in the Rack
 contract. `/demonkey:next`.

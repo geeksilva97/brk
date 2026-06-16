@@ -14,25 +14,7 @@ connection was" — the moment we return to `IO.select`, that context is gone. S
 hash keyed by the socket. We'll switch `clients` from an array to `io => buffer` and only act on a
 complete line (terminated by `\n`).
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Why can't we just use a local variable to remember a connection's partial input between
-reads, the way a blocking one-client server could?
-- ✅ **Because the single loop interleaves many connections — after handling one fd we go back to
-  `IO.select` and lose any stack-local context, so state must be stored *per connection* (keyed by
-  the IO).** No stack frame survives across the select.
-- ❌ "We could, if we read fast enough." → No — speed is irrelevant; the loop structurally returns to
-  select between fragments.
-- ❌ "Ruby keeps the variable alive automatically." → Not across separate `read_nonblock` calls in a
-  shared loop; you must hold it yourself.
 
-## Design-quiz  (AskUserQuestion)
-**Question:** A read returns `"abc"` with no newline yet. What's the right move?
-- ✅ **Append it to that connection's buffer and do nothing else until a `\n` arrives; then consume up
-  to (and including) the newline and leave any remainder in the buffer.** Frame on the delimiter, not
-  on the read boundary.
-- ❌ "Echo `"abc"` immediately." → That assumes read boundaries equal message boundaries — they don't;
-  a frame can split across reads (and two frames can arrive in one read).
-- ❌ "Discard it until a newline shows up." → You'd lose the start of the message.
 
 ## Spine  (the learner edits `workspace/reactor.rb`, ~10 changed lines)
 Evolve Step 3's reactor:
@@ -62,15 +44,20 @@ Evolve Step 3's reactor:
 (`printf 'hel'; sleep 1; printf 'lo\n'` piped in) → the server echoes the full `hello` exactly once,
 when the newline arrives — not the fragments. Two clients still work concurrently.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** Our reads are nonblocking and buffered. What's the *symmetric* problem still lurking on
-the write side?
-- ✅ **A `write` can also fail to complete if the client's receive buffer is full — the socket isn't
-  writable yet. A blocking write there would freeze the whole reactor, so writes need the same
-  nonblocking + buffering treatment.** That's the last step.
-- ❌ "Writes always complete instantly." → Not for a slow/backed-up client; the kernel buffer can
-  fill.
-- ❌ "Reads and writes are unrelated." → They're symmetric: both must be nonblocking and select-driven.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+
+**Question 1:** Why can't we just use a local variable to remember a connection's partial input between reads, the way a blocking one-client server could?
+
+A good answer covers: because the single loop interleaves many connections — after handling one fd we go back to `IO.select` and lose any stack-local context, so state must be stored *per connection* (keyed by the IO); no stack frame survives across the select.
+
+**Question 2:** A read returns `"abc"` with no newline yet. What's the right move?
+
+A good answer covers: append it to that connection's buffer and do nothing else until a `\n` arrives; then consume up to (and including) the newline and leave any remainder in the buffer; frame on the delimiter, not on the read boundary.
+
+**Question 3:** Our reads are nonblocking and buffered. What's the *symmetric* problem still lurking on the write side?
+
+A good answer covers: a `write` can also fail to complete if the client's receive buffer is full — the socket isn't writable yet; a blocking write there would freeze the whole reactor, so writes need the same nonblocking + buffering treatment.
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance. Say: *"We fixed slow readers. A slow *reader on

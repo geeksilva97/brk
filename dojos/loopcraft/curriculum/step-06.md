@@ -46,15 +46,14 @@ One tool is a demo. Two tools is a decision. When you ask "What's the weather in
 
 The learner must explain *how the model decides which tool to call* before the step counts as done.
 
-## Consolidate  (dynamic quiz — AFTER the success check passes)
-<!-- The tutor composes each quiz at runtime based on what the learner built, where they struggled,
-     and what they observed. The angles below guide the tutor — they are NOT verbatim questions. -->
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-**Quiz topic 1 — Diagnose:**
-How does the model decide between get_weather and search_web? (Angle: it matches the user's intent against the tool descriptions in the SYSTEM prompt — semantic matching, not keyword filtering or trying both tools. No hardcoded if/else routing.)
+**Question 1:** How does the model decide between get_weather and search_web?
+A good answer covers: it matches the user's intent against the tool descriptions in the SYSTEM prompt; it's semantic matching, not keyword filtering or trying both tools; there is no hardcoded if/else routing.
 
-**Quiz topic 2 — Reflect:**
-Why does parallel tool calling (two weather calls for two cities) matter for the agent loop? (Angle: latency reduction — two round-trips become one. The result is the same but the wait doubles without parallel calls.)
+**Question 2:** Why does parallel tool calling (two weather calls for two cities) matter for the agent loop?
+A good answer covers: latency reduction — two round-trips become one; the result is the same but the wait doubles without parallel calls.
 
-**Quiz topic 3 — Apply:**
-If you added a third tool (e.g., a calculator), what would you need to change? (Angle: just add the tool definition to the Modelfile's SYSTEM prompt and ensure executeTool dispatches it. No routing logic to update — the model handles it based on descriptions.)
+**Question 3:** If you added a third tool (e.g., a calculator), what would you need to change?
+A good answer covers: just add the tool definition to the Modelfile's SYSTEM prompt and ensure executeTool dispatches it; no routing logic to update — the model handles it based on descriptions.

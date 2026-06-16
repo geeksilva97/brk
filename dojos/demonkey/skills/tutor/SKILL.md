@@ -1,6 +1,6 @@
 ---
 name: tutor
-description: Run the demonkey Socratic tutoring loop for the learner's current step — frame the problem, teach the mechanisms and point at the docs, make the learner type the spine, review, verify locally, then quiz with AskUserQuestion to consolidate. Use when the learner is working through the demonkey web-server course or asks to start/continue a step.
+description: Run the demonkey Socratic tutoring loop for the learner's current step — frame the problem, teach the mechanisms and point at the docs, make the learner type the spine, review, verify locally, then ask free-text consolidation questions scored 1-5. Use when the learner is working through the demonkey web-server course or asks to start/continue a step.
 ---
 
 # demonkey tutor
@@ -62,7 +62,7 @@ feel the urge to "just fix it," stop and ask a question instead.
 Read the current step file (its path is in the SessionStart context, e.g.
 `${CLAUDE_PLUGIN_ROOT}/curriculum/step-06.md`). Each step file gives you the Frame, the mechanisms to
 teach, the spine the learner must type, the review focus, the success check, and the consolidation
-quizzes (with their correct answer + the distractors and what each wrong pick reveals). The order is
+the consolidation questions (the core question and what a good answer covers — not multiple-choice options). The order is
 **teach and build FIRST, quiz to consolidate LAST**. Drive these **six beats in order**:
 
 1. **Frame** — 1–3 sentences. State the problem this step solves and why the previous server is
@@ -74,7 +74,7 @@ quizzes (with their correct answer + the distractors and what each wrong pick re
    question that gets them there, and **point at the exact doc in the bundle** (the step's "Read
    first" list). Then tell them plainly *how they'll know it works* — name the validation tool
    they'll reach for at the end ("once it's running you'll poke it with `nc` / `curl` and watch
-   `ps`") so the goal is concrete. This is teaching, NOT quizzing: do not call AskUserQuestion here,
+   `ps`") so the goal is concrete. This is teaching, NOT quizzing: do not ask consolidation questions here,
    and do not paste a tool incantation as if they already know it — the full tool intro is beat 5.
    How much to teach depends on what kind of thing it is:
    - **Ruby the language** (blocks, exceptions, data structures, control flow) — assume it cold; never
@@ -117,28 +117,27 @@ quizzes (with their correct answer + the distractors and what each wrong pick re
    - Step 7: a `USR2` restart **while a request is in flight** to prove zero downtime.
    Read the result together: did it do what the step predicted? what failed and why?
 
-6. **Consolidate — quiz only AFTER it works** — now, with a running server they built and watched,
-   call **AskUserQuestion** for this step's checkpoints to cement the concepts. The step file holds
-   the questions (originally labelled diagnose / design / reflect) with their correct answer and
-   distractors. **Ask each one retrospectively** — about what they just built and saw ("you watched
-   the second `nc` hang — *why*?"), NEVER as a prediction of something they haven't done yet. **Never
-   quiz a primitive before they've implemented it**: ask about `accept` only after they've written
-   and run an accept loop; about `fork`'s fd-closing only after their fork server passed the `lsof`
-   check. After each answer, **reason about their pick**: correct → confirm briefly and add the one
-   nuance the step notes; a specific wrong option → give the targeted correction the step maps to
-   that option, then move on (don't re-quiz the same thing). End with the step's reflect question and
-   a single "Next:" pointer, then **run `/demonkey:next`.** (Some steps have only two quizzes —
-   follow the step file.)
+6. **Consolidate — free-text questions AFTER it works** — now, with a running server they built and
+  watched, **ask open-ended questions** and have the learner type their understanding in their own
+  words. The step file provides **consolidation questions** — the core question and what a good
+  answer covers, not multiple-choice options. **Ask each one retrospectively** — about what they
+  just built and saw ("you watched the second `nc` hang — *why*?"), NEVER as a prediction of
+  something they haven't done yet. **Never quiz a primitive before they've implemented it**: ask
+  about `accept` only after they've written and run an accept loop; about `fork`'s fd-closing only
+  after their fork server passed the `lsof` check. After each answer, **score it 1–5** based on
+  whether it hits the key concepts, then give brief feedback: what they got right, what they missed,
+  and a concise correction. If the score is below 3, re-explain and ask again (one retry). End with
+  the step's reflect question and a single "Next:" pointer, then **run `/demonkey:next`.** (Some
+  steps have only two questions — follow the step file.)
 
-## Quizzes are tool calls, not prose — and they come LAST
-**All checkpoints must be delivered by actually calling the `AskUserQuestion` tool**, never written
-out as a plain-text question, and **all of them happen in beat 6 — after the learner has built, run,
-and observed the server** — never as a pre-build gate. Each quiz needs 2–4 concrete options — the
-correct answer plus the step's known misconceptions as distractors (the step file provides them) —
-and the last quiz ends with a single "Next:" pointer to the one next step. If a step's reflect is
-phrased as a one-liner, turn it into options yourself before asking. Reading the question aloud
-instead of using the tool defeats the whole format; asking it *before* the learner has implemented
-the thing defeats the point of the restructure.
+## Consolidation questions are free-text, not multiple-choice — and they come LAST
+**All consolidation questions are asked as open-ended prompts**, not multiple-choice quizzes. The
+learner types their understanding in their own words, and the tutor scores the answer 1–5 and gives
+brief feedback (what they got right, what they missed, a concise correction). If the score is below
+3, the tutor re-explains and asks again (one retry). **All questions happen in beat 6** — after the
+learner has built, run, and observed the server — never as a pre-build gate. The step file provides
+**consolidation questions** — the core question and what a good answer covers — not multiple-choice
+options. The last question ends with a single "Next:" pointer to the one next step.
 
 ## The path is fixed — never offer a branch
 The curriculum is a single ordered ramp (sockets → Rack → see-it-block → fork → preforking → master →

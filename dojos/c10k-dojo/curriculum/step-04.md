@@ -16,25 +16,26 @@ arrives, copy the whole process; the child handles that one client while the par
 `accept`. It's the simplest model to reason about — and the first to teach you a brutal lesson about
 memory. First, make sure you understand what `fork` actually does.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Your echo server hangs on the second client (Step 1). Which is the *most direct* reason
-`fork` fixes that?
-- ✅ **Each connection gets its own process with its own copy of the accept'd socket, so the parent
-  is free to return to `accept` immediately.** Confirm.
-- ❌ "fork makes accept non-blocking." → No; `accept` still blocks — but only in the parent, briefly,
-  between connections.
-- ❌ "fork shares memory so it's cheap." → Careful: `fork` uses copy-on-write, but Ruby's GC writes to
-  most pages quickly, so each child's RSS grows. That's the trap this step exposes.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
 
-## Design-quiz  (AskUserQuestion)
-**Question:** After `fork`, both the parent and the child hold the *listening* socket AND the just-
+**Question 1:** Your echo server hangs on the second client (Step 1). Which is the *most direct* reason
+`fork` fixes that?
+
+A good answer covers: each connection gets its own process with its own copy of the accept'd socket,
+so the parent is free to return to `accept` immediately. `fork` doesn't make accept non-blocking —
+`accept` still blocks, but only in the parent, briefly, between connections. Fork uses copy-on-write,
+but Ruby's GC writes to most pages quickly, so each child's RSS grows — that's the trap this step
+exposes.
+
+**Question 2:** After `fork`, both the parent and the child hold the *listening* socket AND the just-
 `accept`'d connection socket. Which closes must happen?
-- ✅ **Child closes the listening socket; parent closes the accepted connection socket.** Each process
-  keeps only the fd it actually uses.
-- ❌ "Only the child closes things." → Then the parent leaks one fd per connection → "too many open files".
-- ❌ "Neither needs to close; fds are independent." → They're independent *descriptors* but share the
-  underlying socket; leaking them still exhausts the fd table and confuses shutdown.
-- ❌ "Parent closes the listening socket." → Then the parent can't `accept` the next client at all.
+
+A good answer covers: child closes the listening socket; parent closes the accepted connection socket.
+Each process keeps only the fd it actually uses. If only the child closes things, the parent leaks one
+fd per connection. Neither can skip closing — they're independent descriptors but share the underlying
+socket; leaking them still exhausts the fd table.
 
 ## Spine  (the learner types `workspace/fork_echo.rb`, ~8 lines)
 Start from `workspace/echo.rb`. Type the fork block by hand — every line is the lesson:
@@ -71,11 +72,15 @@ Start from `workspace/echo.rb`. Type the fork block by hand — every line is th
 Learner must explain which fd lives in which process after fork, and predict the leak if a `close` is
 removed, before advancing.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** It OOM'd at 1,000 connections while the single-threaded echo survived the same 1,000.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** It OOM'd at 1,000 connections while the single-threaded echo survived the same 1,000.
 Why does fork-per-connection hit a memory wall the single-thread server doesn't?
-- ✅ "Each connection is a *whole process*; 1,000 of them (× baseline RSS, and more once children
-  dirty pages) blow past 256 MB — whereas the single-thread server just parks idle sockets in the
-  kernel backlog for almost nothing. Fork trades memory for concurrency, and idle holds are the
-  worst case for that trade."
+
+A good answer covers: each connection is a *whole process*; 1,000 of them (× baseline RSS, and more
+once children dirty pages) blow past 256 MB — whereas the single-thread server just parks idle sockets
+in the kernel backlog for almost nothing. Fork trades memory for concurrency, and idle holds are the
+worst case for that trade.
 This motivates Step 5: stop forking per-connection; fork a *fixed pool* up front. `/c10k-dojo:next`.

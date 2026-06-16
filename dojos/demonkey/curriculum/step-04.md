@@ -77,39 +77,32 @@ model hits, made concrete. **The lesson: a process per connection means memory g
 it blows.** Step 5 runs this *same* bench against a preforking server — keep this OOM number to
 compare.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Now that both clients echoed and you've watched the bench OOM-kill it, run these as comprehension
 checks about what you built and saw.
 
-### Concept check — why fork fixed the hang  (AskUserQuestion)
-**Question:** Your fork server now echoes to two clients at once — the Step-1 hang is gone. What did
+**Question 1:** Your fork server now echoes to two clients at once — the Step-1 hang is gone. What did
 `fork` change that fixed it?
-- ✅ **Each connection gets its own process with its own copy of the accept'd socket, so the parent
-  is free to return to `accept` immediately.** Confirm.
-- ❌ "fork makes accept non-blocking." → No; `accept` still blocks — but only in the parent, briefly,
-  between connections.
-- ❌ "fork shares memory so it's cheap." → Careful: `fork` uses copy-on-write, but each child is still
-  a whole process. Thousands of connections means thousands of processes — the wall you just watched.
+A good answer covers: each connection gets its own process with its own copy of the accept'd socket,
+so the parent is free to return to `accept` immediately; `accept` still blocks — but only in the
+parent, briefly, between connections; `fork` uses copy-on-write, but each child is still a whole
+process — thousands of connections means thousands of processes.
 
-### Concept check — the closes  (AskUserQuestion)
-**Question:** After `fork`, both parent and child held the *listening* socket AND the just-`accept`'d
+**Question 2:** After `fork`, both parent and child held the *listening* socket AND the just-`accept`'d
 connection socket. In your code, which closed which — and why?
-- ✅ **Child closes the listening socket; parent closes the accepted connection socket.** Each process
-  keeps only the fd it actually uses.
-- ❌ "Only the child closes things." → Then the parent leaks one fd per connection → "too many open files".
-- ❌ "Neither needs to close; fds are independent." → They're independent *descriptors* but share the
-  underlying socket; leaking them still exhausts the fd table and confuses shutdown.
-- ❌ "Parent closes the listening socket." → Then the parent can't `accept` the next client at all.
+A good answer covers: child closes the listening socket; parent closes the accepted connection socket;
+each process keeps only the fd it actually uses; if the parent doesn't close the accepted connection,
+it leaks one fd per connection → "too many open files"; if the child closes the listening socket, the
+parent can't accept the next client.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** fork-per-connection works — but you just spawned one whole process for every single
+**Question 3:** fork-per-connection works — but you just spawned one whole process for every single
 connection. What goes wrong as connections climb into the thousands?
-- ✅ **A process per connection doesn't scale — thousands of processes blow memory and the PID/fork
-  cost dominates.** Fork trades memory for concurrency, and per-connection is the worst case for that
-  trade. (You just SAW it: under `/demonkey:bench` this server's RSS climbed with every held
-  connection and got OOM-killed at ~150 connections in a 192MB cage — you don't even reach the
-  thousands.)
-- ❌ "Nothing — fork scales fine." → Each child is a full process; the OS won't give you tens of
-  thousands for free.
-- ❌ "The kernel reuses the processes." → It doesn't; each `fork` is a brand-new process you must reap.
+A good answer covers: a process per connection doesn't scale — thousands of processes blow memory
+and the PID/fork cost dominates; fork trades memory for concurrency, and per-connection is the worst
+case for that trade; under `/demonkey:bench` this server's RSS climbed with every held connection
+and got OOM-killed at ~150 connections in a 192MB cage.
+
 **Next:** Step 5 — stop forking per-connection; fork a *fixed pool* up front. `/demonkey:next`.

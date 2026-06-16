@@ -69,33 +69,29 @@ Pull up `${CLAUDE_PROJECT_DIR}/.demonkey/results.csv`: the fork row (`oom_killed
 climbing) and the prefork row (`oom_killed=false`, RSS flat) sit side by side. **That contrast — same
 load, same cage, one dies and one shrugs — IS the value of preforking.**
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Now that workers distribute connections and the bench survived, run these as comprehension checks.
 
-### Concept check — shared accept  (AskUserQuestion)
-**Question:** Your N workers all call `accept` on the *same* inherited listening socket — and you saw
+**Question 1:** Your N workers all call `accept` on the *same* inherited listening socket — and you saw
 connections land on different worker PIDs with no duplicates. When one connection arrives, what does
 the kernel do?
-- ✅ **It wakes exactly one worker to handle it (load-balanced across workers).** Confirm.
-- ❌ "All workers wake and race / get duplicate connections." → No; `accept` on a shared socket hands
-  the connection to one waiter (modern kernels avoid the old thundering-herd).
-- ❌ "You need a lock so only one worker accepts." → Not for basic preforking; the kernel handles it.
+A good answer covers: the kernel wakes exactly one worker to handle it, load-balanced across workers;
+`accept` on a shared socket hands the connection to one waiter; modern kernels avoid the old
+thundering-herd problem; no lock or coordination is needed for basic preforking.
 
-### Concept check — pool size  (AskUserQuestion)
-**Question:** You spawned a hardcoded N (default 4), not `Etc.nprocessors`. Why pick the count by hand?
-- ✅ **A hardcoded N you choose on purpose (say 4–8), often oversubscribing the cores** so I/O-bound
-  workers overlap while one waits. Web work is mostly *waiting* on I/O, so matching CPU count exactly
-  leaves capacity on the table. The point is choosing N deliberately, not auto-detecting it.
-- ❌ "Exactly `Etc.nprocessors`." → A fine *starting* heuristic for CPU-bound work, but web work waits
-  a lot; you usually want a few more. And on a constrained/containerized box `nprocessors` can mislead.
-- ❌ "As many as possible." → Each worker is a whole process; past a point you just add memory and
-  context-switching for no throughput.
+**Question 2:** You spawned a hardcoded N (default 4), not `Etc.nprocessors`. Why pick the count by hand?
+A good answer covers: a hardcoded N you choose on purpose (say 4–8), often oversubscribing the cores,
+so I/O-bound workers overlap while one waits; web work is mostly *waiting* on I/O, so matching CPU
+count exactly leaves capacity on the table; the point is choosing N deliberately, not auto-detecting
+it; on a constrained/containerized box `nprocessors` can mislead.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** A worker process crashes (say `kill -9` one of them). With preforking as built so far,
+**Question 3:** A worker process crashes (say `kill -9` one of them). With preforking as built so far,
 what happens?
-- ✅ **Nothing replaces it — you silently lose capacity until you have none left.**
-- ❌ "The OS restarts it." → The kernel doesn't respawn your workers.
-- ❌ "The master re-forks it." → Not yet — the "master" here just sits in `waitall`; it doesn't
-  supervise. That's exactly what's next.
+A good answer covers: nothing replaces it — you silently lose capacity until you have none left;
+the kernel doesn't respawn your workers; the "master" here just sits in `waitall` and doesn't
+supervise — that's exactly what's next.
+
 **Next:** Step 6 — a real master process that supervises and respawns. `/demonkey:next`.

@@ -56,7 +56,8 @@ The learner must explain *why* it behaves this way before the step counts as don
      
      The topics below are ANGLES to quiz from, not verbatim questions. The tutor composes
      each quiz at runtime, drawing distractors from the gotchas above and the learner's
-     actual mistakes during review. Each quiz is an AskUserQuestion call with 2–4 options. -->
+     actual mistakes during review. Each question asks the learner to explain in their own words;
+     the tutor scores 1–5 and gives feedback. One retry if score < 3. -->
 
 **Quiz topic 1 — Diagnose:**
 <!-- What angle to quiz from: e.g. "Why does X happen when Y?" or "What breaks if you remove Z?"

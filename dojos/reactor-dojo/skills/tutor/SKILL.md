@@ -1,6 +1,6 @@
 ---
 name: tutor
-description: Run the reactor-dojo Socratic tutoring loop for the learner's current step — frame the problem, quiz with AskUserQuestion, make the learner type the spine, review, run the success check, reflect. Use when the learner is working through the reactor-dojo course on a reactor-based server in Ruby or asks to start/continue a step.
+description: Run the reactor-dojo Socratic tutoring loop for the learner's current step — frame the problem, ask free-text consolidation questions scored 1-5, make the learner type the spine, review, run the success check, reflect. Use when the learner is working through the reactor-dojo course on a reactor-based server in Ruby or asks to start/continue a step.
 ---
 
 # reactor-dojo tutor
@@ -27,23 +27,19 @@ feel the urge to "just fix it," stop and ask a question instead.
 ## How to run a step
 
 Read the current step file (its path is in the SessionStart context, e.g.
-`${CLAUDE_PLUGIN_ROOT}/curriculum/step-04.md`). Each step file gives you the Frame, the quizzes
-(with their correct answer + the distractors and what each wrong pick reveals), the spine the
-learner must type, the review focus, the success check, and the reflect question. Drive these
-**seven beats in order**:
+`${CLAUDE_PLUGIN_ROOT}/curriculum/step-04.md`). Each step file gives you the Frame, the
+consolidation questions (what a good answer covers), the spine the learner must type, the review
+focus, the success check, and the reflect question. Drive these **seven beats in order**:
 
 1. **Frame** — 1–3 sentences. State the problem this step solves and why the previous stage is
    inadequate. Don't lecture; set up the first question.
 
-2. **Diagnose-quiz** — call **AskUserQuestion** with the step's diagnostic question. Use the
-   step's options verbatim: one correct, the rest are real misconceptions. After the answer,
-   **reason about their pick**:
-   - correct → confirm briefly and add the one nuance the step notes;
-   - a specific wrong option → give the targeted correction the step maps to that option, then
-     move on (don't re-quiz the same thing more than once).
+2. **Diagnose** — ask the learner to explain in their own words why the previous implementation
+   fails. Score their answer 1–5 based on whether it covers the key concepts. If below 3, re-explain
+   and ask again (one retry). Confirm what they got right and correct what they missed.
 
-3. **Design-quiz** — another AskUserQuestion: how should the fix be structured? Distractors are the
-   classic bugs. Steer to the right design.
+3. **Design** — ask the learner to explain how the fix should be structured. Score 1–5. If below 3,
+   guide them toward the right design and ask again (one retry). Steer to the right approach.
 
 4. **Type the spine** — tell the learner exactly what to type and where (the spine file, the
    approximate line count, the primitives to use), and which bundle docs to read first. Then
@@ -56,19 +52,28 @@ learner must type, the review focus, the success check, and the reflect question
 6. **Run + observe** — give the success-check command. Read the result together: did it pass? What
    failed and why?
 
-7. **Reflect-quiz** — a final AskUserQuestion that cements the lesson (a comprehension check with a
-   right answer), then **point to the one next step and run `/reactor-dojo:next`.**
+7. **Reflect** — ask the learner to explain the key takeaway in their own words. Score 1–5. If below
+   3, re-explain and ask again (one retry). Then **point to the one next step and run
+   `/reactor-dojo:next`.**
 
-## Quizzes are tool calls, not prose
-**All three checkpoints — diagnose, design, AND the ending reflect — must be delivered by actually
-calling the `AskUserQuestion` tool**, never written out as a plain-text question. This includes the
-final reflect-quiz *after* a passing implementation: the step isn't over until that Ask has been
-asked and answered. Each quiz needs 2–4 concrete options — the correct answer plus the step's known
-misconceptions as distractors (the step file provides them). If a step's reflect is phrased as a
-one-liner, turn it into options yourself before asking. Reading the question aloud instead of using
-the tool defeats the whole format.
+## Consolidation questions are free-text, not multiple-choice
+
+**All three checkpoints — diagnose, design, AND the ending reflect — are open-ended questions.** The
+learner types their understanding in their own words. You then:
+
+1. **Score** the answer 1–5 based on whether it covers the key concepts listed in the step file.
+2. **Give feedback**: what they got right, what they missed, a concise correction.
+3. **If score < 3**: re-explain the concept briefly and ask the question again (one retry only).
+
+The step file provides **consolidation questions — the core question and what a good answer covers —
+not multiple-choice options**. You compose each question in the moment, targeting what the learner
+just built and where they struggled.
+
+Never ask the learner to pick from options. The point is to make them *explain* — explaining
+something in your own words is the best way to determine if you learned it.
 
 ## The path is fixed — never offer a branch
+
 The curriculum is a single ordered ramp, chosen to build difficulty deliberately. **Never present a
 "pick what to build next" menu.** There is always exactly one logical next step; name it and advance
 via `/reactor-dojo:next`. If a reflect-quiz lists several upcoming techniques, it is *previewing

@@ -68,25 +68,17 @@ You've built an agent that can call tools for data. Now you'll make it *learn ne
 
 The learner must explain *the difference between a tool call and a skill call* before the step counts as done.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate  (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
 
-### Concept check  (AskUserQuestion)
-**Question:** What's the key difference between a tool call (weather, search) and a skill call?
-- ✅ **A tool call returns *data* — weather JSON, search results. A skill call returns *instructions* that change how the model behaves for the rest of the conversation. Both are context injection, but tools add facts while skills add behavior.**
-- ❌ "Tools are external, skills are internal." → Both are external — weather is an API call, a skill reads a file. The difference is what they inject.
-- ❌ "Skills are more powerful." → Not necessarily — a weather tool can be more impactful than a skill. The difference is data vs. behavior.
+**Question 1:** What's the key difference between a tool call (weather, search) and a skill call?
+A good answer covers: a tool call returns data — weather JSON, search results; a skill call returns instructions that change how the model behaves for the rest of the conversation; both are context injection, but tools add facts while skills add behavior.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** Why scan skills at startup instead of hardcoding the list?
-- ✅ **So the agent can learn new skills without code changes. Drop a new `skills/whatever/SKILL.md` directory and restart — the agent automatically picks it up. This is the same pattern as Claude Code plugins or shell PATH: dynamic discovery beats static lists.**
-- ❌ "For performance — scanning is faster than hardcoding." → The opposite — scanning is slower. But it's more flexible.
-- ❌ "Because the Modelfile can't list skills." → It can — we just choose not to. Dynamic discovery is a design choice for extensibility.
+**Question 2:** Why scan skills at startup instead of hardcoding the list?
+A good answer covers: so the agent can learn new skills without code changes; drop a new `skills/whatever/SKILL.md` directory and restart — the agent automatically picks it up; this is the same pattern as Claude Code plugins or shell PATH — dynamic discovery beats static lists.
 
-### Apply  (AskUserQuestion)
-**Question:** You want to add a "translate" skill that makes the model respond in a specific language. What do you need to change in agent.ts?
-- ✅ **Nothing.** Create `workspace/skills/translate/SKILL.md` with the instructions, restart the agent, and `scanSkills()` will pick it up automatically. The Modelfile already defines the skill tool. This is the power of dynamic discovery — no code changes.
-- ❌ "Add a new case to executeTool." → `executeTool` already handles `skill` → `loadSkill`. No code change needed.
-- ❌ "Add a new function to utils.ts." → `loadSkill` and `scanSkills` are already provided. No code change needed.
+**Question 3:** You want to add a "translate" skill that makes the model respond in a specific language. What do you need to change in agent.ts?
+A good answer covers: nothing — create `workspace/skills/translate/SKILL.md` with the instructions, restart the agent, and `scanSkills()` will pick it up automatically; the Modelfile already defines the skill tool; `executeTool` already handles `skill` → `loadSkill`; this is the power of dynamic discovery — no code changes needed.
 
 ## Congratulations 🎉
 You've built a complete AI agent from scratch. You now understand:

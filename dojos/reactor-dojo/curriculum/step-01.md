@@ -14,26 +14,7 @@ sense. So first we build the naive thing: a server that accepts one client, talk
 then loops back to accept the next. By the end you'll see exactly why a single slow client freezes
 everyone — that freeze is the reason the next five steps exist.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** You start the server, connect with one `nc`, and it echoes fine. You open a *second*
-`nc` while the first is still connected — and it just hangs. Why?
-- ✅ **The process is blocked inside `read` (or back in a blocking `accept`) for client 1 and never
-  services client 2.** Confirm, then add: client 2 isn't refused — the kernel parks it in the listen
-  backlog until someone calls `accept` again, which never happens while we're stuck on client 1.
-- ❌ "`accept` can only return once." → No — `accept` is in a loop and returns a *new* socket each
-  time; the problem is we never *get back* to it because the read blocks.
-- ❌ "The OS refuses the second connection." → No — it's queued in the backlog; it'll be served the
-  instant we reach `accept` again.
 
-## Design-quiz  (AskUserQuestion)
-**Question:** Where, in this blocking design, does the process spend its time when one client is
-connected but idle (not sending anything)?
-- ✅ **Asleep inside a blocking `read`/`readpartial` on that one socket — doing nothing for anyone
-  else.** That single blocking call is the whole bottleneck.
-- ❌ "Spinning in a busy loop checking for data." → No — a blocking read sleeps; it doesn't spin. The
-  problem isn't CPU, it's that it can only wait on one fd.
-- ❌ "In `accept`, ready for the next client." → No — we don't reach `accept` again until client 1
-  disconnects.
 
 ## Spine  (the learner types `workspace/blocking_echo.rb`, ~12 lines)
 Type it by hand — this whole spine is the lesson:
@@ -62,15 +43,20 @@ Type it by hand — this whole spine is the lesson:
 
 The learner must explain *why* it hangs before the step counts as done.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** What is the *one* blocking call we'll have to eliminate to serve two clients at once
-without threads or processes?
-- ✅ **The blocking wait on a single socket — we need to wait on *all* sockets at once and only touch
-  the ones that are ready.** That's exactly what `IO.select` gives us.
-- ❌ "We need a thread per connection." → That's a different model; the reactor's whole point is one
-  thread. We'll do it without threads.
-- ❌ "We need to `fork` per connection." → Also a different model; the reactor avoids per-connection
-  processes entirely.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+
+**Question 1:** You start the server, connect with one client, and it echoes fine. A second client connects but gets no response at all — not even a refusal. Why does it just hang?
+
+A good answer covers: the process is blocked inside `read`/`readpartial` for client 1 and never loops back to `accept`; client 2 isn't refused — the kernel parks it in the listen backlog until someone calls `accept` again, which never happens while stuck on client 1.
+
+**Question 2:** In this blocking design, where does the process spend its time when one client is connected but idle (not sending anything)?
+
+A good answer covers: asleep inside a blocking `read`/`readpartial` on that one socket — doing nothing for anyone else; the problem isn't CPU usage, it's that the process can only wait on one file descriptor at a time.
+
+**Question 3:** What is the *one* blocking call we'll have to eliminate to serve two clients at once without threads or processes?
+
+A good answer covers: the blocking wait on a single socket — we need to wait on *all* sockets at once and only touch the ones that are ready; `IO.select` is the mechanism that provides this.
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance. Say: *"The fix is to never block on one socket.

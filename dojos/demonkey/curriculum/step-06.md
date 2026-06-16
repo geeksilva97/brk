@@ -68,36 +68,30 @@ Stuck on a specific call? `/demonkey:hint` (it points at the doc, then asks, the
 
 The learner must explain what the self-pipe is doing and why the reap is a loop before advancing.
 
-## Consolidate — quizzes AFTER it works  (AskUserQuestion each)
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
+     Scored 1–5; feedback given; retry once if score < 3. -->
+
 Now that you've watched the master respawn a `kill -9`'d worker and adjust the pool on TTIN/TTOU, run
 these as comprehension checks.
 
-### Concept check — how it noticed  (AskUserQuestion)
-**Question:** You `kill -9`'d a worker and the master respawned it — without any polling loop. How did
+**Question 1:** You `kill -9`'d a worker and the master respawned it — without any polling loop. How did
 the master find out the worker had died?
-- ✅ **The kernel sent the master `SIGCHLD`; the handler reaps with `Process.wait(-1, WNOHANG)` in a
-  loop and forks a replacement.** Confirm — and note the loop: one SIGCHLD can stand for several dead
-  children.
-- ❌ "The master loops calling `Process.wait` constantly." → Wasteful; signal-driven is the point.
-- ❌ "Workers tell the master over a pipe before dying." → They can't reliably signal their own crash;
-  `SIGCHLD` is the mechanism the kernel gives you.
+A good answer covers: the kernel sent the master `SIGCHLD`; the handler reaps with
+`Process.wait(-1, WNOHANG)` in a loop and forks a replacement; one SIGCHLD can stand for several dead
+children, so the reap must be a loop; the approach is signal-driven, not a busy-polling loop.
 
-### Concept check — the self-pipe  (AskUserQuestion)
-**Question:** Your traps just write one byte to the self-pipe; the main loop does the fork/log/reap.
+**Question 2:** Your traps just write one byte to the self-pipe; the main loop does the fork/log/reap.
 Why couldn't you do that real work directly inside the signal trap?
-- ✅ **Signal handlers run at unsafe moments; do the minimum and defer. The self-pipe trick turns a
-  signal into a readable fd the main loop handles safely** — the trap writes one byte; the main loop,
-  blocked in `IO.select`, wakes and does the real work on a normal stack.
-- ❌ "You can do anything in a trap." → Async-signal-unsafe calls can deadlock or corrupt; Ruby's trap
-  is safer than C but you still want the trap to be tiny.
-- ❌ "Just disable signals during the handler." → That doesn't make the handler's own work safe, and
-  you'd miss signals.
+A good answer covers: signal handlers run at unsafe moments; do the minimum and defer; the self-pipe
+trick turns a signal into a readable fd the main loop handles safely — the trap writes one byte, the
+main loop blocked in `IO.select` wakes and does the real work on a normal stack; async-signal-unsafe
+calls can deadlock or corrupt; Ruby's trap is safer than C but you still want the trap to be tiny.
 
-### Reflect-quiz  (AskUserQuestion)
-**Question:** The master can reap and respawn *dead* workers. What's still missing for production?
-- ✅ **Stuck-worker recovery + zero-downtime restart — heartbeats/timeouts and USR2.** A worker wedged
-  on a bad request is alive but useless; and a deploy still drops connections.
-- ❌ "Nothing — this is production-ready." → A worker stuck in an infinite loop never dies, so SIGCHLD
-  never fires for it.
-- ❌ "Just more workers." → Count fixes neither a stuck worker nor a deploy that drops connections.
+**Question 3:** The master can reap and respawn *dead* workers. What's still missing for production?
+A good answer covers: stuck-worker recovery and zero-downtime restart — heartbeats/timeouts and USR2;
+a worker wedged on a bad request is alive but useless, so SIGCHLD never fires for it; a deploy still
+drops connections without USR2; more workers doesn't fix a stuck worker or a deploy that drops
+connections.
+
 **Next:** Step 7 — production-grade preforking (the unicorn thing). `/demonkey:next`.

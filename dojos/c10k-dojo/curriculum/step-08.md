@@ -16,12 +16,16 @@ only one thread runs Ruby bytecode at a time. The crucial nuance — **I/O relea
 doesn't** — is exactly what makes threads great for web servers and useless for parallel number-
 crunching. We'll prove it with two endpoints.
 
-## Diagnose-quiz  (AskUserQuestion)
-**Question:** Ten threads each handle a request. Which workload actually runs concurrently on MRI?
-- ✅ **I/O-bound work (`/io`, sleeping/waiting on the network) — the GVL is released during I/O.**
-  CPU-bound work (`/cpu`) is serialized by the GVL.
-- ❌ "Both run in parallel — threads are threads." → Not on MRI; CPU work is GVL-pinned to one core.
-- ❌ "Neither — the GVL blocks everything." → No; I/O explicitly releases it, which is most web work.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Ten threads each handle a request. Which workload actually runs concurrently on MRI?
+
+A good answer covers: I/O-bound work (`/io`, sleeping/waiting on the network) — the GVL is released
+during I/O. CPU-bound work (`/cpu`) is serialized by the GVL. Both do not run in parallel — not on
+MRI; CPU work is GVL-pinned to one core. And it's not true that the GVL blocks everything; I/O
+explicitly releases it, which is most web work.
 
 ## Spine  (`workspace/thread_echo.rb`, ~10 lines)
 From the Step-2 server: in the accept loop, `Thread.new(conn) { serve(conn) }` instead of serving
@@ -41,9 +45,12 @@ inline. Reuse `build_env` from Step 2.
 `/c10k-dojo:bench` twice (the harness hits `/io` and `/cpu`): `/io` latency scales with concurrency
 (threads help); `/cpu` does not (GVL-pinned). Make the learner predict each result first.
 
-## Reflect-quiz  (AskUserQuestion)
-**Question:** Unbounded `Thread.new` per connection — what breaks first at ~5,000 connections?
-- ✅ **Memory — thousands of ~1 MB thread stacks exhaust RAM (OOM).**
-- ❌ "CPU — too many threads to schedule." → Idle threads cost little CPU; it's stack memory.
-- ❌ "The GVL deadlocks." → The GVL serializes; it doesn't deadlock here.
+## Consolidate (free-text questions — AFTER the success check passes)
+<!-- The tutor asks these open-ended questions; the learner types their understanding.
+     Scored 1–5. Feedback given. One retry if score < 3. -->
+
+**Question 1:** Unbounded `Thread.new` per connection — what breaks first at ~5,000 connections?
+
+A good answer covers: memory — thousands of ~1 MB thread stacks exhaust RAM (OOM). It's not CPU —
+idle threads cost little CPU; it's stack memory. And the GVL serializes; it doesn't deadlock here.
 **Next:** Step 9 — a bounded thread pool. `/c10k-dojo:next`.

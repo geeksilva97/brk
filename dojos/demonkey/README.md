@@ -7,7 +7,7 @@ you reason from a mounted Ruby + C docs bundle and first principles).
 
 Claude Code acts as a **Socratic tutor**: it frames each problem, teaches the mechanisms and points
 you at the docs, makes **you type the load-bearing code**, then — once it's built and running — quizzes
-you with `AskUserQuestion` to consolidate, reasoning about whether your answer is right. It handles
+you with free-text consolidation questions, scoring your explanation 1–5 and giving feedback. It handles
 boilerplate and review; you build first, and the quizzes come after the thing works. Verification is **local and lightweight** — `nc`
 clients, `ps`/`lsof` for zombies and fd leaks, `kill -SIGNAL` to drive the signal protocol, and a
 `USR2` restart with a live client to prove zero downtime. The emphasis is *building and signals*, not
