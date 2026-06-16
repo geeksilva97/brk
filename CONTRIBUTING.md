@@ -4,12 +4,12 @@
 
 A dojo is just a Claude Code plugin directory. To make it appear in `dojo list` / `dojo run`:
 
-1. Drop the plugin in a top-level subdir (e.g. `my-dojo/`) with a valid
+1. Drop the plugin in `dojos/` (e.g. `dojos/my-dojo/`) with a valid
    `.claude-plugin/plugin.json`.
 2. Add one line to `.claude-plugin/marketplace.json`:
 
    ```json
-   { "name": "my-dojo", "source": "./my-dojo", "category": "workshop" }
+   { "name": "my-dojo", "source": "./dojos/my-dojo", "category": "workshop" }
    ```
 
    The `name` must match the plugin's own manifest `name` (a test enforces this).
@@ -18,8 +18,11 @@ A dojo is just a Claude Code plugin directory. To make it appear in `dojo list` 
 
 Don't hand-write a dojo from scratch — use the generator: `dojo new "<your topic>"` runs
 **dojo-forge**, which interviews you and scaffolds a complete, validating dojo in the right
-shape (tutor skill, jail hooks, per-project state, curriculum). Then move it in per the steps
-above.
+shape (tutor skill, jail hooks, per-project state, curriculum). Then move it into `dojos/`
+per the steps above.
+
+See the README's **Creating a new dojo** section for full details on both forge-generated
+and manual dojos.
 
 ## Running the tests
 
