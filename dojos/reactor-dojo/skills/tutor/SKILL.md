@@ -35,11 +35,15 @@ focus, the success check, and the reflect question. Drive these **seven beats in
    inadequate. Don't lecture; set up the first question.
 
 2. **Diagnose** — ask the learner to explain in their own words why the previous implementation
-   fails. Score their answer 1–5 based on whether it covers the key concepts. If below 3, re-explain
-   and ask again (one retry). Confirm what they got right and correct what they missed.
+   fails. Score their answer 1–5 based on whether it covers the key concepts. If below 3, re-explain,
+   give a different angle, and ask again — repeat until the learner gives a substantive answer
+   (score ≥ 3). A nonsense answer, a vague one-liner, or "I don't know" does NOT count.
+   Confirm what they got right and correct what they missed.
 
 3. **Design** — ask the learner to explain how the fix should be structured. Score 1–5. If below 3,
-   guide them toward the right design and ask again (one retry). Steer to the right approach.
+   guide them toward the right design and ask again — repeat until the learner gives a substantive
+   answer (score ≥ 3). A nonsense answer, a vague one-liner, or "I don't know" does NOT count.
+   Steer to the right approach.
 
 4. **Type the spine** — tell the learner exactly what to type and where (the spine file, the
    approximate line count, the primitives to use), and which bundle docs to read first. Then
@@ -53,8 +57,9 @@ focus, the success check, and the reflect question. Drive these **seven beats in
    failed and why?
 
 7. **Reflect** — ask the learner to explain the key takeaway in their own words. Score 1–5. If below
-   3, re-explain and ask again (one retry). Then **point to the one next step and run
-   `/reactor-dojo:next`.**
+   3, re-explain, give a different angle, and ask again — repeat until the learner gives a substantive
+   answer (score ≥ 3). A nonsense answer, a vague one-liner, or "I don't know" does NOT count.
+   Then **point to the one next step and run `/reactor-dojo:next`.**
 
 ## Consolidation questions are free-text, not multiple-choice
 
@@ -63,7 +68,11 @@ learner types their understanding in their own words. You then:
 
 1. **Score** the answer 1–5 based on whether it covers the key concepts listed in the step file.
 2. **Give feedback**: what they got right, what they missed, a concise correction.
-3. **If score < 3**: re-explain the concept briefly and ask the question again (one retry only).
+3. **If score < 3**: re-explain the concept, give a different angle, and ask the question again.
+   Repeat until the learner gives a substantive answer (score ≥ 3). A nonsense answer, a vague
+   one-liner, or "I don't know" is NOT an answer — the tutor must NOT advance past this checkpoint
+   until the learner demonstrates real understanding. There is no retry limit; the gate is
+   understanding, not patience.
 
 The step file provides **consolidation questions — the core question and what a good answer covers —
 not multiple-choice options**. You compose each question in the moment, targeting what the learner
@@ -71,6 +80,15 @@ just built and where they struggled.
 
 Never ask the learner to pick from options. The point is to make them *explain* — explaining
 something in your own words is the best way to determine if you learned it.
+
+## No advancement without understanding
+
+**Each checkpoint (diagnose, design, reflect) must pass before moving to the next beat.** The tutor
+does NOT proceed past a consolidation question until the learner gives a substantive answer that
+demonstrates real understanding (score ≥ 3). A nonsense answer, a vague one-liner, or "I don't know"
+is NOT an answer — the tutor re-explains, gives a different angle, and asks again. If the learner
+can't explain it, they haven't learned it. There is no retry limit; the gate is understanding,
+not patience.
 
 ## The path is fixed — never offer a branch
 

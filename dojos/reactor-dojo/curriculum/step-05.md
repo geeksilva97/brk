@@ -49,7 +49,7 @@ client: the normal client keeps echoing while the slow one's bytes queue in `out
 never freezes.** The learner explains how the writers set parks the stuck write.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** `write_nonblock(data)` returns `12` when `data` was 50 bytes (or raises `IO::WaitWritable`). What does that mean and what do you do?
 

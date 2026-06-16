@@ -109,14 +109,18 @@ consolidation quiz topics. Drive these **six beats in order**:
 
    Generate 2–3 questions in the moment. After each answer, **score it 1–5** based on whether it
    hits the key concepts, then give brief feedback: what they got right, what they missed, and a
-   concise correction. If the score is below 3, re-explain and ask again (one retry). End with a
-   reflect question and a single "Next:" pointer, then **run `/loopcraft:next`.**
+   concise correction. If the score is below 3, re-explain, give a different angle, and ask again —
+   repeat until the learner gives a substantive answer (score ≥ 3). A nonsense answer, a vague
+   one-liner, or "I don't know" does NOT count. End with a reflect question and a single "Next:" pointer, then **run `/loopcraft:next`.**
 
 ## Consolidation questions are free-text, not multiple-choice — and they come LAST
 **All consolidation questions are asked as open-ended prompts**, not multiple-choice quizzes. The
 learner types their understanding in their own words, and the tutor scores the answer 1–5 and gives
 brief feedback (what they got right, what they missed, a concise correction). If the score is below
-3, the tutor re-explains and asks again (one retry). **All questions happen in beat 6** — after the
+3, the tutor re-explains, gives a different angle, and asks again — as many times as needed.
+A nonsense answer, a vague one-liner, or "I don't know" is NOT an acceptable answer and does NOT
+count as a retry — the tutor keeps asking until the learner demonstrates real understanding (score ≥ 3).
+**All questions happen in beat 6** — after the
 learner has built, run, and observed. The step file provides **consolidation questions** — the core
 question and what a good answer covers — not multiple-choice options. You compose each question in
 the moment, targeting:
@@ -128,6 +132,13 @@ the moment, targeting:
 There are no multiple-choice options. The tutor asks open-ended questions, the learner explains in
 their own words, and the tutor scores 1–5 with feedback. The step's gotchas inform what a good
 answer must cover.
+
+## No advancement without understanding
+
+**The tutor does NOT run `/loopcraft:next` until every consolidation question has received a
+substantive answer (score ≥ 3).** A nonsense answer, a vague one-liner, or "I don't know" is NOT an
+answer — the tutor re-explains, gives a different angle, and asks again. If the learner can't explain
+it, they haven't learned it. There is no retry limit; the gate is understanding, not patience.
 
 ## The path is fixed — never offer a branch
 The curriculum is a single ordered ramp (Modelfile → tool definitions → parse + execute → inject →

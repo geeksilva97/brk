@@ -17,7 +17,7 @@ tier (1,000 concurrent held connections) with the Step-2 server, and watch it fa
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Before we run it — what do you predict happens when 1,000 clients connect at once to the
 single-threaded Rack server and each holds its connection open?
@@ -43,7 +43,7 @@ while async holds them all. See `reference/DRY-RUN-FINDINGS.md`.)
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Which model is the right fit for **thousands of idle/slow held connections** — the
 C10K shape we just failed?

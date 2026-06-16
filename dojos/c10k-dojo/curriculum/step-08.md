@@ -18,7 +18,7 @@ crunching. We'll prove it with two endpoints.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Ten threads each handle a request. Which workload actually runs concurrently on MRI?
 
@@ -47,7 +47,7 @@ inline. Reuse `build_env` from Step 2.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Unbounded `Thread.new` per connection — what breaks first at ~5,000 connections?
 

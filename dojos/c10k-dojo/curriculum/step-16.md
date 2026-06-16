@@ -18,7 +18,7 @@ the frontier, not a C10K contender.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** What's the *first* thing that breaks when you try to serve a normal Rack middleware
 stack from inside a Ractor?
@@ -48,7 +48,7 @@ The learner can articulate *why* this isn't production-ready in 2026 (the talk's
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** You've built all four models. For a typical I/O-bound Rails app on a multi-core box,
 which would you reach for?

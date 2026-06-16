@@ -18,7 +18,7 @@ code (and Rack) can't drop into a Ractor unchanged. Ties directly to your RubyCo
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** You try to pass a mutable `Hash` into a Ractor and use it from both sides. What happens?
 
@@ -48,7 +48,7 @@ the 1-CPU cage). The sharing attempt raises a clear error.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Given Ractor isolation (no shared mutable state), what would a Ractor-based web server
 need from Rack + middleware?

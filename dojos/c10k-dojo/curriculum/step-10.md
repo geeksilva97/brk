@@ -17,7 +17,7 @@ fail intermittently, then fix it with a `Mutex`.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** A shared `@counter += 1` in the app, hit by many threads. Why does the final count come
 out *less* than the number of requests?
@@ -47,7 +47,7 @@ Before fix: total < requests, varying per run. After `Mutex`: total == requests,
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Threads cap out on memory/contention well before C10K. What if one thread could juggle
 thousands of connections cooperatively?

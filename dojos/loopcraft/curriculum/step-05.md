@@ -63,7 +63,7 @@ Every agent — from a simple weather bot to AutoGPT to Claude Code — is this 
 The learner must explain **why the loop is what makes this an agent and not a chatbot** before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** What makes an "agent" different from a "chatbot"?
 A good answer covers: a chatbot responds once and stops, an agent loops — it calls a tool, gets a result, decides if it needs more, and goes again; the while-loop is the only structural difference; without it you have a script, with it you have an autonomous system that decides its own path through tool calls; the model's intelligence is the same in both cases — the loop is what gives it agency.

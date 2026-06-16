@@ -18,7 +18,7 @@ models (and humans) do one capability at a time.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** A worker is stuck in an infinite loop on a bad request. How does the master notice and
 recover?
@@ -61,7 +61,7 @@ CoW defeat by GC, Shopify's mold/refork — reflect-quiz only, no build for that
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Preforking gives bulletproof isolation, but each worker is a whole process. What if you
 want many concurrent requests *inside* one process?

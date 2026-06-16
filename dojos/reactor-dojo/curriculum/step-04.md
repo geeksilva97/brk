@@ -45,7 +45,7 @@ Evolve Step 3's reactor:
 when the newline arrives — not the fragments. Two clients still work concurrently.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** Why can't we just use a local variable to remember a connection's partial input between reads, the way a blocking one-client server could?
 

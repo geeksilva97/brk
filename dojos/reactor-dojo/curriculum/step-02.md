@@ -43,7 +43,7 @@ and `docs/man/README.md` (no epoll on macOS — use `IO.select`).
 learner should confirm the process is asleep in `IO.select` (not spinning) when idle.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** `IO.select([server], nil, nil)` returns. What does it mean that `server` is in the returned readable array?
 

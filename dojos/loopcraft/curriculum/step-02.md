@@ -80,7 +80,7 @@ Run with: `node --experimental-strip-types workspace/agent.ts`
 The learner must explain *how the model knows to output JSON* before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** What determines whether the model outputs JSON (a tool call) or plain text?
 A good answer covers: the question combined with tool descriptions and the RULES block, if the question matches a tool's description the model follows the RULES and outputs JSON, if it can answer from its own knowledge it outputs plain text, it's not random and there's no formal API deciding — it's text instructions in the prompt.

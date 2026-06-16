@@ -84,7 +84,7 @@ Run with: `node --experimental-strip-types workspace/agent.ts`
 The learner must explain *why the assistant's tool-call message must be in the history* before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** Why do we send the tool result as a user message instead of a special "tool" message type?
 A good answer covers: in prompt emulation there's no formal tool_result type, the conversation is just user/assistant turns; we format it as a user message so the model reads it naturally; it's not about priority or the model being unable to read assistant messages.

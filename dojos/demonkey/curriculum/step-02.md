@@ -78,7 +78,7 @@ Reference (instructor): `curriculum/reference/rack_server.rb` + `rack_env.rb`.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
-     Scored 1–5; feedback given; retry once if score < 3. -->
+     Scored 1–5; feedback given; the tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 Only now, with a working server, run these as comprehension checks about the code they just wrote.
 

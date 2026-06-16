@@ -18,7 +18,7 @@ end you'll *feel* its fatal limitation, and that limitation is the reason the ot
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** You start the server, connect with one `nc`, and it echoes fine. You open a *second*
 `nc` while the first is still connected — and it just hangs. Why?
@@ -59,7 +59,7 @@ The learner must explain *why* it hangs before the step counts as done.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Is the second client hanging a *protocol* problem or a *concurrency* problem?
 

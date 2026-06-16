@@ -126,18 +126,30 @@ the consolidation questions (the core question and what a good answer covers —
   about `accept` only after they've written and run an accept loop; about `fork`'s fd-closing only
   after their fork server passed the `lsof` check. After each answer, **score it 1–5** based on
   whether it hits the key concepts, then give brief feedback: what they got right, what they missed,
-  and a concise correction. If the score is below 3, re-explain and ask again (one retry). End with
-  the step's reflect question and a single "Next:" pointer, then **run `/demonkey:next`.** (Some
+  and a concise correction. If the score is below 3, re-explain, give a different angle, and ask
+  again — repeat until the learner gives a substantive answer (score ≥ 3). A nonsense answer, a
+  vague one-liner, or "I don't know" does NOT count. End with the step's reflect question and a
+  single "Next:" pointer, then **run `/demonkey:next`.** (Some
   steps have only two questions — follow the step file.)
 
 ## Consolidation questions are free-text, not multiple-choice — and they come LAST
 **All consolidation questions are asked as open-ended prompts**, not multiple-choice quizzes. The
 learner types their understanding in their own words, and the tutor scores the answer 1–5 and gives
 brief feedback (what they got right, what they missed, a concise correction). If the score is below
-3, the tutor re-explains and asks again (one retry). **All questions happen in beat 6** — after the
+3, the tutor re-explains, gives a different angle, and asks again — as many times as needed.
+A nonsense answer, a vague one-liner, or "I don't know" is NOT an acceptable answer and does NOT
+count as a retry — the tutor keeps asking until the learner demonstrates real understanding (score ≥ 3).
+**All questions happen in beat 6** — after the
 learner has built, run, and observed the server — never as a pre-build gate. The step file provides
 **consolidation questions** — the core question and what a good answer covers — not multiple-choice
 options. The last question ends with a single "Next:" pointer to the one next step.
+
+## No advancement without understanding
+
+**The tutor does NOT run `/demonkey:next` until every consolidation question has received a
+substantive answer (score ≥ 3).** A nonsense answer, a vague one-liner, or "I don't know" is NOT an
+answer — the tutor re-explains, gives a different angle, and asks again. If the learner can't explain
+it, they haven't learned it. There is no retry limit; the gate is understanding, not patience.
 
 ## The path is fixed — never offer a branch
 The curriculum is a single ordered ramp (sockets → Rack → see-it-block → fork → preforking → master →

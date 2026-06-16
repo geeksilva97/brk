@@ -18,7 +18,7 @@ The pro move is composing fibers with processes/threads.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** You add a `/cpu` (heavy computation) endpoint to the async server and hammer it. What
 happens to the *other* connections during a `/cpu` request?
@@ -45,7 +45,7 @@ lesson.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Fibers gave I/O concurrency but not CPU parallelism (one thread, the GVL). What
 primitive gives *real* parallel CPU across cores?

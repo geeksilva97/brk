@@ -63,7 +63,7 @@ No `npm install`, no `package.json`, no build step — Node 22+ runs TypeScript 
 The learner must explain *why* the model can't give real-time weather before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** Why can't the model tell you the current weather?
 A good answer covers: frozen training data vs. real-time access, the model generates text from patterns not live data, this is why tools exist.

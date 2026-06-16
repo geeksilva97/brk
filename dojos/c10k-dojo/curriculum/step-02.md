@@ -19,7 +19,7 @@ a real Rack app over the raw socket from Step 1.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** A Rack app returns `[200, {"content-type"=>"text/plain"}, ["hi"]]`. Who is responsible
 for writing the `Content-Length` (or chunked `Transfer-Encoding`) header on the wire?
@@ -83,7 +83,7 @@ Reference (instructor): `curriculum/reference/rack_server.rb` + `rack_env.rb`.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** When we add concurrency next, what changes in this server?
 

@@ -79,7 +79,7 @@ compare.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
-     Scored 1–5; feedback given; retry once if score < 3. -->
+     Scored 1–5; feedback given; the tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 Now that both clients echoed and you've watched the bench OOM-kill it, run these as comprehension
 checks about what you built and saw.

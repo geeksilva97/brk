@@ -18,7 +18,7 @@ production scheduler — using it is allowed (it's the runtime, not a server).
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** With a fiber scheduler installed, you run three `sleep 1` calls concurrently in three
 fibers. Total wall-clock time?
@@ -52,7 +52,7 @@ Three concurrent `sleep 1`s complete in ~1s total, not ~3s. Learner explains *wh
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** If `accept` and `read` now yield instead of blocking, how many connections can one
 thread hold?

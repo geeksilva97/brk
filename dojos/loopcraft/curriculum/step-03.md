@@ -48,7 +48,7 @@ The model asked for the weather — now you need to act on it. In Step 2 the mod
 The learner must explain *why the parser needs to handle messy output* and *how the wiring connects model output to tool execution* before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** Why can't you just `JSON.parse` the model's response?
 A good answer covers: the model wraps JSON in markdown backticks, adds explanatory text, or outputs a single object instead of an array; a robust parser handles all these cases; it's about robustness against messy LLM output; the provided `parseToolCalls` handles this so you don't have to.

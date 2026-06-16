@@ -40,7 +40,7 @@ server from Step 5 and read the result together.
    actual ceiling is (open fds, not threads).
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** A thread-per-connection server and your reactor both face 5,000 idle-but-open connections. What's the structural difference in what each holds?
 

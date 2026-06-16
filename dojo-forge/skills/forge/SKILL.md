@@ -242,7 +242,7 @@ later if you want graded measurement").
    step changed**; no-op outside the project. Only those two events set the title.
 4. All consolidation questions are **free-text** — the tutor asks open-ended questions, the learner
    types their understanding in their own words, and the tutor scores 1–5 based on whether the answer
-   covers the key concepts. If the score is below 3, the tutor re-explains and asks again (one retry).
+   covers the key concepts. If the score is below 3, the tutor re-explains and asks again — as many times as needed. Nonsense, vague, or 'I don't know' answers do NOT count; no advancement without understanding.
    The step file provides the **core question and what a good answer covers**, not multiple-choice options.
 5. Fixed linear path — the tutor never offers a "pick what to build" menu; always one next step.
 6. Type-the-spine `PreToolUse` guard denies writing the current step's spine file; glue/scaffold ok.

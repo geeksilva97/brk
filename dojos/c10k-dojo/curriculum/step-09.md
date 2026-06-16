@@ -17,7 +17,7 @@ Bounded concurrency = predictable memory + backpressure.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Why a *bounded* queue between the acceptor and the worker pool, not an unbounded one?
 
@@ -52,7 +52,7 @@ more than this naive teaching pool. (Numbers: `reference/DRY-RUN-FINDINGS.md`.)
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** The pool shares one Rack app across worker threads. What can go wrong if the app
 mutates shared state?

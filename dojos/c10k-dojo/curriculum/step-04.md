@@ -18,7 +18,7 @@ memory. First, make sure you understand what `fork` actually does.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Your echo server hangs on the second client (Step 1). Which is the *most direct* reason
 `fork` fixes that?
@@ -74,7 +74,7 @@ removed, before advancing.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** It OOM'd at 1,000 connections while the single-threaded echo survived the same 1,000.
 Why does fork-per-connection hit a memory wall the single-thread server doesn't?

@@ -47,7 +47,7 @@ One tool is a demo. Two tools is a decision. When you ask "What's the weather in
 The learner must explain *how the model decides which tool to call* before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** How does the model decide between get_weather and search_web?
 A good answer covers: it matches the user's intent against the tool descriptions in the SYSTEM prompt; it's semantic matching, not keyword filtering or trying both tools; there is no hardcoded if/else routing.

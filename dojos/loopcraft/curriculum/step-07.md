@@ -69,7 +69,7 @@ You've built an agent that can call tools for data. Now you'll make it *learn ne
 The learner must explain *the difference between a tool call and a skill call* before the step counts as done.
 
 ## Consolidate  (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and retries once if score < 3. -->
+<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1-5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count — the tutor re-explains and asks again. -->
 
 **Question 1:** What's the key difference between a tool call (weather, search) and a skill call?
 A good answer covers: a tool call returns data — weather JSON, search results; a skill call returns instructions that change how the model behaves for the rest of the conversation; both are context injection, but tools add facts while skills add behavior.

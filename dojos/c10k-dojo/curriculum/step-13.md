@@ -18,7 +18,7 @@ shape. This is the step that beats C10K.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Why does the async server hold 10k idle/slow connections on 256 MB when the thread pool
 choked at a couple thousand?
@@ -54,7 +54,7 @@ Contrast on the same cage: fork OOM'd ~1k, thread-pool capped ~5,140. (`referenc
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks these open-ended questions; the learner types their understanding.
-     Scored 1–5. Feedback given. One retry if score < 3. -->
+     Scored 1–5. Feedback given. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 **Question 1:** Did fibers make *everything* faster, or just concurrent I/O cheaper?
 

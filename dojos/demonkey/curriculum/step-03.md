@@ -33,7 +33,7 @@ We run the demo *first*, then talk about why it happened. Don't predict; watch.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
-     Scored 1–5; feedback given; retry once if score < 3. -->
+     Scored 1–5; feedback given; the tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 Now that the timings are on screen, run these as comprehension checks about what just happened.
 

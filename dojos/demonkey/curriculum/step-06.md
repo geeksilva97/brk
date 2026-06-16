@@ -70,7 +70,7 @@ The learner must explain what the self-pipe is doing and why the reap is a loop 
 
 ## Consolidate (free-text questions — AFTER the success check passes)
 <!-- The tutor asks open-ended questions; the learner types their understanding in their own words.
-     Scored 1–5; feedback given; retry once if score < 3. -->
+     Scored 1–5; feedback given; the tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count. -->
 
 Now that you've watched the master respawn a `kill -9`'d worker and adjust the pool on TTIN/TTOU, run
 these as comprehension checks.

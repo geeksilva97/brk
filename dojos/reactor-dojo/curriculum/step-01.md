@@ -44,7 +44,7 @@ Type it by hand — this whole spine is the lesson:
 The learner must explain *why* it hangs before the step counts as done.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** You start the server, connect with one client, and it echoes fine. A second client connects but gets no response at all — not even a refusal. Why does it just hang?
 

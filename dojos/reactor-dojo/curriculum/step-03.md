@@ -53,7 +53,7 @@ independently and neither hangs. Close one; the other keeps working. The learner
 Step-1 hang is gone.
 
 ## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the learner may retry once. -->
+<!-- The tutor asks these open-ended questions; the learner types their understanding in their own words. Each answer is scored 1–5 with feedback given. If score < 3, the tutor re-explains and asks again — nonsense, vague, or 'I don't know' answers do NOT count. No advancement without understanding. -->
 
 **Question 1:** In `readable, _, _ = IO.select([server, *clients], nil, nil)`, the returned `readable` array can contain the listener and several clients at once. How should the loop treat that array?
 
