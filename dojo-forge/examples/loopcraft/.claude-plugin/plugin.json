@@ -1,7 +1,0 @@
-{
-  "name": "loopcraft",
-  "description": "A Socratic tutor that teaches you how AI agents work by making you build one — from a raw prompt to a full agent loop with tool calling, all in JavaScript. You type the load-bearing code; the tutor guides, quizzes, and reviews.",
-  "version": "0.1.0",
-  "author": { "name": "Antonio Barbosa" },
-  "keywords": ["javascript", "agent", "tool-calling", "llm", "workshop", "tutor"]
-}

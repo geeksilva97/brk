@@ -10,8 +10,8 @@ import { spawnSync } from 'node:child_process';
 import { REPO_ROOT } from './helpers/env.js';
 
 const skip = process.platform === 'win32';
-const GUARD = path.join(REPO_ROOT, 'demonkey', 'hooks', 'guard.sh');
-const PLUGIN_ROOT = path.join(REPO_ROOT, 'demonkey');
+const GUARD = path.join(REPO_ROOT, 'dojos', 'demonkey', 'hooks', 'guard.sh');
+const PLUGIN_ROOT = path.join(REPO_ROOT, 'dojos', 'demonkey');
 
 let project;
 beforeEach(() => { project = fs.mkdtempSync(path.join(os.tmpdir(), 'dojo-guard-')); });

@@ -16,7 +16,7 @@ beforeEach(() => { project = fs.mkdtempSync(path.join(os.tmpdir(), 'dojo-state-'
 afterEach(() => fs.rmSync(project, { recursive: true, force: true }));
 
 function state(dojo, args) {
-  const root = path.join(REPO_ROOT, dojo);
+  const root = path.join(REPO_ROOT, 'dojos', dojo);
   return spawnSync('bash', [path.join(root, 'bin', 'dojo.sh'), ...args], {
     encoding: 'utf8',
     env: { ...process.env, CLAUDE_PLUGIN_ROOT: root, CLAUDE_PROJECT_DIR: project },

@@ -6,6 +6,7 @@ node_modules/
 .demonkey/
 .c10k-dojo/
 .reactor-dojo/
+.loopcraft/
 workspace/
 vendor/
 

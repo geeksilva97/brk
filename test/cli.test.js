@@ -27,10 +27,10 @@ test('unknown command exits 2', () => {
   assert.match(r.stderr, /unknown command/);
 });
 
-test('list shows all four bundled dojos', () => {
+test('list shows all bundled dojos', () => {
   const r = runCli(['list'], sb.env);
   assert.equal(r.status, 0);
-  for (const name of ['demonkey', 'c10k-dojo', 'reactor-dojo', 'dojo-forge']) {
+  for (const name of ['demonkey', 'c10k-dojo', 'reactor-dojo', 'loopcraft', 'dojo-forge']) {
     assert.match(r.stdout, new RegExp(name));
   }
 });
@@ -47,7 +47,7 @@ test('run builds the exact claude invocation with jail flags', () => {
   const calls = sb.calls();
   assert.equal(calls.length, 1);
   assert.deepEqual(calls[0].argv, [
-    '--plugin-dir', path.join(REPO_ROOT, 'demonkey'),
+    '--plugin-dir', path.join(REPO_ROOT, 'dojos', 'demonkey'),
     '--model', 'qwen',
     '--disallowed-tools', 'WebSearch', 'WebFetch',
   ]);
@@ -60,7 +60,7 @@ test('run without a project dir uses cwd and still jails', () => {
   assert.equal(r.status, 0);
   const { argv } = sb.calls()[0];
   assert.deepEqual(argv, [
-    '--plugin-dir', path.join(REPO_ROOT, 'c10k-dojo'),
+    '--plugin-dir', path.join(REPO_ROOT, 'dojos', 'c10k-dojo'),
     '--disallowed-tools', 'WebSearch', 'WebFetch',
   ]);
 });
