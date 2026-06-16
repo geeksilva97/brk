@@ -7,6 +7,7 @@
     { "name": "c10k-dojo", "source": "./dojos/c10k-dojo", "category": "workshop" },
     { "name": "reactor-dojo", "source": "./dojos/reactor-dojo", "category": "workshop" },
     { "name": "loopcraft", "source": "./dojos/loopcraft", "category": "workshop" },
+    { "name": "systeminterview", "source": "./dojos/systeminterview", "category": "workshop" },
     { "name": "dojo-forge", "source": "./dojo-forge", "category": "meta" }
   ]
 }

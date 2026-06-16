@@ -40,6 +40,7 @@ dojo update                        # pull the latest tool + dojos
 | **c10k-dojo** | Ruby web servers from raw sockets to C10K, graded against a constrained benchmark. |
 | **reactor-dojo** | A single-threaded `IO.select` reactor that juggles thousands of connections. |
 | **loopcraft** | An AI agent loop with tool calling in TypeScript — from a raw LLM call to a full agent with weather, search, and skills. |
+| **systeminterview** | System design interviews — scope, architecture, deep dives, estimation, trade-offs using Alex Xu's framework. |
 | **dojo-forge** | The generator: scaffold a brand-new dojo for any topic (`dojo new`). |
 
 ## Repo layout
@@ -50,6 +51,7 @@ dojos/
   demonkey/          # Ruby process-family dojo
   reactor-dojo/      # IO.select reactor dojo
   loopcraft/          # AI agent loop dojo
+  systeminterview/    # System design interview dojo
 dojo-forge/           # Meta-plugin: generates new dojos
 src/                  # dojo CLI source
 bin/dojo.js           # CLI entry point

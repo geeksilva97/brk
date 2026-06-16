@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "SessionStart": [{ "command": "bash hooks/session-start.sh" }],
+    "UserPromptSubmit": [{ "command": "bash hooks/title.sh" }],
+    "PreToolUse": [{ "command": "bash hooks/guard.sh" }]
+  }
+}

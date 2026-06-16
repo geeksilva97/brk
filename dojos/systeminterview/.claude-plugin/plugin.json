@@ -1,0 +1,6 @@
+{
+  "name": "systeminterview",
+  "description": "System Design Interview Dojo — practice designing scalable systems through a Socratic interview simulator",
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}
