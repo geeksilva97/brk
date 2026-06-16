@@ -16,19 +16,26 @@ You've built an agent that can call tools for data. Now you'll make it *learn ne
 - **Tools return data, skills change behavior**: get_weather returns `{temperature: 22, condition: "partly cloudy"}`. A skill returns instructions that alter how the model responds for the rest of the conversation. Both are context injection, but they inject different things.
 - **Dynamic tool discovery**: at startup, your agent calls `scanSkills()` (provided in utils.ts) to get a list of available skills with their descriptions. Drop a new `skills/whatever/SKILL.md` directory and restart — the agent automatically picks it up. No code changes needed. This is the same pattern as Claude Code plugins or shell PATH: dynamic discovery beats static lists.
 - **The same mechanism as tool calling**: the model outputs `{"tool": "skill", "args": {"name": "explain-like-5"}}` exactly like `{"tool": "get_weather", "args": {"location": "Tokyo"}}`. Your loop already handles this — `executeTool` dispatches to `loadSkill`, which reads the file. Same loop, same parser, same everything.
+- **A `system` message OVERRIDES the Modelfile — it does not append**: this is the one trap of this step. Ollama replaces the model's baked SYSTEM with whatever `system` message you put in the `messages` array. So if you inject a bare skill list as `{ role: 'system', content: "Available skills:\n..." }`, you *wipe out* every tool definition and RULE from the Modelfile — the model forgets it can call tools at all (and often reads the skill list as a command, e.g. literally "explaining like a 5-year-old"). Verify it yourself: send a custom system message + "What's the weather in Tokyo?" and watch the `get_weather` tool call disappear. The fix is below: send the *complete* prompt, not a fragment.
 
 **How you'll validate it:** you'll ask "Explain how a database index works, keep it simple" and watch the model call the skill tool, load explain-like-5's instructions, and answer in simple language. Then "What's the weather in Tokyo?" and watch it call get_weather — no skill needed.
 
-## Spine  (the learner modifies `workspace/Modelfile` and tests routing)
+## Spine  (the learner modifies `workspace/Modelfile` AND `workspace/agent.ts`)
 - `loadSkill`, `scanSkills`, and the `skill` dispatch in `executeTool` are all **provided in utils.ts**. You don't write them.
-- Update `workspace/Modelfile` SYSTEM to add `[TOOL: skill]` definition:
+- Update `workspace/Modelfile` SYSTEM to add `[TOOL: skill]` definition. Make it **emphatic about the indirection** — small models (e.g. llama3:8b) tend to call `{"tool": "explain-like-5"}` (treating the skill *name* as a tool) unless you spell out that the name is an *argument* and show the exact shape:
   ```
   [TOOL: skill]
-  Description: Load a skill that changes how you respond. Available skills will be listed dynamically.
-  Parameters: {"name": "string — name of the skill to load"}
+  Description: Change your behavior by loading a skill. The skill NAME is an ARGUMENT to this tool, NOT a tool itself. To use one, call: {"tool": "skill", "args": {"name": "<skill-name>"}}. Available skill names are listed below.
+  Parameters: {"name": "string — one of the skill names listed below"}
   Returns: the skill's instructions, which you should follow for the rest of the conversation
   ```
-- At startup, call `scanSkills()` and append the results to the tool description in the SYSTEM prompt, or rebuild the model. The tutor can help you decide which approach to use.
+  It also helps to add a RULE like: `The only valid tool names are get_weather, search_web, skill — skill names are never tool names.`
+- **Inject the skill list at runtime — and send the COMPLETE system prompt, not a fragment.** Because a `system` message overrides the Modelfile's baked SYSTEM (see the teach note above), do this in `agent.ts`'s `main()`, once at startup:
+  1. Read `workspace/Modelfile` and extract its SYSTEM block — the regex `/SYSTEM\s+"""([\s\S]*?)"""/` captures everything between the triple quotes in group 1. This is your single source of truth for tool defs + RULES.
+  2. Call `await scanSkills()` to get the live skill list.
+  3. Concatenate them: `systemText + "\n\nAvailable skills (load via the skill tool by name):\n" + skillList`.
+  4. Seed every fresh conversation with that as a single `{ role: 'system', content: ... }` message (replace the empty `messages = []` from Step 5 with `messages = [systemMsg]`).
+- This keeps tool defs in the Modelfile, makes the skill list dynamic, and means **dropping a skill + restarting** (no `ollama create`, no code change) picks it up — because the baked SYSTEM is read fresh and overridden every run. Putting the skill list next to an *emphatic* `[TOOL: skill]` definition (see above) is what gets the model to call `{tool: skill, args: {name: ...}}` instead of treating the skill name as its own tool — a weak description alone is not enough on small models.
 - Create example skills in `workspace/skills/`:
   - `workspace/skills/explain-like-5/SKILL.md`:
     ```
@@ -46,15 +53,16 @@ You've built an agent that can call tools for data. Now you'll make it *learn ne
     ---
     Review code following this checklist: 1. Check for bugs 2. Check for security issues 3. Check for readability 4. Check for performance. Be specific and give line numbers.
     ```
-- Rebuild: `ollama create loopcraft -f workspace/Modelfile`
+- Rebuild once so the model picks up the new `[TOOL: skill]` definition: `ollama create loopcraft -f workspace/Modelfile`. (After this, skill *changes* need only a restart — `agent.ts` reads the Modelfile SYSTEM at runtime and `scanSkills()` re-reads the directory.)
 - Run: `node --experimental-strip-types workspace/agent.ts`
 
 ## Agent role
 - `[explain]` How skills are the same mechanism as tools (JSON in, file read, content injected), how they differ (data vs. behavior), and why dynamic discovery is better than hardcoding.
-- `[review]` Check the Modelfile includes the skill tool definition. Check that `scanSkills()` runs at startup and its output appears in the SYSTEM prompt. Verify `executeTool` (in utils.ts) already handles `skill` → `loadSkill`.
+- `[review]` Check the Modelfile includes the skill tool definition. Check that `agent.ts` reads the Modelfile SYSTEM, appends `scanSkills()`, and sends the combined text as ONE `system` message seeded into each conversation — not a bare skill list (which would override the Modelfile and break tool calling). Verify `executeTool` (in utils.ts) already handles `skill` → `loadSkill`.
 
 ## Gotchas
-- The skill description in the Modelfile must be rebuilt when skills change — either rebuild the model or update the SYSTEM prompt dynamically at startup.
+- Because `agent.ts` reads the Modelfile SYSTEM at startup and sends it as a `system` message, you do NOT need to `ollama create` when skills change — just restart the agent and `scanSkills()` re-reads the directory. (You only rebuild if you edit the Modelfile's tool definitions and want the baked default in sync; the runtime override means the baked SYSTEM isn't actually used while the agent runs.)
+- A `system` message in the `messages` array OVERRIDES the Modelfile's baked SYSTEM — it does not merge. Always send the full prompt (Modelfile SYSTEM + skill list), never a bare fragment, or the model loses its tool definitions.
 - The model might try to call a skill that doesn't exist — `loadSkill` in utils.ts handles this gracefully with an error message like "Skill 'foo' not found."
 - Skills are loaded *into the conversation*, not cached between sessions — each new conversation starts fresh.
 - Frontmatter stripping: the content between the first two `---` markers is YAML metadata (name, description). The content after the second `---` is the actual instructions. `loadSkill` in utils.ts strips this automatically.
