@@ -1,0 +1,7 @@
+1	Ollama + Modelfile	workspace/agent.ts	build
+2	Tool definitions in the Modelfile	workspace/agent.ts	build
+3	Wire tools into the loop	workspace/agent.ts	build
+4	Inject + re-prompt	workspace/agent.ts	build
+5	The agent loop	workspace/agent.ts	build
+6	Web search tool	workspace/agent.ts	build
+7	Skills as tools	workspace/agent.ts	build

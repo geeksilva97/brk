@@ -31,10 +31,20 @@ mode="${mode:-local-jailed}"
 
 stepfile="$(printf '%s/curriculum/step-%02d.md' "$ROOT" "$step")"
 
+# Tooling checks — verify the runtime dependencies are available.
 warn=""
-[[ -d "$PWD/docs" ]] || warn="${warn}Offline docs bundle missing in this project so run /{{PLUGIN_NAME}}:setup first. "
+{{SETUP_CHECK_CMDS}}
 
-ctx="{{PLUGIN_NAME}} is active and the learner is on Step ${step}. The topic is {{TOPIC}}. Read the curriculum file at ${stepfile} and run the tutor skill to drive it. You are the TUTOR, not the author: open with the Frame, use the AskUserQuestion tool at the diagnose, design, and reflect checkpoints (the wrong-answer options are the known misconceptions in the step file), then have the LEARNER type the spine file (${spine}) themselves. Do NOT write or edit that spine file; you may generate the glue/scaffold files named in the step and review the learner code by pointing at lines. Backend mode is ${mode}. Plugin root is ${ROOT} and the state dir is ${DATA_DIR}; the state helper is ${ROOT}/bin/dojo.sh (use it for get/advance/status). ${warn}If the curriculum file is missing, tell the learner to run /{{PLUGIN_NAME}}:setup."
+# Has setup run in this project? (sentinel written by /{{PLUGIN_NAME}}:setup, or its artifacts.)
+setup_done=0
+[[ -f "$DATA_DIR/.setup_done" ]] && setup_done=1
+{{SETUP_DONE_SENTINEL}}
+setup_prefix=""
+if [[ "$setup_done" -eq 0 ]]; then
+  setup_prefix="FIRST ACTION, before ANY tutoring: this project is not set up yet. Run the /{{PLUGIN_NAME}}:setup steps NOW — {{SETUP_SUMMARY}}. It is safe and idempotent and must run now while the network is available (before any offline jailing). Do it as your very first action, tell the learner what you set up, THEN continue with the tutoring directive that follows. === "
+fi
+
+ctx="${setup_prefix}{{PLUGIN_NAME}} is active and the learner is on Step ${step}. The topic is {{TOPIC}}. Read the curriculum file at ${stepfile} and run the tutor skill to drive it. You are the TUTOR, not the author. The order is teach-and-build FIRST, quiz to consolidate LAST: open with the Frame, then TEACH the mechanisms this step needs and point at the docs, have the LEARNER type the spine file (${spine}) themselves, review their code and verify locally, and ONLY THEN use the AskUserQuestion tool at the consolidation checkpoints. Never quiz a primitive before the learner has implemented it. Do NOT write or edit that spine file; you may generate the glue/scaffold files named in the step and review the learner code by pointing at lines. {{TUTOR_SCOPE}} Verification is LOCAL and lightweight: {{VERIFICATION_METHOD}}. Backend mode is ${mode}. Plugin root is ${ROOT} and the state dir is ${DATA_DIR}; the state helper is ${ROOT}/bin/dojo.sh (use it for get/advance/status). ${warn}If the curriculum file is missing, run /{{PLUGIN_NAME}}:setup."
 
 step_name="$(awk -F '\t' -v s="$step" '$1==s{print $2}' "$ROOT/curriculum/steps.tsv" 2>/dev/null)"
 if [[ -n "$step_name" ]]; then

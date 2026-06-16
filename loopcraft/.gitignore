@@ -1,0 +1,6 @@
+node_modules/
+workspace/
+docs/
+.loopcraft/
+*.js
+.env
