@@ -39,6 +39,8 @@ reference: {{STEP_REFERENCE}}
 - `[review]` {{ROLE_REVIEW}}
 
 ## Gotchas
+<!-- Classic bugs/misconceptions for THIS step only. Do NOT foreshadow later steps
+     ("Step N+1 adds…") — each step stands alone (forge invariant 14). -->
 {{GOTCHAS}}
 
 ## Success check
@@ -56,7 +58,9 @@ The learner must explain *why* it behaves this way before the step counts as don
      
      The topics below are ANGLES to quiz from, not verbatim questions. The tutor composes
      each quiz at runtime, drawing distractors from the gotchas above and the learner's
-     actual mistakes during review. Each question asks the learner to explain in their own words;
+     actual mistakes during review. Angles must target the learner's OWN spine and concepts —
+     never provided [scaffold]/[glue]/GIVEN code — and must not depend on a later step (invariants 14–15).
+     Each question asks the learner to explain in their own words;
      the tutor scores 1–5 and gives feedback. The tutor keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' do NOT count; no advancement without understanding. -->
 
 **Quiz topic 1 — Diagnose:**

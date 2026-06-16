@@ -192,7 +192,7 @@ Create `./<PLUGIN_NAME>/curriculum/`:
   - **Spine**: exactly what the learner types, the goal, the shape, and `Read first:` docs,
   - **Agent role**: `[explain]` / `[glue]` / `[scaffold]` / `[review]` lines (drop any that don't
     apply, but keep at least `[explain]` and `[review]`),
-  - **Gotchas**: the classic bugs and misconceptions,
+  - **Gotchas**: the classic bugs and misconceptions — about THIS step only; never "Step N+1 adds…",
   - **Success check**: concrete runnable command(s) + expected output (the win-condition),
   - **Consolidate**: quiz **topics and angles**, NOT verbatim questions. Provide 2–3 angles:
     *Diagnose* (what breaks and why), *Design* (why is the API shaped this way), *Reflect* (what's
@@ -200,6 +200,8 @@ Create `./<PLUGIN_NAME>/curriculum/`:
     and where they struggled, drawing distractors from the gotchas. Write angles like:
     "Why does X happen when Y?" or "What's the one insight that makes Z click?"
     — NOT "Which of the following is correct about X? A) ... B) ..."
+    Angles must target the learner's OWN spine and concepts — never provided scaffold/glue — and
+    must not depend on a later step's mechanism (invariants 14–15).
   - **Next step**: name the single next step; never offer a branch.
 
   The LAST step's "Next step" should congratulate and point at `/{{PLUGIN_NAME}}:status` instead of a
@@ -260,3 +262,11 @@ later if you want graded measurement").
     not verbatim questions. The tutor composes each quiz at runtime based on what the learner
     actually built, where they struggled, and what they observed.
 13. `.gitignore` excludes the state dir + `workspace/` + `vendor/` + `docs/`.
+14. **No forward references.** Each step stands alone — the tutor never previews, teases, or
+    explains a later step's mechanism, and generated step files don't foreshadow ("this pays off in
+    Step N+1") in their Frame, Gotchas, or Consolidate angles. The only forward reference allowed is
+    the bare "Next:" line naming the next step's title.
+15. **Never quiz the learner on code they didn't write.** Review comments and consolidation
+    questions target ONLY the learner's spine. Every `[scaffold]`/`[glue]`/GIVEN file and provided
+    helper is a black box: the tutor may state what it does, never ask the learner to explain or
+    justify it.
