@@ -5,11 +5,16 @@ description: Scaffold a complete, loadable tutored coding-dojo plugin for any to
 
 # dojo-forge — the dojo generator
 
-You generate **tutored coding-dojo plugins** — Claude Code plugins shaped exactly like the reference
-`c10k-dojo`: a Socratic tutor that quizzes the learner, makes them type the load-bearing "spine" code
-themselves, and enforces an offline jail through hooks. Most of a dojo is topic-agnostic and lives as
-templates in `${CLAUDE_PLUGIN_ROOT}/templates/`. Your job is to produce a complete, validated plugin
-directory — either from an interview or from self-directed research.
+You generate **tutored dojo plugins** — Claude Code plugins shaped like the reference `c10k-dojo`: a
+Socratic tutor that makes the learner produce the load-bearing "spine" themselves, scores their
+understanding, and enforces an offline jail through hooks. A dojo comes in one of two **modalities**:
+`code` (the learner types and runs a spine file — the default) or `interview` (no code; the learner
+*reasons out loud* and the tutor plays the interviewer — e.g. system-design or behavioral prep). Both
+share the same jail, state helper, launcher, and Socratic loop. Most of a dojo is topic-agnostic and
+lives as templates in `${CLAUDE_PLUGIN_ROOT}/templates/` (with `interview`-modality overrides in
+`${CLAUDE_PLUGIN_ROOT}/templates/interview/`). Your job is to produce a complete, validated plugin
+directory — either from an interview or from self-directed research. **Decide the modality first
+(see the Modality section below); it changes which templates you scaffold from.**
 
 You run in one of two modes, selected by whether the instructor provides details interactively or
 just gives a topic:
@@ -22,6 +27,58 @@ just gives a topic:
   instructor wants to learn the topic and doesn't already have a curriculum in mind.
 
 Both modes converge on the same **SCAFFOLD** phase.
+
+---
+
+## Modality — code vs interview (decide this FIRST, in either mode)
+
+A dojo is one of two **modalities**, and it changes which templates you scaffold from:
+
+- **`code` modality (default).** The learner builds something runnable; each step has a **spine file**
+  they type and a **runnable success check**. This is the `c10k-dojo` shape. Use the templates in
+  `${CLAUDE_PLUGIN_ROOT}/templates/` as-is.
+
+- **`interview` modality (no-code).** There is **no code and no file to type.** The learner *reasons
+  out loud* — designs a system, answers an interview, argues a position — and the tutor plays the
+  interviewer, scores each answer 1–5, and advances only on understanding. The "spine" of each step is
+  the **load-bearing reasoning** the learner must produce; the "success check" is a **rubric** the
+  tutor scores against, not a command. System-design interviews, behavioral-interview prep, architecture
+  reviews, and "defend this decision" drills are all interview-modality dojos.
+
+**How to pick.** If the topic is something you *build and run* (a parser, a server, a library, a CLI),
+it's `code`. If the topic is something you *reason about and defend* with no artifact to execute
+(system design, interviews, trade-off analysis), it's `interview`. When a topic could go either way,
+ask the instructor with one `AskUserQuestion`. In SELF-SERVICE mode, infer it from the topic and state
+your choice in the compact spec.
+
+**What changes for `interview` modality** (everything else is identical):
+
+1. **Use the interview template overrides.** In step 2b, copy these from
+   `${CLAUDE_PLUGIN_ROOT}/templates/interview/` instead of the code versions:
+   `skills/tutor/SKILL.md`, `hooks/session-start.sh`, `commands/setup.md`, and the step format in
+   `templates/interview/step-template.md`. Everything else (`hooks.json`, `title.sh`, `guard.sh`,
+   `bin/dojo.sh`, the other commands, `build-bundle.sh`, `gitignore.tmpl`, `launch.sh.tmpl`,
+   `plugin.json`) is copied from the normal `templates/` dir unchanged — the offline jail, state
+   helper, and launcher are modality-agnostic.
+2. **Every step's spine is `-`** in `steps.tsv`, and **`{{FIRST_SPINE}}` is `-`.** There is no file to
+   protect, so the `guard.sh spine` branch is a harmless no-op.
+3. **No dependencies, no workspace, no runtime.** `{{SETUP_DEPS}}` is "none — pure conversation";
+   `{{SETUP_CHECK_CMDS}}` is a no-op (`: # no runtime to check`); `{{SETUP_TOOLING}}` is "nothing to
+   verify"; `{{SETUP_DONE_SENTINEL}}` keys off the docs bundle (`[ -f "$PWD/docs/INDEX.md" ] && setup_done=1`);
+   `{{SETUP_SUMMARY}}` is "build the offline cheatsheet bundle (no dependencies to install)".
+4. **The docs bundle is cheatsheets only.** `{{BUNDLE_GATHER}}` is a single `echo` (no man/ri pages) —
+   the GIVEN cheatsheets ARE the bundle.
+5. **Success check is a rubric, not a command.** Each step's `## Success check` states what a complete,
+   sound answer must contain; `{{VERIFICATION_METHOD}}` describes the scoring lens
+   (e.g. "is the decision justified, quantified where it should be, and does it name the trade-off?").
+6. **`{{LANGUAGE}}`** is `no code — <domain>` (e.g. `no code — system design`); `{{RUNTIME_CMD}}` is
+   unused. The `{{TOPIC_DESCRIPTION}}` mentions Socratic tutor + reason-it-yourself + offline jail
+   (there's no "type-the-spine" to mention).
+
+The invariants below still ALL apply, with two reinterpreted for no-code: invariant 6 (type-the-spine
+guard) becomes "the learner produces the reasoning; the tutor never hands it over" — enforced by the
+tutor skill rather than the write-guard, since there's no file; and the success check (invariant 12) is
+a rubric the tutor scores rather than a runnable command. See `designme-daddy` for a worked example.
 
 ---
 
@@ -146,6 +203,10 @@ Build a substitution map from the answers:
 | `{{VERIFICATION_METHOD}}` | how steps are verified, e.g. `nc clients, curl for HTTP, ps/lsof`, `npx tsx, check outputs, ask questions` |
 
 ### 2b. Copy the generic skeleton verbatim, substituting placeholders
+**For `interview` modality, first re-read the "What changes" list in the Modality section** — you copy
+`skills/tutor/SKILL.md`, `hooks/session-start.sh`, `commands/setup.md`, and the step format from
+`${CLAUDE_PLUGIN_ROOT}/templates/interview/` instead of the paths below; everything else is identical.
+
 From `${CLAUDE_PLUGIN_ROOT}/templates/`, copy into `./<PLUGIN_NAME>/`:
 - `.claude-plugin/plugin.json`
 - `skills/tutor/SKILL.md`
@@ -184,8 +245,11 @@ Create `./<PLUGIN_NAME>/curriculum/`:
   `check`). Make sure columns are real tab characters, not spaces.
 
 - **`step-NN.md`** (zero-padded) — one per milestone, following the format in
-  `${CLAUDE_PLUGIN_ROOT}/templates/curriculum/step-template.md`. Fill EVERY section with real,
-  topic-specific content derived from the interview or research:
+  `${CLAUDE_PLUGIN_ROOT}/templates/curriculum/step-template.md` (for `interview` modality use
+  `${CLAUDE_PLUGIN_ROOT}/templates/interview/step-template.md` instead — `spine:` is always `-`, the
+  Spine section is the reasoning the learner must produce, and Success check is a **rubric** the tutor
+  scores rather than a runnable command). Fill EVERY section with real, topic-specific content derived
+  from the interview or research:
   - **Frame** (1–3 sentences: the problem + why the previous step is inadequate),
   - **Teach the mechanisms**: explain each NEW concept with a one-line "what and why" or a leading
     question, point at the exact doc in the bundle, and name how the learner will verify it,

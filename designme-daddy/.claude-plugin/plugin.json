@@ -1,0 +1,9 @@
+{
+  "name": "designme-daddy",
+  "description": "A Socratic system-design interview coach: it plays the interviewer for a ride-sharing service like Uber, makes you reason out every design decision yourself, scores each answer 1-5, and runs offline by design. No code — just you and the whiteboard.",
+  "version": "0.1.0",
+  "author": { "name": "geeksilva97" },
+  "keywords": ["system-design","interview","architecture","scalability","uber","ride-sharing","workshop","tutor","socratic"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

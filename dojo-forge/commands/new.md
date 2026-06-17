@@ -14,6 +14,12 @@ ask the instructor questions via `AskUserQuestion` to gather: the topic, the lan
 plugin name, the step-by-step spine progression (4–12 milestones), the constraint/jail, the
 win-condition, and any "given black box" the learner receives vs must derive.
 
+Either way, **decide the dojo's modality first** (the forge skill's Modality section): `code` (the
+learner types and runs a spine file — the default) or `interview` (no code; the learner reasons out
+loud and the tutor plays the interviewer — system-design or behavioral prep). The modality changes
+which templates you scaffold from (`interview` uses the overrides in
+`${CLAUDE_PLUGIN_ROOT}/templates/interview/`).
+
 After either mode converges on a spec, **scaffold** the new `<name>-dojo/` plugin directory by copying
 the generic templates from `${CLAUDE_PLUGIN_ROOT}/templates/` (substituting placeholders) and
 generating `curriculum/steps.tsv` + `step-NN.md` files, a tailored `/setup`, cheatsheets, the root

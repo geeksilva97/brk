@@ -1,0 +1,6 @@
+# Per-project dojo state (created at runtime in the learner's project).
+/.designme-daddy/
+# The learner's working dir + generated docs bundle.
+/workspace/
+/vendor/
+/docs/
