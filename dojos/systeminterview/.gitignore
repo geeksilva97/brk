@@ -1,5 +1,3 @@
-# Per-project dojo state (created at runtime in the learner's project).
 /.systeminterview/
-# The learner's working docs + generated docs bundle.
 /workspace/
 /docs/

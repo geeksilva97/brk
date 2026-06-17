@@ -1,17 +1,16 @@
 ---
-description: Instructor escape hatch — show the reference design for the current step.
+description: Show the reference design for the current step (last resort).
 ---
 
-Show the canonical reference for the current step. This is the **instructor's** demo tool for when a
-learner is truly blocked or the session is out of time — not a shortcut to skip the struggle.
+Reveal the reference design — use only as a last resort when the learner is truly blocked
+after 3+ failed attempts with hints.
 
-1. Resolve the current step and its reference: look in `${CLAUDE_PLUGIN_ROOT}/curriculum/reference/`
-   for the file named in the step's `reference:` pointer (if the step has one).
-2. Show it, then **diff it against the learner's attempt** — frame their failed version as the
-   "before" and walk the delta line by line. The learning is in the comparison, so don't just paste
-   the answer and move on.
-3. Note this reveal in the conversation so it's clear the learner saw the reference rather than
-   deriving it.
+1. Read `curriculum/reference/ground-truth.md` for the current step's section.
+2. Present the reference design as: "Here's how a strong candidate would approach this:
+   ..." — frame it as a teaching moment, not a solution.
+3. Ask the learner: "Compare this with what you described. What's different? Why might
+   the reference make that choice?"
+4. After the learner has compared and discussed, advance the step — the point is learning,
+   not perfection.
 
-Prefer `/systeminterview:hint` first. Only reveal after ~3 failed attempts with a skeleton, or for a
-live instructor demo.
+This is the instructor escape hatch. Prefer `/systeminterview:hint` escalation first.

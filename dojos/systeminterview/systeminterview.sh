@@ -5,8 +5,9 @@
 #     offline by design — belt-and-suspenders with the plugin's own guard hook.
 #
 # The dojo runs in the project directory you pick (NOT the plugin's own dir) —
-# your workspace/ and the per-project .systeminterview/ state land there. The
-# SessionStart hook auto-runs setup on first launch, then drops you into Step 1.
+# the per-project .systeminterview/ state lands there. This is a
+# conversation-first dojo (no workspace, no file writing). The SessionStart hook
+# auto-runs setup on first launch, then drops you into Step 1.
 #
 # Usage:
 #   systeminterview.sh [project-dir] [claude args...]
@@ -33,9 +34,9 @@ if [[ "${1:-}" != "" && "${1#-}" == "$1" ]]; then
   cd "$PROJECT_DIR"
 fi
 
-# Turn OFF Claude Code's input-box prompt suggestions for the dojo. The learner is
-# meant to think and type the load-bearing code themselves; a grayed-out "type this"
-# hand-out breaks that. The flag is read from the process env at startup, so it must
+# Turn OFF Claude Code's input-box prompt suggestions for the dojo. The learner
+# is meant to think and reason through design decisions themselves; a grayed-out
+# "type this" hand-out breaks that. The flag is read from the process env at startup, so it must
 # be set HERE, before claude launches — a plugin's settings.json only supports the
 # `agent`/`subagentStatusLine` keys (not `env`), and a hook runs too late to set it.
 export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false

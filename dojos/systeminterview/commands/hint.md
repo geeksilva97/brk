@@ -1,11 +1,22 @@
 ---
-description: Give a scoped hint for the current step — never the full spine.
+description: Give a hint for the current step when the learner is stuck.
 ---
 
-The learner is stuck. Give the **smallest** nudge that unblocks them, escalating only if needed:
+Give the learner a nudge without revealing the answer. Escalate in 3 levels:
 
-1. **Point to the concept.** Name the area they should think about (e.g. "Think about what happens when a user is behind a corporate firewall.")
-2. **Ask a leading question** that isolates the gap (e.g. "What protocol would you use for real-time bidirectional communication between client and server?")
-3. **Worked skeleton.** Only if 1–2 fail: provide the document's *shape* with blanks — section headings and key questions, but the learner fills the load-bearing content. This is NOT writing the spine; the blanks are theirs.
+1. **Concept pointer** — Point at a specific section in the reference material.
+   Example: "Check the Media Topologies section in the WebRTC cheatsheet — focus on
+   what happens to client bandwidth as participants increase."
 
-Never paste the complete reference design. If they're still blocked after a skeleton, suggest the instructor demo via `/systeminterview:reveal`. The struggle is the point — protect it.
+2. **Leading question** — Ask a question that guides them toward the answer.
+   Example: "If every participant in a 10-person call sends video to every other
+   participant, how many streams does each client handle? What does that mean for
+   their upload bandwidth?"
+
+3. **Worked skeleton** — Provide a partial framework with gaps for them to fill.
+   Example: "An SFU receives one stream from each participant. For N participants,
+   it needs to forward each stream to ___? other participants. So the total SFU
+   bandwidth is ___? × ___? × 2 Mbps."
+
+Use level 1 first. Only escalate if the learner is still stuck after the previous level.
+Never reveal the complete answer — the learner must reason through it themselves.

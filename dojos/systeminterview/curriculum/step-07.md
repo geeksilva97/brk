@@ -1,9 +1,7 @@
 ---
 step: 7
 title: "Wrap-Up & Self-Review"
-spine: "-"
 kind: demo
-reference: -
 ---
 
 # Step 7: Wrap-Up & Self-Review
@@ -28,27 +26,24 @@ The wrap-up should cover (from Xu's framework, Step 4):
 - Signaling server failover (stateful connections can't easily migrate)
 - SFU connection limits per server
 
-**Read first:** `docs/ground-truth.md` (Key Trade-offs, Scoring Rubric)
+**Reference:** `curriculum/reference/ground-truth.md` (Key Trade-offs, Scoring Rubric)
 
-## Spine
+## Conversation Flow
 
-No new file to write. The candidate:
-1. Gives a 60-second verbal summary of their entire design
-2. Lists the top 3 bottlenecks they've identified
-3. Names 3 improvements they'd make with more time
-4. Says "I'm done"
+The learner wraps up the interview verbally. Guide them through:
 
-Then the tutor runs the **evaluation** against the ground truth.
+1. **60-second summary** — "Give me a 60-second summary of your entire design — the problem, the architecture, and the key decisions."
+2. **Bottleneck identification** — "What's the weakest point in your system? What breaks first?"
+3. **Improvements** — "What would you change if you had more time? Name 3 things."
+4. **Error handling** — "How would you handle a signaling server failure mid-call?" "What's the biggest cost driver and how would you reduce it?"
+5. **When they say "I'm done"** — run the evaluation.
 
 ## Agent role
-- `[probe]` — Ask: "Give me a 60-second summary of your design." "What's the biggest bottleneck in your system?" "What would you change if you had more time?" "How would you handle a signaling server failure mid-call?" "What's the biggest cost driver and how would you reduce it?"
-- `[review]` — After the candidate says "I'm done," run the evaluation:
+- `[probe]` — Ask: "Give me a 60-second summary of your design." "What's the biggest bottleneck?" "What would you change if you had more time?" "How would you handle a signaling server failure mid-call?"
+- `[evaluate]` — After the candidate says "I'm done," run the evaluation:
 
 ### Evaluation Process
-1. Read all candidate files in `workspace/`
-2. Compare against the ground truth in `docs/ground-truth.md`
-3. Score on 6 dimensions (see below)
-4. Write evaluation to `workspace/evaluation.md`
+Compare the learner's verbal design against the ground truth in `curriculum/reference/ground-truth.md`. Score on 6 dimensions and provide the evaluation as feedback in the conversation.
 
 ### Scoring Rubric
 
@@ -91,25 +86,25 @@ Then the tutor runs the **evaluation** against the ground truth.
 
 ## Success check
 
-Candidate has:
+The learner has:
 - Given a 60-second summary
 - Identified 3+ bottlenecks
 - Named 3+ improvements
 - Said "I'm done"
 
-Then the evaluation file is written to `workspace/evaluation.md`.
+Then the tutor provides the evaluation with scores and feedback.
 
 ## Consolidate  (dynamic quiz — AFTER the success check passes)
 
 **Quiz topic 1 — Diagnose:**
-Why is saying "my design is solid, no major weaknesses" a red flag in an interview? What does it signal about engineering maturity?
+Why is saying "my design is solid, no major weaknesses" a red flag in an interview?
 
 **Quiz topic 2 — Design:**
-How would you prioritize the bottlenecks you identified — which one would you fix first and why? What's the cost of not fixing it?
+How would you prioritize the bottlenecks you identified — which one would you fix first and why?
 
 **Quiz topic 3 — Reflect:**
-What's the one insight from this entire interview that changed how you think about system design? How would you approach the next interview differently?
+What's the one insight from this entire interview that changed how you think about system design?
 
 ## Next step
 
-Congratulations — you've completed the System Design Interview dojo! Run `/systeminterview:status` to see your final evaluation and progress.
+Congratulations — you've completed the System Design Interview dojo! Run `/systeminterview:status` to see your final progress.

@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 # UserPromptSubmit hook: keep the session title in sync with the current step.
 #
-# Claude Code only lets SessionStart and UserPromptSubmit set the title — there is
-# no "/next was called" hook that can rename (PostToolUse can see the advance but
-# cannot set sessionTitle). So this must be registered per-prompt. To avoid renaming
-# on every prompt, it only EMITS when the step changed since we last set the title
-# (cached in .titled_step): a trivial read-and-exit otherwise, a rename exactly at
-# the /next boundary.
+# Only EMITS when the step changed since we last set the title
+# (cached in .titled_step): a trivial read-and-exit otherwise,
+# a rename exactly at the /next boundary.
 #
-# No-op (exit 0, no output) outside a dojo project, so it never touches other sessions.
+# No-op (exit 0, no output) outside a dojo project.
 set -uo pipefail
 
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.systeminterview"

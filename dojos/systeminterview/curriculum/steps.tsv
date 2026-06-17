@@ -1,7 +1,7 @@
-1	Scoping the Problem	workspace/scope.md	interview
-2	High-Level Architecture	workspace/architecture.md	design
-3	Deep Dive: Signaling & WebRTC	workspace/signaling.md	design
-4	Deep Dive: Media Servers & NAT Traversal	workspace/media-servers.md	design
-5	Capacity Planning & Estimation	workspace/capacity.md	interview
-6	Recording, Multi-Region & Trade-offs	workspace/tradeoffs.md	design
-7	Wrap-Up & Self-Review	-	demo
+1	Scoping the Problem	interview
+2	High-Level Architecture	design
+3	Deep Dive: Signaling & WebRTC	design
+4	Deep Dive: Media Servers & NAT Traversal	design
+5	Capacity Planning & Estimation	interview
+6	Recording, Multi-Region & Trade-offs	design
+7	Wrap-Up & Self-Review	demo

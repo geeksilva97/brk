@@ -39,15 +39,6 @@
             "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/guard.sh bash"
           }
         ]
-      },
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/guard.sh spine"
-          }
-        ]
       }
     ]
   }

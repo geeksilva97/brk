@@ -1,9 +1,7 @@
 ---
 step: 1
 title: Scoping the Problem
-spine: workspace/scope.md
 kind: interview
-reference: -
 ---
 
 # Step 1: Scoping the Problem
@@ -44,24 +42,22 @@ Key scoping questions for video conferencing:
 - End-to-end encryption (mention it, but say you'll note it for later)
 - Legacy browser support
 
-**Read first:** `docs/webrtc-cheatsheet.md` (Key Numbers section) and `docs/capacity-cheatsheet.md` (The Estimation Framework)
+**Reference:** `curriculum/reference/webrtc-cheatsheet.md` (Key Numbers section) and `curriculum/reference/capacity-cheatsheet.md` (The Estimation Framework)
 
-## Spine  (the learner types `workspace/scope.md`, ~20-30 lines)
+## Conversation Flow
 
-The candidate writes `workspace/scope.md` containing:
-- A list of clarifying questions they would ask (and their assumed answers)
-- Functional requirements (bullet list)
-- Non-functional requirements (bullet list with numbers)
-- Out-of-scope items
-- Key assumptions
+The learner discusses their scoping verbally. Guide them through:
 
-Rough size: 15-25 bullet points total.
+1. **Ask them to list their clarifying questions** — "What questions would you ask before designing a video conferencing system?"
+2. **Probe categories they miss** — If they skip non-functional: "What about latency?" If they skip scale: "How many users?"
+3. **Push for numbers** — "You said 'a lot of users' — what's a lot? 10K? 10M?"
+4. **Have them state out-of-scope items** — "What are you NOT designing?"
+5. **Summarize** — "So you're designing for 5M DAU, 500K concurrent, with recording and screen sharing, under 300ms latency, excluding E2EE. Right?"
 
 ## Agent role
 - `[explain]` — Explain the 4-step framework and what each scoping category covers
-- `[probe]` — Ask: "What questions would you ask before designing a video conferencing system?" Let them list questions first. Then ask follow-ups: "What about mobile?" "How many users at peak?" "Do you need recording?"
+- `[probe]` — Ask: "What questions would you ask?" Then follow-ups: "What about mobile?" "How many users at peak?" "Do you need recording?"
 - `[scaffold]` — If they struggle, suggest categories: functional, non-functional, scale, out-of-scope. But let THEM fill in the items.
-- `[review]` — Check that their scope includes: clarifying questions, functional + non-functional requirements, scale numbers, and out-of-scope items
 
 ## Gotchas
 
@@ -73,14 +69,15 @@ Rough size: 15-25 bullet points total.
 
 ## Success check
 
-Candidate has produced `workspace/scope.md` with:
+The learner has verbally demonstrated:
 - At least 5 clarifying questions (with assumed answers)
 - Functional requirements listed
 - Non-functional requirements with numbers (latency, availability)
 - Clear out-of-scope section
 - At least one scale-related number (DAU, concurrent users)
 
-Verify by reading the file. If missing scale numbers, prompt: "How many users are we designing for?"
+If missing scale numbers: "How many users are we designing for?"
+If missing non-functional: "What latency target does real-time video need?"
 
 The learner must explain *why* scoping comes before architecture before the step counts as done.
 

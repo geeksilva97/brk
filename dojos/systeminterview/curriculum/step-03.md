@@ -1,9 +1,7 @@
 ---
 step: 3
 title: "Deep Dive: Signaling & WebRTC"
-spine: workspace/signaling.md
 kind: design
-reference: -
 ---
 
 # Step 3: Deep Dive — Signaling & WebRTC
@@ -26,7 +24,7 @@ The high-level architecture has boxes and arrows. Now zoom into the most critica
 8. **DataChannel** can also be established (for chat, screen share control)
 
 **Key concepts:**
-- **SDP (Session Description Protocol)**: Text blob describing what the peer can do (codecs, resolutions, ICE credentials). NOT a protocol — it's a format.
+- **SDP (Session Description Protocol)**: Text blob describing what the peer can do. NOT a protocol — it's a format.
 - **ICE (Interactive Connectivity Establishment)**: Framework for finding the best network path. Tries host (local), server-reflexive (STUN-discovered), and relay (TURN) candidates.
 - **Trickle ICE**: Instead of waiting for all candidates, send them as discovered. Faster connection setup.
 
@@ -35,29 +33,25 @@ The high-level architecture has boxes and arrows. Now zoom into the most critica
 - Room management: create, join, leave
 - Must handle reconnect (client drops, reconnects, must resume call)
 - Must broadcast presence to all participants in room
-- Service discovery: assign clients to least-loaded signaling server
 
-**Read first:** `docs/webrtc-cheatsheet.md` (WebRTC Connection Lifecycle, Key Protocols, Trickle ICE)
+**Reference:** `curriculum/reference/webrtc-cheatsheet.md` (WebRTC Connection Lifecycle, Key Protocols, Trickle ICE)
 
-## GIVEN black box
-The WebRTC fundamentals cheatsheet (`docs/webrtc-cheatsheet.md`) is provided — the protocol details (SDP, ICE, DTLS order) are given. You don't need to derive them; use them as building blocks for your signaling flow.
+## GIVEN reference
+The WebRTC fundamentals cheatsheet (`curriculum/reference/webrtc-cheatsheet.md`) provides the protocol details (SDP, ICE, DTLS order). The learner doesn't need to derive them; they use them as building blocks for their signaling flow.
 
-## Spine  (the learner types `workspace/signaling.md`, ~30-40 lines)
+## Conversation Flow
 
-The candidate creates `workspace/signaling.md` containing:
-- Complete signaling flow (step by step, numbered)
-- What happens when: user A calls user B, user C joins existing call, user A loses connection
-- ICE candidate exchange sequence
-- Signaling server responsibilities list
-- Reconnection handling
+The learner walks through the signaling flow verbally. Guide them through:
 
-Rough size: 15-25 numbered steps + 5-8 responsibilities.
+1. **Ask them to describe how two peers connect** — "Walk me through what happens when user A calls user B."
+2. **Probe the step-by-step sequence** — "What's the first message? Then what?"
+3. **Challenge edge cases** — "What if ICE candidates arrive after the media starts?" "What if user A drops and reconnects?"
+4. **Push for completeness** — "How does user C join an existing call?" "How does the room know when someone disconnects?"
 
 ## Agent role
 - `[explain]` — Walk through the WebRTC connection lifecycle and explain what each step accomplishes
 - `[probe]` — Ask the candidate to walk through the signaling flow step by step. Then: "What happens if user A's SDP offer reaches user B before B is connected?" "What if ICE candidates arrive after the media starts?"
 - `[scaffold]` — If stuck, remind them of the order: SDP offer → SDP answer → ICE candidates → DTLS → media. Ask what each step accomplishes.
-- `[review]` — Check for correct SDP offer/answer order, ICE candidate exchange (must happen after SDP), room management (join/leave broadcasting), reconnection handling
 
 ## Gotchas
 
@@ -69,8 +63,8 @@ Rough size: 15-25 numbered steps + 5-8 responsibilities.
 
 ## Success check
 
-Candidate has produced `workspace/signaling.md` with:
-- Numbered signaling flow (offer → answer → ICE → DTLS → media)
+The learner has verbally demonstrated:
+- Correct signaling flow (offer → answer → ICE → DTLS → media)
 - Room join/leave flow
 - At least one reconnection scenario handled
 - ICE candidate exchange described
@@ -84,13 +78,13 @@ The learner must explain *why* media can't flow before the offer/answer exchange
 ## Consolidate  (dynamic quiz — AFTER the success check passes)
 
 **Quiz topic 1 — Diagnose:**
-What does SDP negotiate, and why can't media flow before the offer/answer exchange completes? What breaks if you skip it?
+What does SDP negotiate, and why can't media flow before the offer/answer exchange completes?
 
 **Quiz topic 2 — Design:**
-How does ICE find a network path between two peers, and why isn't STUN enough? What does each candidate type (host, srflx, relay) represent?
+How does ICE find a network path between two peers, and why isn't STUN enough?
 
 **Quiz topic 3 — Reflect:**
-Why can't a WebRTC client just reconnect after dropping, and what does the system need to handle? What's the insight that makes reconnection a deliberate design problem, not an automatic recovery?
+Why can't a WebRTC client just reconnect after dropping, and what does the system need to handle?
 
 ## Next step  (do NOT ask the learner to choose)
 There is one logical next step; state it and advance. Then point them to
