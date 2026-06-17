@@ -154,6 +154,7 @@ From `${CLAUDE_PLUGIN_ROOT}/templates/`, copy into `./<PLUGIN_NAME>/`:
 - `commands/start.md`, `next.md`, `status.md`, `hint.md`, `reveal.md`, `setup.md`
 - `env/docs/build-bundle.sh`
 - `gitignore.tmpl` → write as `./<PLUGIN_NAME>/.gitignore`
+- `launch.sh.tmpl` → write as `./<PLUGIN_NAME>/<PLUGIN_NAME>.sh` (the root launcher script)
 
 Substitute **every** `{{...}}` placeholder in every copied file. The simplest reliable way: read each
 template, replace placeholders in memory, and Write the result to the destination. Do a final
@@ -170,8 +171,8 @@ For `env/docs/build-bundle.sh`, fill `{{BUNDLE_GATHER}}` with the topic's doc-ga
 `{{INDEX_BODY}}` with a greppable INDEX table pointing at the bundled files + cheatsheets.
 
 ### 2c. Ensure executables
-`chmod +x` the four scripts: `hooks/session-start.sh`, `hooks/title.sh`, `hooks/guard.sh`,
-`bin/dojo.sh`, `env/docs/build-bundle.sh`.
+`chmod +x` the five scripts: `hooks/session-start.sh`, `hooks/title.sh`, `hooks/guard.sh`,
+`bin/dojo.sh`, `env/docs/build-bundle.sh`, `<PLUGIN_NAME>.sh`.
 
 ### 2d. Generate the curriculum
 Create `./<PLUGIN_NAME>/curriculum/`:
@@ -220,8 +221,10 @@ copy the *shape* of — this is GIVEN scaffolding, framed in the relevant step a
 
 ### 2f. README
 Write `./<PLUGIN_NAME>/README.md` from the c10k-dojo README's shape: what it teaches, install
-(`claude --plugin-dir ./<PLUGIN_NAME>`), the `/setup` then `/start` flow, the command list, how it's
-wired (hooks = jail, per-project state in `<STATE_DIR>/`), and the layout tree.
+(`claude --plugin-dir ./<PLUGIN_NAME>`, or `./<PLUGIN_NAME>.sh [project-dir]` for the one-shot
+launcher that also disables web + prompt suggestions), the `/setup` then `/start` flow, the
+command list, how it's wired (hooks = jail, per-project state in `<STATE_DIR>/`), and the layout
+tree (include `<PLUGIN_NAME>.sh` — the root launcher).
 
 ### 2g. Validate and report
 Run, from the project dir:
@@ -237,6 +240,13 @@ later if you want graded measurement").
 ---
 
 ## Invariants every generated dojo MUST satisfy (do not regress these)
+0. **Root launcher script.** The plugin ships `<PLUGIN_NAME>.sh` at its root — a one-shot
+   `exec claude --plugin-dir … --disallowed-tools WebSearch WebFetch` wrapper that the learner
+   runs from any project dir. It resolves its own plugin dir before cd-ing, exports
+   `CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false` (must be set before claude launches — a hook is
+   too late), and prints a one-line status. This is the documented entrypoint in the README; the
+   bare `claude --plugin-dir` path still works but doesn't disable prompt suggestions or web tools
+   at the CLI level.
 1. The manifest has **no `"hooks"` field** — `hooks/hooks.json` auto-loads; referencing it causes a
    "Duplicate hooks file" error.
 2. State is **per-project** in `${CLAUDE_PROJECT_DIR:-$PWD}/<STATE_DIR>/progress.json` — never global.

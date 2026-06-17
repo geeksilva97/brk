@@ -1,82 +1,65 @@
-#!/bin/bash
-# System Interview Dojo — State Management
-# Usage: dojo.sh <command> [args]
+#!/usr/bin/env bash
+# systeminterview state helper. Reads/writes progress.json in the PROJECT's .systeminterview/
+# dir and the step table in curriculum/steps.tsv. No jq dependency — flat-JSON parsing.
+#
+# Usage:
+#   dojo.sh get                 -> current step number
+#   dojo.sh spine [step]        -> spine file path for step (default: current)
+#   dojo.sh title [step]        -> step title
+#   dojo.sh kind  [step]        -> step kind (e.g. interview|design|demo)
+#   dojo.sh mode                -> backend mode
+#   dojo.sh set-mode <mode>     -> set backend mode (e.g. local-jailed | anthropic-api)
+#   dojo.sh advance             -> mark current step completed, move to next
+#   dojo.sh status              -> print progress.json
+set -uo pipefail
 
-DIR="$(cd "$(dirname "$0")/.." && pwd)"
-PROGRESS_FILE="$DIR/.systeminterview/progress.json"
-STEPS_FILE="$DIR/curriculum/steps.tsv"
+# State is PER-PROJECT (lives in the learner's project dir), NOT global — so a new
+# folder starts fresh at Step 1 instead of inheriting another project's progress.
+DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.systeminterview"
+ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+PROGRESS="$DATA_DIR/progress.json"
+TSV="$ROOT/curriculum/steps.tsv"
+mkdir -p "$DATA_DIR" 2>/dev/null || true
 
-ensure_progress() {
-  if [ ! -f "$PROGRESS_FILE" ]; then
-    mkdir -p "$(dirname "$PROGRESS_FILE")"
-    echo '{"step":1,"completed":[],"mode":"interview"}' > "$PROGRESS_FILE"
-  fi
+ensure() {
+  [[ -f "$PROGRESS" ]] || printf '%s\n' \
+    '{ "step": 1, "completed": [], "spine_file": "workspace/scope.md", "mode": "local-jailed" }' > "$PROGRESS"
 }
 
-get_step() {
-  ensure_progress
-  cat "$PROGRESS_FILE" | python3 -c "import sys,json; print(json.load(sys.stdin)['step'])"
+read_field() { # read_field <key>  (works for quoted or bare values)
+  sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\{0,1\}\([^\",}]*\)\"\{0,1\}.*/\1/p" "$PROGRESS" | head -1
 }
 
-get_spine() {
-  local step="${1:-$(get_step)}"
-  awk -F'\t' -v s="$step" '$1 == s {print $3}' "$STEPS_FILE"
+read_completed() {
+  sed -n 's/.*"completed"[[:space:]]*:[[:space:]]*\[\([^]]*\)\].*/\1/p' "$PROGRESS" | head -1
 }
 
-get_title() {
-  local step="${1:-$(get_step)}"
-  awk -F'\t' -v s="$step" '$1 == s {print $2}' "$STEPS_FILE"
+tsv_col() { # tsv_col <step> <colnum>
+  awk -F '\t' -v s="$1" -v c="$2" '$1==s{print $c}' "$TSV"
 }
 
-get_kind() {
-  local step="${1:-$(get_step)}"
-  awk -F'\t' -v s="$step" '$1 == s {print $4}' "$STEPS_FILE"
+write_progress() { # step completed spine mode
+  printf '{ "step": %s, "completed": [%s], "spine_file": "%s", "mode": "%s" }\n' \
+    "$1" "$2" "$3" "$4" > "$PROGRESS"
 }
 
-advance() {
-  ensure_progress
-  local current=$(get_step)
-  local next=$((current + 1))
-  local completed=$(cat "$PROGRESS_FILE" | python3 -c "import sys,json; print(json.load(sys.stdin)['completed'])")
-  python3 -c "
-import sys, json
-with open('$PROGRESS_FILE') as f:
-    data = json.load(f)
-data['completed'] = list(set(data['completed'] + [$current]))
-data['step'] = $next
-with open('$PROGRESS_FILE', 'w') as f:
-    json.dump(data, f, indent=2)
-"
-  echo "Advanced to step $next"
-}
-
-status() {
-  ensure_progress
-  local current=$(get_step)
-  local total=$(wc -l < "$STEPS_FILE")
-  echo "=== System Design Interview Dojo ==="
-  echo "Current: Step $current / $total"
-  echo "Title: $(get_title $current)"
-  echo "Kind: $(get_kind $current)"
-  echo "Spine: $(get_spine $current)"
-  echo ""
-  echo "Completed steps:"
-  cat "$PROGRESS_FILE" | python3 -c "import sys,json; print(', '.join(map(str, json.load(sys.stdin)['completed'])))"
-}
-
-init() {
-  mkdir -p "$(dirname "$PROGRESS_FILE")"
-  echo '{"step":1,"completed":[],"mode":"interview"}' > "$PROGRESS_FILE"
-  echo "Initialized. Starting at step 1."
-}
-
-case "${1:-status}" in
-  get)      get_step ;;
-  spine)    get_spine "${2:-}" ;;
-  title)    get_title "${2:-}" ;;
-  kind)     get_kind "${2:-}" ;;
-  advance)  advance ;;
-  status)   status ;;
-  init)     init ;;
-  *)        echo "Usage: dojo.sh {get|spine|title|kind|advance|status|init}" ;;
+ensure
+cmd="${1:-}"; shift || true
+case "$cmd" in
+  get)    read_field step ;;
+  mode)   read_field mode ;;
+  spine)  tsv_col "${1:-$(read_field step)}" 3 ;;
+  title)  tsv_col "${1:-$(read_field step)}" 2 ;;
+  kind)   tsv_col "${1:-$(read_field step)}" 4 ;;
+  status) cat "$PROGRESS" ;;
+  set-mode)
+    write_progress "$(read_field step)" "$(read_completed)" "$(read_field spine_file)" "${1:-local-jailed}" ;;
+  advance)
+    step="$(read_field step)"; comp="$(read_completed)"
+    if [[ -z "$comp" ]]; then comp="$step"; else comp="$comp, $step"; fi
+    next=$((step + 1))
+    spine="$(tsv_col "$next" 3)"; [[ -z "$spine" || "$spine" == "-" ]] && spine="workspace/"
+    write_progress "$next" "$comp" "$spine" "$(read_field mode)"
+    echo "Advanced to step $next ($(tsv_col "$next" 2))" ;;
+  *) echo "usage: dojo.sh {get|spine|title|kind|mode|set-mode <m>|advance|status} [step]" >&2; exit 2 ;;
 esac

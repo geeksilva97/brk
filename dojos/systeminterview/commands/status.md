@@ -1,13 +1,11 @@
 ---
-description: "Show current progress through the System Design Interview dojo"
+description: Show dojo progress — current step, completed steps, backend mode.
 ---
 
-# Status Command
+Show the learner where they are.
 
-1. Read progress from `bin/dojo.sh status`
-2. Display:
-   - Current step number and title
-   - List of completed steps
-   - Overall roadmap (all 7 steps)
-   - Current step's spine/task description
-3. If on Step 7, show that evaluation is pending
+1. Progress: run `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" status` and render it readably — current step
+   (with title), completed steps, backend mode.
+2. Read the step table (`${CLAUDE_PLUGIN_ROOT}/curriculum/steps.tsv`) and show the full ramp with a
+   marker on where the learner is, so the path ahead is visible.
+3. If an evaluation file exists in `workspace/evaluation.md`, render the scores.

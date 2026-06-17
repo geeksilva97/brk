@@ -14,6 +14,9 @@ code** while it handles boilerplate and review.
 ## Install (local dev)
 
 ```bash
+# One-shot launcher (disables web + prompt suggestions at the CLI level):
+./reactor-dojo.sh ~/my-workshop   # create/enter that dir and run the dojo there
+# …or the bare claude path:
 claude --plugin-dir ./reactor-dojo
 # then, in the project where you'll build:
 /reactor-dojo:setup     # build the offline docs bundle (stdlib-only — no gems to install)
@@ -48,6 +51,7 @@ claude --plugin-dir ./reactor-dojo
 ## Layout
 ```
 .claude-plugin/plugin.json   manifest (no "hooks" field)
+reactor-dojo.sh              launch script (one-shot: disables web + prompt suggestions)
 skills/tutor/SKILL.md        the 7-beat Socratic loop
 commands/                    start, next, status, hint, reveal, setup
 hooks/                       session-start, title, guard (jail)

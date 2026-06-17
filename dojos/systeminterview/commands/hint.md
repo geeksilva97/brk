@@ -1,14 +1,11 @@
 ---
-description: "Give an escalating hint for the current step"
+description: Give a scoped hint for the current step — never the full spine.
 ---
 
-# Hint Command
+The learner is stuck. Give the **smallest** nudge that unblocks them, escalating only if needed:
 
-Escalate hints in this order:
+1. **Point to the concept.** Name the area they should think about (e.g. "Think about what happens when a user is behind a corporate firewall.")
+2. **Ask a leading question** that isolates the gap (e.g. "What protocol would you use for real-time bidirectional communication between client and server?")
+3. **Worked skeleton.** Only if 1–2 fail: provide the document's *shape* with blanks — section headings and key questions, but the learner fills the load-bearing content. This is NOT writing the spine; the blanks are theirs.
 
-1. **Gentle nudge** — Point to a concept or section they should think about. "Think about what happens when a user is behind a corporate firewall."
-2. **Leading question** — Ask a specific question that points toward the answer. "What protocol would you use for real-time bidirectional communication between client and server?"
-3. **Skeleton** — Provide a partial structure with blanks. "Your signaling server needs to handle: room management, SDP relay, ICE candidate exchange, and ___?"
-4. **Reveal** — Only as last resort via /systeminterview:reveal
-
-Always start at level 1 and only escalate if the candidate is still stuck after the previous level.
+Never paste the complete reference design. If they're still blocked after a skeleton, suggest the instructor demo via `/systeminterview:reveal`. The struggle is the point — protect it.

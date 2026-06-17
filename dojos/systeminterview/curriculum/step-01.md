@@ -3,7 +3,7 @@ step: 1
 title: Scoping the Problem
 spine: workspace/scope.md
 kind: interview
-reference: scope-reference.md
+reference: -
 ---
 
 # Step 1: Scoping the Problem
@@ -12,7 +12,7 @@ reference: scope-reference.md
 
 Every system design interview starts the same way: you're given a vague prompt like "Design Google Meet." Your first job isn't to draw boxes — it's to ask questions. The quality of your design depends on the quality of your requirements.
 
-## Teach the Mechanism
+## Teach the Mechanisms
 
 The 4-step framework (from Xu's book):
 
@@ -44,7 +44,9 @@ Key scoping questions for video conferencing:
 - End-to-end encryption (mention it, but say you'll note it for later)
 - Legacy browser support
 
-## Spine
+**Read first:** `docs/webrtc-cheatsheet.md` (Key Numbers section) and `docs/capacity-cheatsheet.md` (The Estimation Framework)
+
+## Spine  (the learner types `workspace/scope.md`, ~20-30 lines)
 
 The candidate writes `workspace/scope.md` containing:
 - A list of clarifying questions they would ask (and their assumed answers)
@@ -55,15 +57,11 @@ The candidate writes `workspace/scope.md` containing:
 
 Rough size: 15-25 bullet points total.
 
-## Agent Role
-
-[probe] — Ask the candidate: "What questions would you ask before designing a video conferencing system?" Let them list questions first. Then ask follow-ups:
-- "What about mobile?" (if they only mention web)
-- "How many users at peak?" (if they don't mention scale)
-- "What about users behind corporate firewalls?" (if they don't mention NAT)
-- "Do you need recording?" (if they don't mention it)
-
-[scaffold] — If they struggle, suggest categories: functional, non-functional, scale, out-of-scope. But let THEM fill in the items.
+## Agent role
+- `[explain]` — Explain the 4-step framework and what each scoping category covers
+- `[probe]` — Ask: "What questions would you ask before designing a video conferencing system?" Let them list questions first. Then ask follow-ups: "What about mobile?" "How many users at peak?" "Do you need recording?"
+- `[scaffold]` — If they struggle, suggest categories: functional, non-functional, scale, out-of-scope. But let THEM fill in the items.
+- `[review]` — Check that their scope includes: clarifying questions, functional + non-functional requirements, scale numbers, and out-of-scope items
 
 ## Gotchas
 
@@ -73,7 +71,7 @@ Rough size: 15-25 bullet points total.
 4. **Not asking about scale** — "design for 100 users" and "design for 100M users" are different problems.
 5. **Assuming all clients are the same** — mobile has bandwidth constraints, screen size differences.
 
-## Success Check
+## Success check
 
 Candidate has produced `workspace/scope.md` with:
 - At least 5 clarifying questions (with assumed answers)
@@ -84,14 +82,19 @@ Candidate has produced `workspace/scope.md` with:
 
 Verify by reading the file. If missing scale numbers, prompt: "How many users are we designing for?"
 
-## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1–5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count. -->
+The learner must explain *why* scoping comes before architecture before the step counts as done.
 
-**Question 1:** Why do good scoping questions need to cover more than just features?
-A good answer covers: functional requirements AND non-functional constraints (latency, availability) AND scale. The interviewer won't give you requirements — you drive scoping by asking. Scope down and state what's out of scope.
+## Consolidate  (dynamic quiz — AFTER the success check passes)
 
-**Question 2:** Why does scale determine whether you need load balancers, sharding, or multi-region?
-A good answer covers: 100 users vs 100M users = fundamentally different architectures. Scale is a first-class requirement, not an afterthought. Different scales require different architectural choices. DAU alone isn't enough — you need concurrent users, peak factor, and call duration. P2P works at small scale; SFU/MCU is needed at larger scale.
+**Quiz topic 1 — Diagnose:**
+Why does skipping scoping lead to architectures that solve the wrong problem? What breaks when you design without numbers?
 
-**Question 3:** Why can't real-time video use the same infrastructure as YouTube?
-A good answer covers: YouTube can buffer; Meet must be real-time (<300ms end-to-end latency). CDN is for recorded content, not live streams. A few seconds of latency breaks conversation. Real-time requires edge deployment, not CDN caching.
+**Quiz topic 2 — Design:**
+Why do non-functional requirements (latency, availability) dictate architectural choices as much as features do? What's different about designing for 100 users vs 100M?
+
+**Quiz topic 3 — Reflect:**
+Why can't real-time video use the same infrastructure as YouTube (CDNs, buffering)? What's the one insight that makes scoping the most important 5 minutes of the interview?
+
+## Next step  (do NOT ask the learner to choose)
+There is one logical next step; state it and advance. Then point them to
+**Step 2** and run `/systeminterview:next`.

@@ -3,7 +3,7 @@ step: 2
 title: High-Level Architecture
 spine: workspace/architecture.md
 kind: design
-reference: architecture-reference.md
+reference: -
 ---
 
 # Step 2: High-Level Architecture
@@ -12,7 +12,7 @@ reference: architecture-reference.md
 
 You've scoped the problem. Now draw the blueprint. A video conferencing system has three distinct flows: signaling (setting up the call), media (the actual video/audio), and data (chat, screen share metadata). Each needs different infrastructure.
 
-## Teach the Mechanism
+## Teach the Mechanisms
 
 Key components for video conferencing:
 
@@ -34,13 +34,18 @@ Key components for video conferencing:
 - Database for user data, meeting metadata
 - Presence service for "who's in the meeting"
 
-**From Step 1 (Chat System patterns, Xu Ch.12):**
+**From Xu's Chat System patterns:**
 - Signaling servers are like chat servers — stateful, persistent connections
 - Service discovery (like Zookeeper) assigns clients to least-loaded signaling server
 - Presence servers track who's online / in the meeting
 - Multi-device sync: user may join from phone + laptop
 
-## Spine
+**Read first:** `docs/webrtc-cheatsheet.md` (Media Topologies section and Signaling Server Requirements)
+
+## GIVEN black box
+The WebRTC fundamentals cheatsheet (`docs/webrtc-cheatsheet.md`) is provided — you don't need to derive the protocols from scratch. Use it as reference when naming components and protocol choices.
+
+## Spine  (the learner types `workspace/architecture.md`, ~40-50 lines)
 
 The candidate creates `workspace/architecture.md` containing:
 - A text-based architecture diagram showing all major components
@@ -51,22 +56,11 @@ The candidate creates `workspace/architecture.md` containing:
 
 Rough size: 1 diagram + 10-15 component descriptions.
 
-## Agent Role
-
-[probe] — Ask the candidate to draw their architecture. Then probe:
-- "How does user A connect to user B?" (signaling flow)
-- "What happens when a user joins a meeting already in progress?" (room management)
-- "How do you handle users behind restrictive firewalls?" (TURN)
-- "Where do you store meeting metadata?" (database)
-
-[scaffold] — If they're stuck, suggest starting with three columns: "Client", "Signaling", "Media". Then fill in connections.
-
-[review] — Check their architecture for:
-- Missing signaling server (common omission)
-- Missing TURN/STUN (very common omission)
-- Missing presence/room management service
-- Using HTTP polling instead of WebSocket for signaling
-- Confusing CDN with media server
+## Agent role
+- `[explain]` — Explain the three flows (signaling, media, data) and why each needs different infrastructure
+- `[probe]` — Ask the candidate to draw their architecture. Then probe: "How does user A connect to user B?" "What happens when a user joins a meeting already in progress?" "How do you handle users behind restrictive firewalls?"
+- `[scaffold]` — If they're stuck, suggest starting with three columns: "Client", "Signaling", "Media". Then fill in connections.
+- `[review]` — Check their architecture for missing signaling server, missing TURN/STUN, missing presence service, HTTP polling instead of WebSocket, CDN used for live video
 
 ## Gotchas
 
@@ -76,7 +70,7 @@ Rough size: 1 diagram + 10-15 component descriptions.
 4. **CDN for live video** — CDN is for recorded content, not real-time media. This is a fundamental misunderstanding.
 5. **Stateless everything** — Signaling and media servers are stateful. You can't just "add more" without considering connection migration.
 
-## Success Check
+## Success check
 
 Candidate has produced `workspace/architecture.md` with:
 - Architecture diagram showing: clients, signaling server, media server (SFU/MCU), TURN/STUN, API server, database, presence service
@@ -87,16 +81,20 @@ Candidate has produced `workspace/architecture.md` with:
 
 If TURN is missing: "What about users behind corporate firewalls?"
 If mesh is used for group calls: "What happens with 10 participants? How many streams per client?"
-If signaling is missing: "How do the peers find each other?"
 
-## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1–5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count. -->
+The learner must explain *why* signaling and media are separate channels before the step counts as done.
 
-**Question 1:** Why does WebRTC need a separate signaling channel, and why is WebSocket the right choice?
-A good answer covers: WebRTC requires signaling to exchange connection parameters (SDP) and network paths (ICE candidates) before media can flow. HTTP polling has too much latency for real-time call setup. Signaling and media are separate concerns — signaling manages connection setup, media handles the streams.
+## Consolidate  (dynamic quiz — AFTER the success check passes)
 
-**Question 2:** Why doesn't P2P mesh work for group calls, and what does an SFU do instead?
-A good answer covers: In mesh, each participant sends N-1 streams and receives N-1 streams, so bandwidth grows O(N²). At 10 participants, each client uploads 9 streams. An SFU receives each stream once and forwards it to all others — client upload drops to 1 stream. SFU reduces client upload but server bandwidth is still high (forwards N-1 copies). MCU is NOT the same as SFU — MCU decodes, composites, and re-encodes (very CPU-heavy on server), while SFU just forwards encoded packets.
+**Quiz topic 1 — Diagnose:**
+Why does WebRTC need a separate signaling channel, and what breaks if you try to use HTTP polling for it? Why is WebSocket the right choice?
 
-**Question 3:** Why can't ~10-20% of users connect without TURN, and what does that mean for infrastructure cost?
-A good answer covers: Users behind symmetric NAT (common in corporate networks) cannot establish direct P2P connections. STUN only helps discover public IPs (works for ~80-90%). TURN relays all media through a server for the remaining 10-20%, and this is expensive — TURN bandwidth is one of the biggest infrastructure costs in video conferencing.
+**Quiz topic 2 — Design:**
+Why doesn't P2P mesh work for group calls, and what does an SFU do instead that's different from an MCU? What happens to client bandwidth at 10 participants with each topology?
+
+**Quiz topic 3 — Reflect:**
+Why can't ~10-20% of users connect without TURN, and what does that mean for infrastructure cost? What's the insight that makes this the most expensive component after SFU bandwidth?
+
+## Next step  (do NOT ask the learner to choose)
+There is one logical next step; state it and advance. Then point them to
+**Step 3** and run `/systeminterview:next`.

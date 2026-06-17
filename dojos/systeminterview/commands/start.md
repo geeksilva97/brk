@@ -1,14 +1,15 @@
 ---
-description: "Start or resume the System Design Interview dojo at the current step"
+description: Begin or resume the systeminterview at your current step.
 ---
 
-# Start Command
+Start (or resume) the systeminterview tutoring session.
 
-1. Read the current step from `bin/dojo.sh get` (defaults to step 1 if no progress file exists)
-2. Read the step's curriculum file: `curriculum/step-{N}.md`
-3. Invoke the **tutor** skill and run its interview loop for this step. You are the interviewer, not the
-   candidate — ask probing questions, make them design, review their architecture, then ask free-text
-   consolidation questions scored 1–5. Never draw the architecture for them.
+1. Find the current step: run `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" get` (the plugin root and a
+   copy of this path were also provided in the session-start context if the variable is unset).
+2. Read that step's curriculum file: `${CLAUDE_PLUGIN_ROOT}/curriculum/step-NN.md` (zero-padded).
+3. Invoke the **tutor** skill and run its six-beat loop for this step. You are the tutor (the
+   interviewer), not the author — ask free-text consolidation questions (scored 1–5), make the
+   learner type the spine, review, do not write the spine file.
 
-If the curriculum file is missing, tell the learner to run
-`/systeminterview:setup` to provision the environment first.
+If the curriculum file or the `docs/` bundle is missing, tell the learner to run
+`/systeminterview:setup` first.

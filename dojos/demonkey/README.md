@@ -20,6 +20,9 @@ benchmark — those are a separate course.
 ## Install (local dev)
 
 ```bash
+# One-shot launcher (disables web + prompt suggestions at the CLI level):
+./demonkey.sh ~/my-workshop     # create/enter that dir and run the dojo there
+# …or the bare claude path:
 claude --plugin-dir ./demonkey
 # then, in the project where you'll build:
 /demonkey:setup     # vendor the pinned gems + build the offline docs bundle
@@ -61,6 +64,7 @@ claude --plugin-dir ./demonkey
 ## Layout
 ```
 .claude-plugin/plugin.json   manifest (NO hooks field — hooks/hooks.json auto-loads)
+demonkey.sh                  launch script (one-shot: disables web + prompt suggestions)
 skills/tutor/SKILL.md        the six-beat Socratic loop (teach → build → quiz-to-consolidate)
 commands/                    the seven slash commands
 hooks/                       session-start, title, guard (the jail)

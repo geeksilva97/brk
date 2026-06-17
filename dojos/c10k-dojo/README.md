@@ -12,6 +12,9 @@ benchmark, so you *feel* where fork, threads, and fibers each live and die.
 ## Install (local dev)
 
 ```bash
+# One-shot launcher (disables web + prompt suggestions at the CLI level):
+./c10k-dojo.sh ~/my-workshop     # create/enter that dir and run the dojo there
+# …or the bare claude path:
 claude --plugin-dir ./c10k-dojo
 # then, in the project where you'll build:
 /c10k-dojo:setup     # build the offline docs bundle + benchmark image
@@ -39,6 +42,7 @@ claude --plugin-dir ./c10k-dojo
 ## Layout
 ```
 .claude-plugin/plugin.json   manifest
+c10k-dojo.sh                 launch script (one-shot: disables web + prompt suggestions)
 skills/tutor/SKILL.md        the 7-beat Socratic loop
 commands/                    the seven slash commands
 hooks/                       session-start, guard (jail), post-bench

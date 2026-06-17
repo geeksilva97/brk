@@ -91,6 +91,10 @@ The same battle-tested wiring as c10k-dojo:
   dependency installs; points at the mounted `docs/` bundle.
 - **`/setup` provisions deps locally before jailing**, so the learner works offline afterward.
 - **Given black boxes ship as complete committed cheatsheets**, framed as `[scaffold]` GIVEN material.
+- **Root launcher `<PLUGIN_NAME>.sh`** — a one-shot `exec claude --plugin-dir …` wrapper the learner
+  runs from any project dir. It disables web tools + prompt suggestions at the CLI level (the latter
+  must be set before claude launches — a hook is too late), so the learner can't accidentally break
+  the jail or get hand-out suggestions. Documented as the primary entrypoint in every generated README.
 
 ## Layout
 ```
@@ -105,6 +109,7 @@ templates/                   the generic dojo skeleton (placeholdered)
   commands/                   start, next, status, hint, reveal, setup
   curriculum/step-template.md the step format spec
   env/docs/build-bundle.sh    offline docs-bundle builder
+  launch.sh.tmpl              root launcher (→ <PLUGIN_NAME>.sh)
   gitignore.tmpl
 ```
 

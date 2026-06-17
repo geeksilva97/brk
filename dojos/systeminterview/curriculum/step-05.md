@@ -3,7 +3,7 @@ step: 5
 title: "Capacity Planning & Estimation"
 spine: workspace/capacity.md
 kind: interview
-reference: capacity-reference.md
+reference: -
 ---
 
 # Step 5: Capacity Planning & Estimation
@@ -12,7 +12,7 @@ reference: capacity-reference.md
 
 Architecture without numbers is just a drawing. Back-of-the-envelope estimation turns "a lot of users" into "150 SFU servers, 200 TB storage, $50K/day bandwidth." This is where strong candidates separate from average ones.
 
-## Teach the Mechanism
+## Teach the Mechanisms
 
 **The estimation framework (from Xu Ch.2):**
 
@@ -27,7 +27,7 @@ Architecture without numbers is just a drawing. Back-of-the-envelope estimation 
 - Video stream: ~2 Mbps (HD 720p), ~300 Kbps (low quality), ~4 Mbps (1080p)
 - Audio stream: ~100 Kbps per participant
 - Screen share: ~1-2 Mbps
-- WebRTC connection memory: ~10-50 KB per connection (varies by implementation)
+- WebRTC connection memory: ~10-50 KB per connection
 - TURN relay: adds ~2-4 Mbps per relayed participant
 - Recording: ~300 MB/hour per stream (compressed)
 
@@ -37,7 +37,12 @@ Architecture without numbers is just a drawing. Back-of-the-envelope estimation 
 - Peak concurrent ≈ 10-15% of DAU for video conferencing
 - TURN usage ≈ 10-20% of participants
 
-## Spine
+**Read first:** `docs/capacity-cheatsheet.md` (The Estimation Framework, Video Conferencing Reference Numbers, Example: Google Meet at 5M DAU)
+
+## GIVEN black box
+The capacity estimation cheatsheet (`docs/capacity-cheatsheet.md`) is provided — it contains the reference numbers and the worked example at 5M DAU. You don't need to memorize these; use them as starting assumptions and show the math.
+
+## Spine  (the learner types `workspace/capacity.md`, ~40-50 lines)
 
 The candidate creates `workspace/capacity.md` containing:
 - All assumptions listed with numbers
@@ -49,25 +54,11 @@ The candidate creates `workspace/capacity.md` containing:
 
 Rough size: 1 page of calculations with clear assumptions.
 
-## Agent Role
-
-[probe] — Ask the candidate to estimate:
-- "How many concurrent users at peak for 5M DAU?"
-- "What's the total bandwidth at peak?"
-- "How many SFU servers do you need?"
-- "What's the TURN bandwidth cost per month?"
-- "How much storage for 1 month of recordings?"
-
-Let THEM do the math. Only correct arithmetic errors.
-
-[scaffold] — If they're stuck on where to start, suggest: "Start with DAU → concurrent users → bandwidth per user → total bandwidth → servers."
-
-[review] — Check for:
-- Clear assumptions (don't accept "a lot" — demand numbers)
-- Correct unit conversions (Mbps vs MBps, etc.)
-- Peak multiplier included
-- TURN cost calculated (not just mentioned)
-- Recording storage estimated
+## Agent role
+- `[explain]` — Walk through the estimation framework and why each step matters
+- `[probe]` — Ask the candidate to estimate: "How many concurrent users at peak for 5M DAU?" "What's the total bandwidth at peak?" "How many SFU servers do you need?" "What's the TURN bandwidth cost per month?"
+- `[scaffold]` — If they're stuck on where to start, suggest: "Start with DAU → concurrent users → bandwidth per user → total bandwidth → servers."
+- `[review]` — Check for clear assumptions (don't accept "a lot" — demand numbers), correct unit conversions (Mbps vs MBps), peak multiplier included, TURN cost calculated, recording storage estimated
 
 ## Gotchas
 
@@ -77,7 +68,7 @@ Let THEM do the math. Only correct arithmetic errors.
 4. **Overestimating server capacity** — A single SFU handles ~1 Gbps, not 10 Gbps. Real numbers matter.
 5. **Forgetting signaling and API servers** — Media gets all the attention, but you still need hundreds of signaling and API servers.
 
-## Success Check
+## Success check
 
 Candidate has produced `workspace/capacity.md` with:
 - Assumptions listed (DAU, concurrent %, bandwidth per stream, etc.)
@@ -90,11 +81,19 @@ Candidate has produced `workspace/capacity.md` with:
 If TURN cost is missing: "What's the monthly bandwidth cost for TURN servers?"
 If peak multiplier is missing: "Is traffic the same at 3 AM and 3 PM?"
 
-## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1–5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count. -->
+The learner must explain *why* showing the process matters more than exact numbers before the step counts as done.
 
-**Question 1:** Why do interviewers want to see your math even when the exact numbers don't matter?
-A good answer covers: Order-of-magnitude estimates are what interviewers want — 500 vs 530 servers doesn't change the design. The process matters more than precision. "Horizontal scaling" without numbers is hand-waving. Pick reasonable assumptions (2 Mbps HD, 10% peak) and calculate. Skipping estimation and saying "we scale" shows no depth.
+## Consolidate  (dynamic quiz — AFTER the success check passes)
 
-**Question 2:** Why does a video conferencing system at 500K concurrent users need hundreds of servers?
-A good answer covers: A 10-person SFU call uses ~180 Mbps on the server side. At 500K concurrent users, you need 150+ SFU servers just for media, plus signaling, TURN, and API servers. TURN handles 15% of users = 75K users × 2 Mbps = 150 Gbps — expensive. Even 10% of calls recorded × 300 MB/hour = significant storage and processing costs. You can't just say "a few servers."
+**Quiz topic 1 — Diagnose:**
+Why do interviewers want to see your math even when the exact numbers don't matter? What breaks when you say "we'll scale horizontally" without numbers?
+
+**Quiz topic 2 — Design:**
+Why does a video conferencing system at 500K concurrent users need hundreds of servers? Walk through what makes each component type expensive.
+
+**Quiz topic 3 — Reflect:**
+What's the one insight that makes back-of-the-envelope estimation the differentiator between strong candidates and average ones? Why does the process matter more than precision?
+
+## Next step  (do NOT ask the learner to choose)
+There is one logical next step; state it and advance. Then point them to
+**Step 6** and run `/systeminterview:next`.

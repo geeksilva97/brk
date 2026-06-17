@@ -3,7 +3,7 @@ step: 4
 title: "Deep Dive: Media Servers & NAT Traversal"
 spine: workspace/media-servers.md
 kind: design
-reference: media-servers-reference.md
+reference: -
 ---
 
 # Step 4: Deep Dive — Media Servers & NAT Traversal
@@ -12,7 +12,7 @@ reference: media-servers-reference.md
 
 For 1:1 calls, direct P2P (mesh) works fine. But group calls need a media server. The choice between SFU, MCU, and mesh determines your scalability, bandwidth costs, and client CPU requirements. This is the heart of any video conferencing system.
 
-## Teach the Mechanism
+## Teach the Mechanisms
 
 **Three topologies:**
 
@@ -35,14 +35,18 @@ For 1:1 calls, direct P2P (mesh) works fine. But group calls need a media server
 - Client upload: 2 Mbps (1 stream). Client download: 2 Mbps (1 composite stream)
 - Server CPU: very high (decode + composite + encode for every participant)
 - Used when bandwidth is extremely limited (old hardware, slow networks)
-- Simpler client but very expensive server
 
 **NAT Traversal (the 10-20% problem):**
 - **STUN** (Session Traversal Utilities for NAT): Helps client discover its public IP. Free/cheap. Works for ~80-90% of users.
 - **TURN** (Traversal Using Relays around NAT): Relays ALL media through a server when direct connection fails. Expensive (bandwidth). Needed for ~10-20% of users (symmetric NAT, corporate firewalls).
 - TURN cost calculation: If 500K concurrent users and 15% need TURN, that's 75K users × 2 Mbps = 150 Gbps of TURN bandwidth.
 
-## Spine
+**Read first:** `docs/webrtc-cheatsheet.md` (Media Topologies) and `docs/capacity-cheatsheet.md` (Example: Google Meet at 5M DAU)
+
+## GIVEN black box
+The WebRTC cheatsheet (`docs/webrtc-cheatsheet.md`) provides the topology comparison and key numbers. The capacity cheatsheet (`docs/capacity-cheatsheet.md`) provides the TURN cost estimation pattern. You don't need to derive these numbers — use them as starting assumptions and adjust.
+
+## Spine  (the learner types `workspace/media-servers.md`, ~30-40 lines)
 
 The candidate creates `workspace/media-servers.md` containing:
 - Comparison table: Mesh vs SFU vs MCU (bandwidth per client, server cost, scalability limit)
@@ -53,21 +57,11 @@ The candidate creates `workspace/media-servers.md` containing:
 
 Rough size: 1 comparison table + 1-2 paragraphs of justification + calculations.
 
-## Agent Role
-
-[probe] — Ask the candidate:
-- "Walk me through what happens when 10 people join a meeting. How many streams is each client handling?"
-- "What happens when user 11 joins? Does anything change architecturally?"
-- "How much bandwidth does your SFU need at peak?"
-- "What percentage of your users will need TURN? What's the cost?"
-
-[scaffold] — If they can't decide between SFU and MCU, ask them to compare: "If you had to choose between more server CPU (MCU) or more server bandwidth (SFU), which is cheaper?"
-
-[review] — Check for:
-- Correct bandwidth math (common error: forgetting upload vs download)
-- TURN included with cost estimate
-- Clear topology choice with justification
-- Scalability limit identified (when to add more SFU servers)
+## Agent role
+- `[explain]` — Walk through the three topologies and the NAT traversal problem
+- `[probe]` — Ask: "Walk me through what happens when 10 people join a meeting. How many streams is each client handling?" "What percentage of your users will need TURN? What's the cost?"
+- `[scaffold]` — If they can't decide between SFU and MCU, ask: "If you had to choose between more server CPU (MCU) or more server bandwidth (SFU), which is cheaper?"
+- `[review]` — Check for correct bandwidth math (common error: forgetting upload vs download), TURN included with cost estimate, clear topology choice with justification, scalability limit identified
 
 ## Gotchas
 
@@ -77,7 +71,7 @@ Rough size: 1 comparison table + 1-2 paragraphs of justification + calculations.
 4. **Forgetting about SFU scalability** — A single SFU handles ~1 Gbps. Need load balancing and SFU assignment for large meetings.
 5. **Not handling topology change** — When a 1:1 call becomes 3 participants, it must switch from mesh to SFU. This transition needs signaling.
 
-## Success Check
+## Success check
 
 Candidate has produced `workspace/media-servers.md` with:
 - Mesh vs SFU vs MCU comparison with bandwidth numbers
@@ -89,14 +83,19 @@ Candidate has produced `workspace/media-servers.md` with:
 If TURN is missing: "What happens when a user behind a corporate firewall tries to join?"
 If bandwidth math is wrong: "Let's walk through a 4-person call. How many streams does the SFU forward?"
 
-## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1–5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count. -->
+The learner must explain *why* SFU is the industry standard and how it differs from MCU before the step counts as done.
 
-**Question 1:** Why does mesh topology break at 6+ participants, and when would you choose MCU over SFU?
-A good answer covers: Mesh has each client uploading N-1 streams — at 10 users that's 18 Mbps per client, exceeding most home upload speeds. SFU reduces client upload to 1 stream but server bandwidth is still high (forwards N-1 copies). MCU saves client bandwidth (1 composite stream) but server cost is astronomical (decode+composite+encode for every stream combination). The choice depends on use case — SFU is industry standard for group video; MCU is for extremely bandwidth-limited clients.
+## Consolidate  (dynamic quiz — AFTER the success check passes)
 
-**Question 2:** Why can 10-20% of users not join calls without TURN, and how do you estimate its cost?
-A good answer covers: Users behind symmetric NAT (common in corporate networks) can't establish direct P2P connections — STUN only helps discover public IPs. TURN relays all media for those users, and at scale this is a major cost. At 500K concurrent users with 15% needing TURN, that's 75K users × 2 Mbps = 150 Gbps of relay bandwidth. TURN bandwidth can exceed all other server costs.
+**Quiz topic 1 — Diagnose:**
+Why does mesh topology break at 6+ participants, and what specifically happens to client bandwidth? When would you choose MCU over SFU?
 
-**Question 3:** Why can't you just add more SFU servers when you run out of capacity?
-A good answer covers: A single SFU holds active WebRTC connections — they're stateful, not stateless. You need service discovery (like Zookeeper) to assign clients to the right server. You can't arbitrarily rebalance connections mid-call. At 500K concurrent users, you need hundreds of SFU servers with intelligent assignment.
+**Quiz topic 2 — Design:**
+Why can 10-20% of users not join calls without TURN, and how do you estimate its cost at scale? What makes TURN one of the biggest infrastructure expenses?
+
+**Quiz topic 3 — Reflect:**
+Why can't you just add more SFU servers when you run out of capacity? What's the insight that makes stateful servers fundamentally different from stateless ones?
+
+## Next step  (do NOT ask the learner to choose)
+There is one logical next step; state it and advance. Then point them to
+**Step 5** and run `/systeminterview:next`.

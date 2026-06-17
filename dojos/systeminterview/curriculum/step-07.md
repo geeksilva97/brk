@@ -3,7 +3,7 @@ step: 7
 title: "Wrap-Up & Self-Review"
 spine: "-"
 kind: demo
-reference: evaluation-reference.md
+reference: -
 ---
 
 # Step 7: Wrap-Up & Self-Review
@@ -12,7 +12,7 @@ reference: evaluation-reference.md
 
 This is the final step — the interview wrap-up. The candidate summarizes their design, identifies bottlenecks, and discusses improvements. This is also where we run the evaluation against the ground truth.
 
-## Teach the Mechanism
+## Teach the Mechanisms
 
 The wrap-up should cover (from Xu's framework, Step 4):
 
@@ -28,6 +28,8 @@ The wrap-up should cover (from Xu's framework, Step 4):
 - Signaling server failover (stateful connections can't easily migrate)
 - SFU connection limits per server
 
+**Read first:** `docs/ground-truth.md` (Key Trade-offs, Scoring Rubric)
+
 ## Spine
 
 No new file to write. The candidate:
@@ -38,21 +40,14 @@ No new file to write. The candidate:
 
 Then the tutor runs the **evaluation** against the ground truth.
 
-## Agent Role
-
-[probe] — Ask:
-- "Give me a 60-second summary of your design."
-- "What's the biggest bottleneck in your system?"
-- "What would you change if you had more time?"
-- "How would you handle a signaling server failure mid-call?"
-- "What's the biggest cost driver and how would you reduce it?"
-
-[review] — After the candidate says "I'm done," run the evaluation:
+## Agent role
+- `[probe]` — Ask: "Give me a 60-second summary of your design." "What's the biggest bottleneck in your system?" "What would you change if you had more time?" "How would you handle a signaling server failure mid-call?" "What's the biggest cost driver and how would you reduce it?"
+- `[review]` — After the candidate says "I'm done," run the evaluation:
 
 ### Evaluation Process
 1. Read all candidate files in `workspace/`
-2. Compare against the ground truth in `curriculum/reference/`
-3. Score on 6 dimensions (see SKILL.md)
+2. Compare against the ground truth in `docs/ground-truth.md`
+3. Score on 6 dimensions (see below)
 4. Write evaluation to `workspace/evaluation.md`
 
 ### Scoring Rubric
@@ -94,7 +89,7 @@ Then the tutor runs the **evaluation** against the ground truth.
 3. **Forgetting the 60-second summary** — This is the last impression. Make it count.
 4. **Not discussing error handling** — "What happens when X fails?" is always asked.
 
-## Success Check
+## Success check
 
 Candidate has:
 - Given a 60-second summary
@@ -104,8 +99,17 @@ Candidate has:
 
 Then the evaluation file is written to `workspace/evaluation.md`.
 
-## Consolidate (free-text questions — AFTER the success check passes)
-<!-- The tutor asks these questions; the learner types their understanding in their own words. The tutor scores 1–5 based on whether the answer covers the key concepts, gives feedback, and keeps asking until the learner gives a substantive answer (score ≥ 3). Nonsense, vague, or 'I don't know' answers do NOT count. -->
+## Consolidate  (dynamic quiz — AFTER the success check passes)
 
-**Question 1:** Why is saying "my design is solid, no major weaknesses" a red flag in an interview?
-A good answer covers: Every design has trade-offs and bottlenecks. Not seeing them shows lack of self-awareness and depth. "I'd just add more servers" doesn't work for stateful services like media and signaling servers. "I'd add caching" doesn't help real-time video — think about what's actually expensive: bandwidth, TURN, CPU. Strong engineers know their design's weaknesses.
+**Quiz topic 1 — Diagnose:**
+Why is saying "my design is solid, no major weaknesses" a red flag in an interview? What does it signal about engineering maturity?
+
+**Quiz topic 2 — Design:**
+How would you prioritize the bottlenecks you identified — which one would you fix first and why? What's the cost of not fixing it?
+
+**Quiz topic 3 — Reflect:**
+What's the one insight from this entire interview that changed how you think about system design? How would you approach the next interview differently?
+
+## Next step
+
+Congratulations — you've completed the System Design Interview dojo! Run `/systeminterview:status` to see your final evaluation and progress.

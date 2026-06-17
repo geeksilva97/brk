@@ -16,7 +16,8 @@ win-condition, and any "given black box" the learner receives vs must derive.
 
 After either mode converges on a spec, **scaffold** the new `<name>-dojo/` plugin directory by copying
 the generic templates from `${CLAUDE_PLUGIN_ROOT}/templates/` (substituting placeholders) and
-generating `curriculum/steps.tsv` + `step-NN.md` files, a tailored `/setup`, cheatsheets, and a
-README. Then **validate** with `claude plugin validate <name>-dojo` and `bash -n` on every shell file.
+generating `curriculum/steps.tsv` + `step-NN.md` files, a tailored `/setup`, cheatsheets, the root
+`<name>-dojo.sh` launcher, and a README. Then **validate** with `claude plugin validate <name>-dojo`
+and `bash -n` on every shell file (including the launcher).
 
 Arguments (optional, triggers self-service mode if present): $ARGUMENTS

@@ -1,16 +1,17 @@
 ---
-description: "Show the reference design for the current step"
+description: Instructor escape hatch — show the reference design for the current step.
 ---
 
-# Reveal Command
+Show the canonical reference for the current step. This is the **instructor's** demo tool for when a
+learner is truly blocked or the session is out of time — not a shortcut to skip the struggle.
 
-Show the ground truth reference for the current step:
+1. Resolve the current step and its reference: look in `${CLAUDE_PLUGIN_ROOT}/curriculum/reference/`
+   for the file named in the step's `reference:` pointer (if the step has one).
+2. Show it, then **diff it against the learner's attempt** — frame their failed version as the
+   "before" and walk the delta line by line. The learning is in the comparison, so don't just paste
+   the answer and move on.
+3. Note this reveal in the conversation so it's clear the learner saw the reference rather than
+   deriving it.
 
-1. Read the current step from `bin/dojo.sh get`
-2. Read the reference file specified in the step's frontmatter (`reference` field)
-3. Read `curriculum/reference/ground-truth.md` for the complete reference
-4. Present the relevant section to the candidate
-5. Compare against what the candidate has in their `workspace/` files
-6. Highlight what they got right and what they missed
-
-Only use this as a last resort or after the candidate has completed the step and wants to compare notes.
+Prefer `/systeminterview:hint` first. Only reveal after ~3 failed attempts with a skeleton, or for a
+live instructor demo.

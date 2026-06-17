@@ -1,6 +1,9 @@
 {
   "name": "systeminterview",
-  "description": "System Design Interview Dojo — practice designing scalable systems through a Socratic interview simulator",
+  "description": "System Design Interview Dojo — practice designing scalable systems through a Socratic interview simulator. Type-the-spine design docs + offline jail + free-text consolidation.",
+  "version": "0.1.0",
+  "author": { "name": "edy" },
+  "keywords": ["system-design","interview","video-conferencing","webrtc","scalability","workshop","tutor"],
   "skills": "./skills/",
   "commands": ["./commands/"]
 }
