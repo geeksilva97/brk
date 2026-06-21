@@ -19,6 +19,12 @@ not a wrapper.
 - **Node.js 22+** — TypeScript runs natively. Node 22–23.5 needs `--experimental-strip-types`; Node 23.6+ needs no flags.
 - **Ollama** — installed and running with a model pulled
 
+> **Two uses of Ollama — don't conflate them.** The agent *you build* calls a local model via
+> Ollama (the prerequisite above). Separately, Claude Code — the *tutor* — can itself run on a
+> local model for a true air-gap: launch with `--model llama3:8b` (the `loopcraft.sh` wrapper
+> forwards it; Ollama serves on `:11434`), or use the Anthropic API as easy-mode. Record the choice
+> with `dojo.sh set-mode <local-jailed|anthropic-api>`.
+
 ## Install
 
 ```bash

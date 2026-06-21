@@ -43,9 +43,12 @@ lightweight (`nc`, `ps`, `lsof`, `kill -SIGNAL`); the one exception is the **mem
    --memory-swap=192m`); `env/bench/holder.rb` (plain stdlib Ruby) holds the idle connections that
    make fork's memory climb. No Go anywhere.
 
-6. **Backend mode:** ask the learner whether they're running the **local-jailed** model
-   (Ollama/llama.cpp, true air-gap — the default) or the **anthropic-api** easy-mode, and record it
-   with `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
+6. **Backend mode (local model via Ollama):** ask which model backs Claude Code — the
+   **local-jailed** model (a local LLM served by **Ollama** or llama.cpp — a true air-gap, the
+   default) or the **anthropic-api** easy-mode. For Ollama, make sure it's serving the model
+   (`ollama pull qwen2.5-coder:32b`; it listens on `:11434`) and launch with
+   `--model qwen2.5-coder:32b` (the `demonkey.sh` wrapper forwards it). Record the choice with
+   `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
 
 7. **Mark setup done** so the auto-setup on future startups stays out of the way:
    `mkdir -p "${CLAUDE_PROJECT_DIR:-$PWD}/.demonkey" && touch "${CLAUDE_PROJECT_DIR:-$PWD}/.demonkey/.setup_done"`.

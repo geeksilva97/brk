@@ -23,9 +23,12 @@ build (their `workspace/` and `docs/` will live here).
    `docker build -t c10k-target -f "${CLAUDE_PLUGIN_ROOT}/env/bench/Dockerfile.target" "${CLAUDE_PLUGIN_ROOT}/env/bench"`.
    `ab` measures throughput + latency; `env/bench/holder.go` (run with `go run`) measures
    held-connection capacity, which `ab` can't. The cage pins to one core (`--cpuset-cpus=0`).
-4. **Backend mode:** ask the learner whether they're running the **local-jailed** model
-   (Ollama/llama.cpp, true air-gap — the default) or the **anthropic-api** easy-mode, and record it
-   with `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
+4. **Backend mode (local model via Ollama):** ask which model backs Claude Code — the
+   **local-jailed** model (a local LLM served by **Ollama** or llama.cpp — a true air-gap, the
+   default) or the **anthropic-api** easy-mode. For Ollama, make sure it's serving the model
+   (`ollama pull llama3:8b`; it listens on `:11434`) and launch with `--model llama3:8b` (the
+   `c10k-dojo.sh` wrapper forwards it). Record the choice with
+   `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
 5. **(Optional) ai-jail:** if they want OS-level isolation, point them at
    `${CLAUDE_PLUGIN_ROOT}/env/ai-jail.toml` as a template.
 

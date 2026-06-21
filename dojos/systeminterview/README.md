@@ -28,6 +28,11 @@ A video conferencing system (like Google Meet) covering:
 
 No runtime dependencies. This is a conversation dojo — you talk, not code.
 
+- **Backend model:** Claude Code — the tutor — can run on a local model via **Ollama** (or
+  llama.cpp) for a true air-gap: launch with `--model llama3:8b` (the `systeminterview.sh` wrapper
+  forwards it; Ollama serves on `:11434`); the Anthropic API is an optional easy-mode. Record the
+  choice with `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
+
 ## Use
 
 ```bash
