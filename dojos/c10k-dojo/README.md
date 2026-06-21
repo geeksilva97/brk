@@ -36,8 +36,10 @@ claude --plugin-dir ./c10k-dojo
   resumes you at your step and injects its curriculum. `PostToolUse` captures benchmark rows.
 - **State** is per-project: `<project>/.c10k-dojo/progress.json` + `results.csv` (keyed to the folder
   you're in, so a new folder starts fresh at Step 1; survives sessions within that project).
-- **Backend model:** default is a local model via Ollama/llama.cpp (true air-gap); the Anthropic API
-  is an optional easy-mode. Either way Claude Code is the harness and the flow is identical.
+- **Backend model:** the default is a local model via **Ollama** (or llama.cpp) — a true air-gap.
+  Pull one (`ollama pull llama3:8b`) and launch with `--model llama3:8b` (the `c10k-dojo.sh` wrapper
+  forwards it; Ollama serves on `:11434`); the Anthropic API is an optional easy-mode. Either way
+  Claude Code is the harness and the flow is identical.
 
 ## Layout
 ```

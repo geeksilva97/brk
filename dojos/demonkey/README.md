@@ -58,8 +58,10 @@ claude --plugin-dir ./demonkey
   so a new folder starts fresh at Step 1; survives sessions within that project).
 - **No benchmark.** Verification is local (`nc` / `ps` / `lsof` / `kill -SIGNAL`); every step's
   curriculum file has a concrete success check, not a load-test score.
-- **Backend model:** default is a local model via Ollama/llama.cpp (true air-gap); the Anthropic API
-  is an optional easy-mode. Either way Claude Code is the harness and the flow is identical.
+- **Backend model:** the default is a local model via **Ollama** (or llama.cpp) — a true air-gap.
+  Pull one (`ollama pull qwen2.5-coder:32b`) and launch with `--model qwen2.5-coder:32b` (the
+  `demonkey.sh` wrapper forwards it; Ollama serves on `:11434`); the Anthropic API is an optional
+  easy-mode. Either way Claude Code is the harness and the flow is identical.
 
 ## Layout
 ```

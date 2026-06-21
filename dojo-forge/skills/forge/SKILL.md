@@ -288,7 +288,10 @@ Write `./<PLUGIN_NAME>/README.md` from the c10k-dojo README's shape: what it tea
 (`claude --plugin-dir ./<PLUGIN_NAME>`, or `./<PLUGIN_NAME>.sh [project-dir]` for the one-shot
 launcher that also disables web + prompt suggestions), the `/setup` then `/start` flow, the
 command list, how it's wired (hooks = jail, per-project state in `<STATE_DIR>/`), and the layout
-tree (include `<PLUGIN_NAME>.sh` — the root launcher).
+tree (include `<PLUGIN_NAME>.sh` — the root launcher). Include the **Backend model** bullet
+(verbatim shape from c10k-dojo): the default is a local model via **Ollama**/llama.cpp for a true
+air-gap — `ollama pull <model>` then launch with `--model <model>` (the `<PLUGIN_NAME>.sh` wrapper
+forwards it; Ollama serves on `:11434`) — with the Anthropic API as the optional easy-mode.
 
 ### 2g. Validate and report
 Run, from the project dir:

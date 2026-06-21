@@ -48,7 +48,14 @@ build (their `workspace/` will live here).
    - `node --version` (Node 22+ for native TypeScript),
    - `ollama list` (should show the model they pulled).
 
-8. **Mark setup done** so the auto-setup on future startups stays out of the way:
+8. **Backend mode (which model backs Claude Code):** distinct from the Ollama model the *agent*
+   calls (above) — this is the model the *tutor* runs on. Ask the learner: the **local-jailed**
+   model (a local LLM served by **Ollama** or llama.cpp — a true air-gap, the default) or the
+   **anthropic-api** easy-mode. For Ollama, pull a model (`ollama pull llama3:8b`; it listens on
+   `:11434`) and launch with `--model llama3:8b` (the `loopcraft.sh` wrapper forwards it). Record the
+   choice with `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
+
+9. **Mark setup done** so the auto-setup on future startups stays out of the way:
    `mkdir -p "${CLAUDE_PROJECT_DIR:-$PWD}/.loopcraft" && touch "${CLAUDE_PROJECT_DIR:-$PWD}/.loopcraft/.setup_done"`.
    (The SessionStart hook checks this sentinel — once it exists, opening Claude goes straight to
    tutoring instead of re-running setup.)

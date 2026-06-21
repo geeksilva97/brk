@@ -13,8 +13,11 @@ build (their `workspace/` and `docs/` will live here).
 3. **Offline docs bundle:** run `"${CLAUDE_PLUGIN_ROOT}/env/docs/build-bundle.sh"` — it generates
    `./docs/` (ri dumps for IO/Socket/TCPServer, the select/kqueue man pages, the reactor cheatsheet,
    INDEX.md). Confirm `./docs/INDEX.md` exists afterward.
-4. **Backend mode:** ask the learner whether they're running the **local-jailed** model (true
-   air-gap — the default) or the **anthropic-api** easy-mode, and record it with
+4. **Backend mode (local model via Ollama):** ask which model backs Claude Code — the
+   **local-jailed** model (a local LLM served by **Ollama** or llama.cpp — a true air-gap, the
+   default) or the **anthropic-api** easy-mode. For Ollama, make sure it's serving the model
+   (`ollama pull llama3:8b`; it listens on `:11434`) and launch with `--model llama3:8b` (the
+   `reactor-dojo.sh` wrapper forwards it). Record the choice with
    `"${CLAUDE_PLUGIN_ROOT}/bin/dojo.sh" set-mode <local-jailed|anthropic-api>`.
 
 Report what's ready and what's missing, then tell them to run `/reactor-dojo:start`.
