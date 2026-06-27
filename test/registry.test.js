@@ -12,7 +12,7 @@ afterEach(() => sb.cleanup());
 test('registry list shows the bundled self registry', () => {
   const r = runCli(['registry', 'list'], sb.env);
   assert.equal(r.status, 0);
-  assert.match(r.stdout, /dojos\s+\(bundled\)/);
+  assert.match(r.stdout, /brk\s+\(bundled\)/);
 });
 
 test('registry add writes the config and list reflects it', () => {
@@ -42,7 +42,7 @@ test('a dojo from an added registry resolves and is listable + runnable', () => 
   const launch = sb.calls().find((c) => c.argv[0] === '--plugin-dir');
   assert.ok(launch, 'expected a launch call');
   // Resolved into the cache clone, not the self repo.
-  assert.match(launch.argv[1], /cache[/\\]dojo[/\\]fakereg[/\\]mini-dojo$/);
+  assert.match(launch.argv[1], /cache[/\\]brk[/\\]fakereg[/\\]mini-dojo$/);
 });
 
 test('registry remove drops the entry', () => {

@@ -36,7 +36,7 @@ test('list shows all bundled dojos', () => {
 });
 
 test('list marks installed dojos from `claude plugin list`', () => {
-  const r = runCli(['list'], sb.env, { DOJO_STUB_INSTALLED: 'demonkey@dojos' });
+  const r = runCli(['list'], sb.env, { BRK_STUB_INSTALLED: 'demonkey@brk' });
   assert.match(r.stdout, /demonkey\s+\[installed\]/);
 });
 
@@ -76,18 +76,18 @@ test('run with no name exits 2', () => {
   assert.equal(r.status, 2);
 });
 
-test('install adds the marketplace then installs name@dojos', () => {
+test('install adds the marketplace then installs name@brk', () => {
   const r = runCli(['install', 'demonkey'], sb.env);
   assert.equal(r.status, 0);
   const argvs = sb.calls().map((c) => c.argv);
   assert.deepEqual(argvs[0], ['plugin', 'marketplace', 'add', REPO_ROOT]);
-  assert.deepEqual(argvs[1], ['plugin', 'install', 'demonkey@dojos']);
+  assert.deepEqual(argvs[1], ['plugin', 'install', 'demonkey@brk']);
 });
 
-test('uninstall removes name@dojos', () => {
+test('uninstall removes name@brk', () => {
   const r = runCli(['uninstall', 'demonkey'], sb.env);
   assert.equal(r.status, 0);
-  assert.deepEqual(sb.calls()[0].argv, ['plugin', 'uninstall', 'demonkey@dojos']);
+  assert.deepEqual(sb.calls()[0].argv, ['plugin', 'uninstall', 'demonkey@brk']);
 });
 
 test('new launches dojo-forge WITHOUT the jail', () => {

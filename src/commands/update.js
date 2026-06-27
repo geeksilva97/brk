@@ -1,4 +1,4 @@
-// `dojo update` — refresh the tool + every registry's dojos. The self repo is
+// `brk update` — refresh the tool + every registry's dojos. The self repo is
 // pulled in place; git registries are pulled in cache; then Claude's catalog.
 import { listRegistries } from '../registry.js';
 import { pullIfRepo, cloneOrPull } from '../lib/git.js';

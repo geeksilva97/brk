@@ -13,7 +13,7 @@ function deriveName(url) {
 
 // All known registries. The self repo is always first (local, no clone).
 export function listRegistries() {
-  const regs = [{ name: marketplaceName(REPO_ROOT) || 'dojos', kind: 'local', location: REPO_ROOT, root: REPO_ROOT }];
+  const regs = [{ name: marketplaceName(REPO_ROOT) || 'brk', kind: 'local', location: REPO_ROOT, root: REPO_ROOT }];
   if (fs.existsSync(REGISTRIES_FILE)) {
     for (const line of fs.readFileSync(REGISTRIES_FILE, 'utf8').split('\n')) {
       const t = line.trim();

@@ -2,7 +2,7 @@
 
 ## Adding a dojo
 
-A dojo is just a Claude Code plugin directory. To make it appear in `dojo list` / `dojo run`:
+A dojo is just a Claude Code plugin directory. To make it appear in `brk list` / `brk run`:
 
 1. Drop the plugin in `dojos/` (e.g. `dojos/my-dojo/`) with a valid
    `.claude-plugin/plugin.json`.
@@ -16,7 +16,7 @@ A dojo is just a Claude Code plugin directory. To make it appear in `dojo list` 
 3. `node --test` — the manifest-invariant tests check the entry resolves, the names match,
    and the plugin doesn't illegally declare a `hooks` field.
 
-Don't hand-write a dojo from scratch — use the generator: `dojo new "<your topic>"` runs
+Don't hand-write a dojo from scratch — use the generator: `brk new "<your topic>"` runs
 **dojo-forge**, which interviews you and scaffolds a complete, validating dojo in the right
 shape (tutor skill, jail hooks, per-project state, curriculum). Then move it into `dojos/`
 per the steps above.
@@ -42,12 +42,12 @@ runs in an isolated temp `HOME`/XDG sandbox (`test/helpers/env.js`). The bash ho
 There's an opt-in live tier that actually launches `claude -p` (needs auth + network):
 
 ```bash
-DOJO_LIVE=1 node --test test/live.test.js   # not part of CI
+BRK_LIVE=1 node --test test/live.test.js   # not part of CI
 ```
 
 ## Code shape
 
 Plain ESM JavaScript, Node builtins only — no transpile, no bundler, no published package.
-`bin/dojo.js` → `src/cli.js` dispatches to `src/commands/*`; shared bits live in `src/lib/`
+`bin/brk.js` → `src/cli.js` dispatches to `src/commands/*`; shared bits live in `src/lib/`
 (`claude.js` spawns Claude, `git.js` fetches registries, `marketplace.js` parses manifests).
 Keep it dependency-free.

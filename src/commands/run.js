@@ -1,4 +1,4 @@
-// `dojo run <name> [project-dir] [claude args...]` — start a dojo immediately,
+// `brk run <name> [project-dir] [claude args...]` — start a dojo immediately,
 // nothing installed. Generalizes demonkey.sh to any registered dojo.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,7 +8,7 @@ import { launchDojo } from '../lib/claude.js';
 export function cmdRun(argv) {
   const name = argv[0];
   if (!name) {
-    console.error('usage: dojo run <name> [project-dir] [claude args...]');
+    console.error('usage: brk run <name> [project-dir] [claude args...]');
     return 2;
   }
   const rest = argv.slice(1);
@@ -22,11 +22,11 @@ export function cmdRun(argv) {
 
   const found = resolveDojo(name);
   if (!found) {
-    console.error(`dojo: unknown dojo '${name}'. Run 'dojo list' to see what's available.`);
+    console.error(`brk: unknown dojo '${name}'. Run 'brk list' to see what's available.`);
     return 1;
   }
   if (!found.dir || !fs.existsSync(found.dir)) {
-    console.error(`dojo: '${name}' resolves to a source this CLI can't run ephemerally; try 'dojo install ${name}'.`);
+    console.error(`brk: '${name}' resolves to a source this CLI can't run ephemerally; try 'brk install ${name}'.`);
     return 1;
   }
 

@@ -1,8 +1,8 @@
-// Everything that shells out to the `claude` CLI. `DOJO_CLAUDE_BIN` lets tests
+// Everything that shells out to the `claude` CLI. `BRK_CLAUDE_BIN` lets tests
 // point at a stub; otherwise `claude` is resolved from PATH.
 import { spawnSync } from 'node:child_process';
 
-const CLAUDE = process.env.DOJO_CLAUDE_BIN || 'claude';
+const CLAUDE = process.env.BRK_CLAUDE_BIN || 'claude';
 
 // Launch a dojo session in `cwd` with the plugin loaded. The learner-dojo flags
 // (offline jail + no prompt suggestions) are uniform — ported from demonkey.sh.
@@ -14,7 +14,7 @@ export function launchDojo(pluginDir, { cwd, extraArgs = [], jail = true } = {})
   if (jail) env.CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION = 'false';
   const res = spawnSync(CLAUDE, args, { stdio: 'inherit', cwd, env });
   if (res.error) {
-    console.error(`dojo: could not launch '${CLAUDE}': ${res.error.message}`);
+    console.error(`brk: could not launch '${CLAUDE}': ${res.error.message}`);
     return 127;
   }
   return res.status ?? 1;

@@ -1,8 +1,8 @@
 export function cmdHelp() {
-  console.log(`dojo — install or start tutored coding-dojo plugins for Claude Code
+  console.log(`brk — install or start tutored coding-dojo plugins for Claude Code
 
 USAGE
-  dojo <command> [args]
+  brk <command> [args]
 
 COMMANDS
   run <name> [dir] [claude args]   Start a dojo right away (ephemeral, nothing installed).
@@ -18,10 +18,10 @@ COMMANDS
   help                             Show this help.
 
 EXAMPLES
-  dojo list
-  dojo run demonkey ./my-workshop
-  dojo install c10k-dojo
-  dojo registry add git@github.com:acme/dojos.git acme
+  brk list
+  brk run demonkey ./my-workshop
+  brk install c10k-dojo
+  brk registry add git@github.com:acme/dojos.git acme
 `);
   return 0;
 }

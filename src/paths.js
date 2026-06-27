@@ -12,8 +12,8 @@ export const REPO_ROOT = path.resolve(SRC_DIR, '..');
 const configHome = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), '.config');
 const cacheHome = process.env.XDG_CACHE_HOME || path.join(os.homedir(), '.cache');
 
-export const CONFIG_DIR = path.join(configHome, 'dojo');
+export const CONFIG_DIR = path.join(configHome, 'brk');
 // One `git-url [name]` per line; blank lines and `#` comments ignored.
 export const REGISTRIES_FILE = path.join(CONFIG_DIR, 'registries');
 // External (git) registries are cloned here, one dir per registry name.
-export const CACHE_DIR = path.join(cacheHome, 'dojo');
+export const CACHE_DIR = path.join(cacheHome, 'brk');
