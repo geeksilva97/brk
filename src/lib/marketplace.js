@@ -23,7 +23,7 @@ export function pluginDir(registryRoot, entry) {
   return null;
 }
 
-// A short, human description for `dojo list`: prefer the plugin's own manifest,
+// A short, human description for `brk list`: prefer the plugin's own manifest,
 // fall back to the marketplace entry.
 export function describe(registryRoot, entry) {
   try {

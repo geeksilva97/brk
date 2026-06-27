@@ -114,4 +114,4 @@ templates/                   the generic dojo skeleton (placeholdered)
 ```
 
 Examples of generated dojos live in the repo's `dojos/` directory (reactor-dojo, loopcraft, etc.).
-Run `dojo list` to see all available dojos including examples.
+Run `brk list` to see all available dojos including examples.

@@ -1,4 +1,4 @@
-// `dojo list` — every dojo across every registry, with an [installed] marker.
+// `brk list` — every dojo across every registry, with an [installed] marker.
 import { listRegistries, registryPlugins } from '../registry.js';
 import { describe } from '../lib/marketplace.js';
 import { installedIds } from '../lib/claude.js';
@@ -23,7 +23,7 @@ export function cmdList() {
   }
 
   if (!any) console.log('No dojos found.');
-  else console.log("\nStart one with 'dojo run <name>' or install with 'dojo install <name>'.");
+  else console.log("\nStart one with 'brk run <name>' or install with 'brk install <name>'.");
   return 0;
 }
 

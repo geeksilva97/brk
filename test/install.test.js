@@ -19,21 +19,21 @@ test('package.json declares no runtime dependencies (simplicity invariant)', () 
 let home;
 let binDir;
 beforeEach(() => {
-  home = fs.mkdtempSync(path.join(os.tmpdir(), 'dojo-install-'));
+  home = fs.mkdtempSync(path.join(os.tmpdir(), 'brk-install-'));
   binDir = path.join(home, 'bin');
 });
 afterEach(() => fs.rmSync(home, { recursive: true, force: true }));
 
-test('install.sh symlinks dojo and the linked CLI runs', { skip }, () => {
+test('install.sh symlinks brk and the linked CLI runs', { skip }, () => {
   const r = spawnSync('bash', [path.join(REPO_ROOT, 'install.sh')], {
     encoding: 'utf8',
-    env: { ...process.env, HOME: home, DOJO_BIN_DIR: binDir, DOJO_SKIP_PULL: '1' },
+    env: { ...process.env, HOME: home, BRK_BIN_DIR: binDir, BRK_SKIP_PULL: '1' },
   });
   assert.equal(r.status, 0, r.stderr);
 
-  const link = path.join(binDir, 'dojo');
+  const link = path.join(binDir, 'brk');
   assert.ok(fs.existsSync(link), 'symlink should exist');
-  assert.equal(fs.realpathSync(link), fs.realpathSync(path.join(REPO_ROOT, 'bin', 'dojo.js')));
+  assert.equal(fs.realpathSync(link), fs.realpathSync(path.join(REPO_ROOT, 'bin', 'brk.js')));
 
   const help = spawnSync(link, ['help'], { encoding: 'utf8' });
   assert.equal(help.status, 0);

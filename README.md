@@ -1,10 +1,10 @@
-# dojos
+# brk
 
 Tutored, constrained **coding-dojo plugins for Claude Code** — build real systems the hard
 way, with a Socratic tutor that makes you type the load-bearing code yourself and an offline
 jail that keeps you honest.
 
-The `dojo` CLI lets you **start a dojo right away** or **install it** for use in any session.
+The `brk` CLI lets you **start a dojo right away** or **install it** for use in any session.
 Nothing is published anywhere — the tool runs straight from this clone.
 
 ## Install the CLI
@@ -12,25 +12,25 @@ Nothing is published anywhere — the tool runs straight from this clone.
 You need `git`, `node` ≥ 18, and the `claude` CLI on your PATH.
 
 ```bash
-gh repo clone geeksilva97/dojos ~/.dojos && ~/.dojos/install.sh
+gh repo clone geeksilva97/dojos ~/.brk && ~/.brk/install.sh
 ```
 
-`install.sh` symlinks `dojo` onto your PATH (`~/.local/bin` by default) and tells you if that
+`install.sh` symlinks `brk` onto your PATH (`~/.local/bin` by default) and tells you if that
 dir isn't on your PATH yet. Re-run it any time to update (it `git pull`s and re-links).
 
 ## Use it
 
 ```bash
-dojo list                          # what's available
-dojo run demonkey ./my-workshop    # start now, in ./my-workshop — nothing installed
-dojo install demonkey              # persistent: /demonkey:start works in any claude session
-dojo update                        # pull the latest tool + dojos
+brk list                          # what's available
+brk run demonkey ./my-workshop    # start now, in ./my-workshop — nothing installed
+brk install demonkey              # persistent: /demonkey:start works in any claude session
+brk update                        # pull the latest tool + dojos
 ```
 
-- **`dojo run`** is the quickest way in: it launches Claude with the dojo loaded, offline jail
+- **`brk run`** is the quickest way in: it launches Claude with the dojo loaded, offline jail
   on, in the project dir you name (created if needed). Close it and nothing lingers.
-- **`dojo install`** registers the dojo as a native Claude Code plugin, so its slash commands
-  (e.g. `/demonkey:start`) are available everywhere until you `dojo uninstall` it.
+- **`brk install`** registers the dojo as a native Claude Code plugin, so its slash commands
+  (e.g. `/demonkey:start`) are available everywhere until you `brk uninstall` it.
 
 ## The dojos
 
@@ -41,7 +41,7 @@ dojo update                        # pull the latest tool + dojos
 | **reactor-dojo** | A single-threaded `IO.select` reactor that juggles thousands of connections. |
 | **loopcraft** | An AI agent loop with tool calling in TypeScript — from a raw LLM call to a full agent with weather, search, and skills. |
 | **systeminterview** | System design interviews — scope, architecture, deep dives, estimation, trade-offs using Alex Xu's framework. |
-| **dojo-forge** | The generator: scaffold a brand-new dojo for any topic (`dojo new`). |
+| **dojo-forge** | The generator: scaffold a brand-new dojo for any topic (`brk new`). |
 
 ## Repo layout
 
@@ -53,8 +53,8 @@ dojos/
   loopcraft/          # AI agent loop dojo
   systeminterview/    # System design interview dojo
 dojo-forge/           # Meta-plugin: generates new dojos
-src/                  # dojo CLI source
-bin/dojo.js           # CLI entry point
+src/                  # brk CLI source
+bin/brk.js            # CLI entry point
 docs/ARCHITECTURE.md  # How it all fits together
 ```
 
@@ -69,13 +69,13 @@ All dojos live under `dojos/`. The `dojo-forge` generator stays at the root sinc
 **Self-service mode** — give it a topic and it researches + scaffolds automatically:
 
 ```bash
-dojo new "a key-value store in Go"
+brk new "a key-value store in Go"
 ```
 
 **Interview mode** — it asks you questions about topic, language, progression, constraints:
 
 ```bash
-dojo new
+brk new
 ```
 
 The forge generates:

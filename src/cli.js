@@ -20,7 +20,7 @@ export function main(argv) {
     case 'new': return cmdNew(rest);
     case 'help': case '--help': case '-h': case undefined: return cmdHelp();
     default:
-      console.error(`dojo: unknown command '${command}'. Run 'dojo help'.`);
+      console.error(`brk: unknown command '${command}'. Run 'brk help'.`);
       return 2;
   }
 }
