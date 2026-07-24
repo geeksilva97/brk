@@ -14,6 +14,14 @@ scales beyond this repo. No backend, no database, nothing published.
   `claude plugin install <name>@<marketplace>`. From then on the dojo's slash commands work in
   any session until `brk uninstall`.
 
+**Auto-review (`brk run --watch`).** There is no supported way for an external watcher to push
+a turn into a running interactive session, so the tutor watches *itself*: `--watch` seeds a
+self-paced `/loop` (`src/lib/watch.js`) as the session's first message. On each wake it resolves
+the current spine via `dojo.sh spine`, gates on the file's mtime, and reviews only when it
+changed — staying in one shared conversation. It's dojo-agnostic, so every dojo (and any the
+forge generates) gets it for free. Cost note: each wake is a model turn; the dynamic interval
+stretches when idle to keep idle polls cheap.
+
 ## Registry-agnostic resolution
 
 A **registry** is a git repo (or local dir) containing a `.claude-plugin/marketplace.json`.

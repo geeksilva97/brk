@@ -21,14 +21,23 @@ dir isn't on your PATH yet. Re-run it any time to update (it `git pull`s and re-
 ## Use it
 
 ```bash
-brk list                          # what's available
-brk run demonkey ./my-workshop    # start now, in ./my-workshop — nothing installed
-brk install demonkey              # persistent: /demonkey:start works in any claude session
-brk update                        # pull the latest tool + dojos
+brk list                            # what's available
+brk run demonkey ./my-workshop      # start now, in ./my-workshop — nothing installed
+brk run --watch demonkey ./my-ws    # ...and auto-review your code every time you save
+brk install demonkey                # persistent: /demonkey:start works in any claude session
+brk update                          # pull the latest tool + dojos
 ```
 
 - **`brk run`** is the quickest way in: it launches Claude with the dojo loaded, offline jail
   on, in the project dir you name (created if needed). Close it and nothing lingers.
+- **`brk run --watch`** (`-w`) adds auto-review: the tutor polls your workspace and reviews the
+  current step's code the moment you save it — no more alt-tabbing back to type "done".
+
+    It works by seeding a self-paced `/loop` (Claude Code's only in-session timer): on each
+    wake the tutor checks the spine file's mtime and, if it changed, reviews it against the
+    step's gotchas and runs the success check — all in the same conversation. It only reviews;
+    it never writes your code. Each poll is a model turn, so it costs more tokens than a normal
+    session; the loop stretches its interval when you're idle to keep that small.
 - **`brk install`** registers the dojo as a native Claude Code plugin, so its slash commands
   (e.g. `/demonkey:start`) are available everywhere until you `brk uninstall` it.
 

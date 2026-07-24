@@ -12,7 +12,7 @@ test('help prints usage and exits 0', () => {
   const r = runCli(['help'], sb.env);
   assert.equal(r.status, 0);
   assert.match(r.stdout, /USAGE/);
-  assert.match(r.stdout, /run <name>/);
+  assert.match(r.stdout, /run \[--watch\] <name>/);
 });
 
 test('no command prints help', () => {
@@ -53,6 +53,28 @@ test('run builds the exact claude invocation with jail flags', () => {
   ]);
   assert.equal(calls[0].promptSuggest, 'false');
   assert.equal(calls[0].cwd, fs.realpathSync(proj));
+});
+
+test('run --watch seeds the auto-review /loop before the jail flags', () => {
+  const proj = path.join(sb.dir, 'ws');
+  const r = runCli(['run', '--watch', 'demonkey', proj], sb.env);
+  assert.equal(r.status, 0);
+  const { argv } = sb.calls()[0];
+  // --watch itself is never forwarded to claude.
+  assert.ok(!argv.includes('--watch') && !argv.includes('-w'));
+  // The seeded message is a /loop invocation...
+  const loop = argv.find((a) => a.startsWith('/loop'));
+  assert.ok(loop, 'expected a /loop prompt in the claude args');
+  assert.match(loop, /dojo\.sh" spine/);
+  // ...and it sits before the variadic --disallowed-tools so claude parses it
+  // as the first message, not as another disallowed tool.
+  assert.ok(argv.indexOf(loop) < argv.indexOf('--disallowed-tools'));
+});
+
+test('run without --watch seeds no /loop prompt', () => {
+  const r = runCli(['run', 'demonkey', path.join(sb.dir, 'ws')], sb.env);
+  assert.equal(r.status, 0);
+  assert.ok(!sb.calls()[0].argv.some((a) => a.startsWith('/loop')));
 });
 
 test('run without a project dir uses cwd and still jails', () => {

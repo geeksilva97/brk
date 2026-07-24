@@ -5,8 +5,9 @@ USAGE
   brk <command> [args]
 
 COMMANDS
-  run <name> [dir] [claude args]   Start a dojo right away (ephemeral, nothing installed).
+  run [--watch] <name> [dir] [args]  Start a dojo right away (ephemeral, nothing installed).
                                    Runs in <dir> (created if given), offline jail on.
+                                   --watch (-w): auto-review your code on each save.
   install <name>                   Install a dojo persistently (native Claude Code plugin).
   uninstall <name>                 Remove an installed dojo.
   list                             List every dojo across all registries.
@@ -20,6 +21,7 @@ COMMANDS
 EXAMPLES
   brk list
   brk run demonkey ./my-workshop
+  brk run --watch demonkey ./my-workshop
   brk install c10k-dojo
   brk registry add git@github.com:acme/dojos.git acme
 `);
