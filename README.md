@@ -41,6 +41,7 @@ brk update                        # pull the latest tool + dojos
 | **reactor-dojo** | A single-threaded `IO.select` reactor that juggles thousands of connections. |
 | **loopcraft** | An AI agent loop with tool calling in TypeScript — from a raw LLM call to a full agent with weather, search, and skills. |
 | **systeminterview** | System design interviews — scope, architecture, deep dives, estimation, trade-offs using Alex Xu's framework. |
+| **replicant** | Database replication from scratch on top of SQLite in Ruby — a networked node, a hand-written write-ahead log, leader/follower replication, and quorum-based leader election (the safety core of Raft). |
 | **dojo-forge** | The generator: scaffold a brand-new dojo for any topic (`brk new`). |
 
 ## Repo layout
