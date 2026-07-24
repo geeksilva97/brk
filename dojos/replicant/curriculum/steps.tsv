@@ -1,0 +1,20 @@
+1	Listen and frame	workspace/node.rb	build
+2	Read frames from the stream	workspace/framing.rb	build
+3	Request, response, correlation ID	workspace/server.rb	build
+4	Peer links and the fault injector	workspace/link.rb	build
+5	Idempotent receiver	workspace/dedupe.rb	build
+6	The append-only log	workspace/wal.rb	build
+7	fsync before apply	workspace/apply.rb	build
+8	Replay on startup	workspace/replay.rb	build
+9	The single-writer queue	workspace/update_queue.rb	build
+10	Ship entries to a follower	workspace/replicator.rb	build
+11	The follower applies	workspace/follower.rb	build
+12	Determinism: capture and rewrite	workspace/rewrite.rb	build
+13	The high-water mark read gate	workspace/hwm.rb	build
+14	Monotonic and consistent-prefix reads	workspace/sticky.rb	build
+15	Follower catch-up	workspace/catchup.rb	build
+16	Heartbeat and failure detection	workspace/heartbeat.rb	build
+17	The generation clock	workspace/generation.rb	build
+18	Naive election and split-brain	workspace/election.rb	build
+19	Majority-quorum election	workspace/quorum_election.rb	build
+20	Quorum commit	workspace/commit.rb	build

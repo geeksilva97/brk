@@ -8,6 +8,7 @@
     { "name": "reactor-dojo", "source": "./dojos/reactor-dojo", "category": "workshop" },
     { "name": "loopcraft", "source": "./dojos/loopcraft", "category": "workshop" },
     { "name": "systeminterview", "source": "./dojos/systeminterview", "category": "workshop" },
+    { "name": "replicant", "source": "./dojos/replicant", "category": "workshop" },
     { "name": "dojo-forge", "source": "./dojo-forge", "category": "meta" }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "name": "replicant",
+  "description": "A tutored coding dojo: build database replication from scratch on top of SQLite in Ruby — leader/follower, a hand-written WAL, quorum and leader election — with a Socratic tutor that makes you type the load-bearing spine and an offline jail that keeps you honest.",
+  "version": "0.1.0",
+  "author": { "name": "geeksilva97" },
+  "keywords": ["ruby","distributed-systems","replication","sqlite","raft","wal","consensus","workshop","tutor"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}
