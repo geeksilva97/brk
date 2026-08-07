@@ -12,7 +12,7 @@ Nothing is published anywhere — the tool runs straight from this clone.
 You need `git`, `node` ≥ 18, and the `claude` CLI on your PATH.
 
 ```bash
-gh repo clone geeksilva97/dojos ~/.brk && ~/.brk/install.sh
+gh repo clone geeksilva97/brk ~/.brk && ~/.brk/install.sh
 ```
 
 `install.sh` symlinks `brk` onto your PATH (`~/.local/bin` by default) and tells you if that

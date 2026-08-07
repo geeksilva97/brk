@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Install (or update) the `brk` CLI by symlinking it onto your PATH.
 #
-#   gh repo clone geeksilva97/dojos ~/.brk && ~/.brk/install.sh
+#   gh repo clone geeksilva97/brk ~/.brk && ~/.brk/install.sh
 #
 # Re-running pulls the latest (tool + dojos) and re-links — so it doubles as the
 # updater. Nothing is published anywhere; the CLI runs straight from this clone.
