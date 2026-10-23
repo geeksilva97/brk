@@ -1,0 +1,7 @@
+# Per-project dojo state (created at runtime in the learner's project).
+/.replicant-lead/
+# The system under construction, its decisions, provisioned dependencies and the docs bundle.
+/workspace/
+/decisions/
+/vendor/
+/docs/

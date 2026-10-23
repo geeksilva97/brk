@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# GIVEN — run the local cluster: leader on 7001, followers on 7002 and 7003.
+#   bin/cluster start     fresh state (wipes .cluster/), start all three, wait until they answer
+#   bin/cluster stop
+#   bin/cluster restart
+#   bin/cluster status    each node's role, log_tail and applied_index
+set -uo pipefail
+
+WS="$(cd "$(dirname "$0")/.." && pwd)"
+DIR="$WS/.cluster"
+LEADER=7001
+FOLLOWERS=(7002 7003)
+
+ruby_cmd() { # use the vendored bundle when the project has one
+  local gemfile="$WS/../Gemfile"
+  if [[ -f "$gemfile" ]]; then BUNDLE_GEMFILE="$gemfile" bundle exec ruby "$@"; else ruby "$@"; fi
+}
+
+start_node() { # start_node <port> <role> [followers]
+  # exec inside the subshell so $! is the node's own pid, not a wrapper's — stop() relies on it.
+  local args=("$WS/lib/node.rb" --port "$1" --role "$2" --followers "${3:-}" --dir "$DIR")
+  (
+    if [[ -f "$WS/../Gemfile" ]]; then BUNDLE_GEMFILE="$WS/../Gemfile" exec bundle exec ruby "${args[@]}"
+    else exec ruby "${args[@]}"; fi
+  ) >> "$DIR/node-$1.out" 2>&1 &
+  echo $! > "$DIR/node-$1.pid"
+}
+
+wait_up() { # wait_up <port>
+  for _ in $(seq 1 100); do
+    ruby_cmd -I "$WS/lib" -rwire -e "Wire.call($1, {'op'=>'status'}, timeout: 1)" >/dev/null 2>&1 && return 0
+    sleep 0.1
+  done
+  echo "node $1 did not come up — see $DIR/node-$1.out" >&2
+  return 1
+}
+
+stop() { # kill every node and wait until each one is gone (a lingering one would keep its port)
+  local pids=() pid
+  shopt -s nullglob
+  for pidfile in "$DIR"/node-*.pid; do
+    pids+=("$(cat "$pidfile")")
+    rm -f "$pidfile"
+  done
+  shopt -u nullglob
+  for pid in ${pids[@]+"${pids[@]}"}; do kill "$pid" 2>/dev/null || true; done
+  for pid in ${pids[@]+"${pids[@]}"}; do
+    for _ in $(seq 1 50); do kill -0 "$pid" 2>/dev/null || break; sleep 0.1; done
+    kill -9 "$pid" 2>/dev/null || true
+  done
+}
+
+start() {
+  stop
+  for p in "$LEADER" "${FOLLOWERS[@]}"; do
+    if ruby_cmd -I "$WS/lib" -rwire -e "Wire.call($p, {'op'=>'status'}, timeout: 1)" >/dev/null 2>&1; then
+      echo "port $p is already taken by a process this cluster did not start — stop it first" >&2
+      exit 1
+    fi
+  done
+  rm -rf "$DIR"
+  mkdir -p "$DIR/link"
+  for f in "${FOLLOWERS[@]}"; do start_node "$f" follower; done
+  start_node "$LEADER" leader "$(IFS=,; echo "${FOLLOWERS[*]}")"
+  for p in "${FOLLOWERS[@]}" "$LEADER"; do wait_up "$p" || exit 1; done
+  echo "cluster up: leader $LEADER, followers ${FOLLOWERS[*]}"
+}
+
+status() {
+  for p in "$LEADER" "${FOLLOWERS[@]}"; do
+    ruby_cmd -I "$WS/lib" -rwire -e "puts Wire.call($p, {'op'=>'status'}, timeout: 1).merge('port'=>$p).to_json" 2>/dev/null \
+      || echo "{\"port\":$p,\"down\":true}"
+  done
+}
+
+case "${1:-}" in
+  start)   start ;;
+  stop)    stop; echo "cluster stopped" ;;
+  restart) start ;;
+  status)  status ;;
+  *) echo "usage: bin/cluster {start|stop|restart|status}" >&2; exit 2 ;;
+esac

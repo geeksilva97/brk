@@ -9,6 +9,7 @@
     { "name": "loopcraft", "source": "./dojos/loopcraft", "category": "workshop" },
     { "name": "systeminterview", "source": "./dojos/systeminterview", "category": "workshop" },
     { "name": "replicant", "source": "./dojos/replicant", "category": "workshop" },
+    { "name": "replicant-lead", "source": "./dojos/replicant-lead", "category": "workshop" },
     { "name": "dojo-forge", "source": "./dojo-forge", "category": "meta" }
   ]
 }

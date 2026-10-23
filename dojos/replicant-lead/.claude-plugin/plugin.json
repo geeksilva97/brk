@@ -1,0 +1,9 @@
+{
+  "name": "replicant-lead",
+  "description": "Lead-mode replicant: you lead an agent through database replication on top of SQLite in Ruby. The agent writes the ADR and the code — you make every decision, commit to numbers before the trial, review what it built, and answer for it. Hooks enforce decide-then-build and predict-then-measure.",
+  "version": "0.1.0",
+  "author": { "name": "geeksilva97" },
+  "keywords": ["ruby","distributed-systems","replication","sqlite","adr","lead-mode","workshop","tutor"],
+  "skills": "./skills/",
+  "commands": ["./commands/"]
+}

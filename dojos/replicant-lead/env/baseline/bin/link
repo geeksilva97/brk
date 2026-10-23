@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# GIVEN — turn the fault knobs on the leader -> follower link. Changes apply immediately.
+#   bin/link 7002 delay 500          ship each entry no earlier than 500 ms after it was written
+#   bin/link 7002 apply-delay 200    the follower takes 200 ms to apply each stored entry
+#   bin/link 7002 partition on|off   hold every entry until the partition heals (nothing is lost)
+#   bin/link 7002 show
+#   bin/link reset                   clear every knob on every link
+require "json"
+require "fileutils"
+
+dir = File.expand_path("../.cluster/link", __dir__)
+FileUtils.mkdir_p(dir)
+
+if ARGV.first == "reset"
+  Dir[File.join(dir, "*.json")].each { |f| File.delete(f) }
+  puts "all links reset"
+  exit
+end
+
+port, knob, value = ARGV
+abort "usage: bin/link <port> {delay <ms>|apply-delay <ms>|partition on|off|show} | bin/link reset" unless port && knob
+
+file = File.join(dir, "#{Integer(port)}.json")
+config = File.exist?(file) ? JSON.parse(File.read(file)) : {}
+
+case knob
+when "delay"       then config["delay_ms"] = Integer(value)
+when "apply-delay" then config["apply_delay_ms"] = Integer(value)
+when "partition"   then config["partitioned"] = (value == "on")
+when "show"        then nil
+else abort "unknown knob #{knob.inspect}"
+end
+
+File.write(file + ".tmp", JSON.generate(config))
+File.rename(file + ".tmp", file)
+puts "link #{port}: #{config.to_json}"
