@@ -5,11 +5,8 @@ description: One-time setup — vendor the sqlite3 gem, copy in the GIVEN baseli
 Prepare the learner's project. Run from the project directory.
 
 1. **Dependencies (BEFORE the jail closes — this is the one network step):**
-   - Write a pinned `Gemfile` in the project root:
-     ```
-     source "https://rubygems.org"
-     gem "sqlite3", "~> 2.0"
-     ```
+   - Copy the pinned Gemfile — do not write it by hand: its source URL in a shell command trips the
+     offline guard. `cp "${CLAUDE_PLUGIN_ROOT}/env/Gemfile" ./Gemfile`
    - `bundle config set --local path vendor/bundle && bundle install`
    - Everything else is Ruby stdlib (`socket`, `json`, `timeout`, `fileutils`). Ruby ≥ 3.2 is
      required (the wire code uses `IO#timeout=`).

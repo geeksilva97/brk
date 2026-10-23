@@ -86,8 +86,9 @@ before seeing the answer. The agent records them; it never proposes numbers or r
 - When the node is behind, does the code do what the ADR says — or silently serve?
 - Walk the unlisted choices report. Which of these is secretly a decision-surface row?
 
-**Drill variant (instructor toggle):** the agent's first build gates on the stored tail instead of
-the applied index, without saying so. The step does not advance until the learner finds it.
+**Drill defect** (only when the instructor ran `bin/dojo.sh drill on`): the first build gates reads
+on the follower's `log_tail` instead of its `applied_index`. It passes the 500 ms-lag phase of the
+trial and fails the apply-delay phase (~50/50 stale) — tail and applied only drift apart there.
 
 ## Gotchas  (what the review and quiz should catch)
 - Gating on the stored tail instead of the applied high-water mark.

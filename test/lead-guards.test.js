@@ -103,3 +103,48 @@ test('post-trial records the result and pairs it with the expected results', { s
 test('post-trial is a no-op for ordinary commands', { skip }, () => {
   assert.equal(run(POST_TRIAL, [], JSON.stringify({ tool_response: { stdout: 'ok' } })).stdout, '');
 });
+
+const dojo = (...args) => run(path.join(PLUGIN_ROOT, 'bin', 'dojo.sh'), args).stdout.trim();
+const sessionContext = () =>
+  JSON.parse(run(path.join(PLUGIN_ROOT, 'hooks', 'session-start.sh'), []).stdout).hookSpecificOutput.additionalContext;
+
+test('drill mode is an instructor toggle that session-start passes to the agent', { skip }, () => {
+  assert.equal(dojo('drill'), 'off');
+  assert.doesNotMatch(sessionContext(), /DRILL MODE/);
+  assert.equal(dojo('drill', 'on'), 'on');
+  assert.match(sessionContext(), /DRILL MODE IS ON/);
+  assert.equal(dojo('drill', 'off'), 'off');
+  assert.doesNotMatch(sessionContext(), /DRILL MODE/);
+});
+
+test('session-start sends a fresh project to setup first', { skip }, () => {
+  assert.match(sessionContext(), /^FIRST ACTION.*setup/);
+  fs.writeFileSync(path.join(project, '.replicant-lead', '.setup_done'), '');
+  assert.doesNotMatch(sessionContext(), /FIRST ACTION/);
+});
+
+test('the title hook renames only when the step changes', { skip }, () => {
+  const title = () => run(path.join(PLUGIN_ROOT, 'hooks', 'title.sh'), [], '{}').stdout;
+  assert.equal(title(), '', 'no-op outside a started dojo');
+  dojo('get');
+  assert.match(JSON.parse(title()).hookSpecificOutput.sessionTitle, /^replicant-lead - Step 13: /);
+  assert.equal(title(), '', 'no rename while the step is unchanged');
+});
+
+test('advance on the last step stays put and says so', { skip }, () => {
+  assert.match(dojo('advance'), /last one/);
+  assert.equal(dojo('get'), '13');
+  assert.match(dojo('status'), /"completed": \[13\]/);
+});
+
+test('numbered expected results count too, but the list marker is not a number', { skip }, () => {
+  const write = (lines) => {
+    fs.mkdirSync(path.join(project, 'decisions'), { recursive: true });
+    fs.writeFileSync(path.join(project, ADR),
+      SECTIONS.map((s) => `## ${s}\nx\n`).join('') + `## Expected results\n${lines.join('\n')}\n`);
+  };
+  write(['1. stale without the gate: 90', '2) stale with the gate: low']);
+  assert.ok(isDeny(guard('spine', codeWrite())), '"2) ... low" has no number once the marker is stripped');
+  write(['1. stale without the gate: 90', '2) stale with the gate: 0']);
+  assert.equal(guard('spine', codeWrite()), '');
+});

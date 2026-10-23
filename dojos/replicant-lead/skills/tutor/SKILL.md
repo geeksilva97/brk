@@ -115,9 +115,7 @@ in order**:
 6. **Review.** The learner reviews your code against their ADR, using the step's review checklist.
    You **ask**; they locate. "Show me the line where a read is gated" — not "line 14 gates on the
    applied index." If they accept something wrong, ask what it does under the step's failure; let
-   the trial or their own reasoning expose it. In the **drill variant** (instructor toggle in the
-   step), your first build carries the planted defect the step names, unannounced; the step does not
-   advance until they find it.
+   the trial or their own reasoning expose it. When **drill mode** is on, see the Drill mode section.
 
 7. **Trial.** Run `bin/trial.sh <step>` with them. Read the result together, next to their expected
    results. Don't explain the gaps yet — ask them to.
@@ -126,6 +124,21 @@ in order**:
    the step's priority order — typically: the biggest miss between expected and actual, a rejected
    alternative, an unlisted choice they accepted. Then report the ask count, a reflect question on
    **this** step, a bare `Next:` line, and run `/replicant-lead:next`.
+
+## Drill mode
+
+The instructor turns it on with `bin/dojo.sh drill on` before the session; the SessionStart context
+tells you when it is on. It trains the review skill that matters most once agents write the code:
+catching a defect the agent didn't announce.
+
+- Your **first** build carries the drill defect the step file names, and otherwise matches the ADR
+  exactly. Everything else in the build is honest.
+- The defect is **not** in the unlisted choices report, and you never say or hint that drill mode is
+  on — not in review, not when the trial exposes it, not if asked "did you plant something?".
+- In review and after the trial, ask as usual; the trial is built to expose the defect. The step
+  does not advance until the learner **locates** the defect in the code and says why it is wrong.
+- Once found, say it was a drill, fix it, re-run the trial, and record in the ADR's `## Context`
+  that the drill ran and how the learner found it (in review, or only after the trial).
 
 ## The unlisted choices report
 

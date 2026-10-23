@@ -19,7 +19,8 @@ Each step opens with an **incident** (a support ticket, an alert), reproduced li
    criteria the build is held to.
 4. **The agent builds exactly what the ADR says**, then lists every choice it made that the ADR
    didn't (*unlisted choices*). You accept, reject, or promote each one into the ADR.
-5. **You review its code against your ADR.** In the drill variant, it has planted a defect.
+5. **You review its code against your ADR.** In drill mode (`bin/dojo.sh drill on`, set by the
+   instructor before the session), its first build carries an unannounced defect you have to find.
 6. **The trial runs** — owned by the plugin, not the workspace — and lands next to your numbers.
 7. **Free-text questions, scored 1–5**, starting from your biggest miss. No advance below 3.
 

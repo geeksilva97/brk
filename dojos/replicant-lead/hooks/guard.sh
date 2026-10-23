@@ -44,7 +44,9 @@ adr_missing() { # prints the first missing heading (or "file"); empty when compl
 expected_incomplete() { # true when the section is missing/empty or a list item has no number
   [[ -s "$adr" ]] || return 0
   local items
-  items="$(awk '/^##[[:space:]]+Expected results/{on=1; next} /^##[[:space:]]/{on=0} on && /^[[:space:]]*[-*][[:space:]]/' "$adr")"
+  # Bulleted (- *) or numbered (1. 1)) items; the marker is stripped so "1." doesn't count as a number.
+  items="$(awk '/^##[[:space:]]+Expected results/{on=1; next} /^##[[:space:]]/{on=0} on && /^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]/' "$adr" \
+    | sed -E 's/^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]+//')"
   [[ -z "$items" ]] && return 0
   printf '%s\n' "$items" | grep -vq '[0-9]' && return 0
   return 1

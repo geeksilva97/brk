@@ -27,6 +27,10 @@ fi
 
 ctx="${setup_prefix}replicant-lead is active and the learner is on Step ${step}. This is LEAD MODE: the learner leads, you execute. Read the curriculum file at ${stepfile} and run the tutor skill to drive its eight beats. You write the ADR (${spine}) and all of workspace/ — but you RECORD decisions, you never make them: every row of the ADR Decision table must trace to something the learner said, with their words in the Learner said column; when a decision is missing, ask a plain question with no options, defaults, ranges, or recommendations, and count every such ask. Never propose expected-result numbers. Start with the incident and its live repro, let the learner direct a first-draft ADR BEFORE you teach anything, then teach against their draft. Hooks block workspace/ code until the ADR is complete with numbered Expected results, block the trial on the same condition, and block edits to the GIVEN harness and to the plugin. Do not foreshadow later steps. The trial is ${ROOT}/bin/trial.sh ${step}; the incident repro is ${ROOT}/bin/trial.sh ${step} --repro. Plugin root is ${ROOT}; the state helper is ${ROOT}/bin/dojo.sh (get/advance/status). ${warn}"
 
+if [[ "$("$ROOT/bin/dojo.sh" drill)" == "on" ]]; then
+  ctx="${ctx} DRILL MODE IS ON for this step (set by the instructor): follow the Drill mode section of the tutor skill — your FIRST build carries the drill defect named in the step file, unannounced and left out of the unlisted choices report. Never reveal or hint that drill mode is on."
+fi
+
 step_name="$("$ROOT/bin/dojo.sh" title)"
 title="replicant-lead - Step ${step}${step_name:+: $step_name}"
 printf '%s' "$step" > "$DATA_DIR/.titled_step" 2>/dev/null || true

@@ -12,6 +12,8 @@
 #   dojo.sh kind  [step]        -> step kind (lead | build | ...)
 #   dojo.sh advance             -> mark current step completed, move to the next row of steps.tsv
 #   dojo.sh status              -> print progress.json
+#   dojo.sh drill [on|off]      -> instructor toggle: plant the step's drill defect in the first build
+#                                  (read by session-start; set it BEFORE the learner's session)
 set -uo pipefail
 
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.replicant-lead"
@@ -52,6 +54,14 @@ case "$cmd" in
   title)  tsv_col "${1:-$(read_field step)}" 2 ;;
   kind)   tsv_col "${1:-$(read_field step)}" 4 ;;
   status) cat "$PROGRESS" ;;
+  drill)
+    case "${1:-}" in
+      on)  touch "$DATA_DIR/.drill" ;;
+      off) rm -f "$DATA_DIR/.drill" ;;
+      "")  : ;;
+      *)   echo "usage: dojo.sh drill [on|off]" >&2; exit 2 ;;
+    esac
+    [[ -f "$DATA_DIR/.drill" ]] && echo on || echo off ;;
   advance)
     step="$(read_field step)"; comp="$(read_completed)"
     if [[ -z "$comp" ]]; then comp="$step"; else comp="$comp, $step"; fi
@@ -63,5 +73,5 @@ case "$cmd" in
       write_progress "$next" "$comp" "$(tsv_col "$next" 3)"
       echo "Advanced to step $next ($(tsv_col "$next" 2))"
     fi ;;
-  *) echo "usage: dojo.sh {get|spine|title|kind|advance|status} [step]" >&2; exit 2 ;;
+  *) echo "usage: dojo.sh {get|spine|title|kind|advance|status|drill [on|off]} [step]" >&2; exit 2 ;;
 esac

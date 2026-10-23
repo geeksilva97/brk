@@ -23,8 +23,8 @@ mkdir -p "$DATA_DIR" 2>/dev/null || true
 printf '%s,%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${row#TRIAL_RESULT,}" >> "$RESULTS"
 
 spine="$("$ROOT/bin/dojo.sh" spine 2>/dev/null || true)"
-expected="$(awk '/^##[[:space:]]+Expected results/{on=1; next} /^##[[:space:]]/{on=0} on && /^[[:space:]]*[-*][[:space:]]/' \
-  "$PROJECT/$spine" 2>/dev/null | sed -E 's/^[[:space:]]*[-*][[:space:]]+//' | tr '"\\' "' " | paste -sd ';' - | sed 's/;/ ; /g')"
+expected="$(awk '/^##[[:space:]]+Expected results/{on=1; next} /^##[[:space:]]/{on=0} on && /^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]/' \
+  "$PROJECT/$spine" 2>/dev/null | sed -E 's/^[[:space:]]*([-*]|[0-9]+[.)])[[:space:]]+//' | tr '"\\' "' " | paste -sd ';' - | sed 's/;/ ; /g')"
 
 ctx="Trial recorded in ${RESULTS}. MEASURED: ${row#TRIAL_RESULT,}. LEARNER EXPECTED (from ${spine}): ${expected:-none found}. Beat 7: put these side by side for the learner, item by item. Do not explain any gap yet — ask the learner to explain the biggest one first."
 
