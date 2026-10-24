@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "state_dir": ".systeminterview",
+  "modality": "interview",
+  "initial_mode": "conversation",
+  "hooks": {
+    "session_context": "hooks/session-context.txt",
+    "title_prefix": "systeminterview"
+  }
+}

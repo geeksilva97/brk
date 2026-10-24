@@ -9,6 +9,11 @@
 # without a JSON library. The agent reads the full step file itself (it has Read).
 set -uo pipefail
 
+if [[ -n "${BRK_RUNTIME_BIN:-}" ]]; then
+  ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+  exec "$BRK_RUNTIME_BIN" hook session-start --plugin-root "$ROOT"
+fi
+
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.demonkey"
 ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 PROGRESS="$DATA_DIR/progress.json"

@@ -2,6 +2,11 @@
 # UserPromptSubmit hook: keep the session title in sync with the current step.
 set -uo pipefail
 
+if [[ -n "${BRK_RUNTIME_BIN:-}" ]]; then
+  ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+  exec "$BRK_RUNTIME_BIN" hook title --plugin-root "$ROOT"
+fi
+
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.loopcraft"
 ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 PROGRESS="$DATA_DIR/progress.json"

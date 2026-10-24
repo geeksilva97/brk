@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "state_dir": ".reactor-dojo",
+  "modality": "code",
+  "initial_mode": "local-jailed",
+  "initial_spine": "workspace/blocking_echo.rb",
+  "hooks": {
+    "session_context": "hooks/session-context.txt",
+    "title_prefix": "reactor-dojo",
+    "path_warnings": [
+      {
+        "kind": "dir",
+        "path": "docs",
+        "message": "Offline docs bundle missing in this project so run /reactor-dojo:setup first. "
+      }
+    ]
+  }
+}

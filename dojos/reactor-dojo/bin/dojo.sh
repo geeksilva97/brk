@@ -13,6 +13,11 @@
 #   dojo.sh status              -> print progress.json
 set -uo pipefail
 
+# Native sessions opt into the shared runtime; standalone plugins keep working.
+if [[ -n "${BRK_RUNTIME_BIN:-}" ]]; then
+  exec "$BRK_RUNTIME_BIN" state --plugin-root "${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}" "$@"
+fi
+
 # State is PER-PROJECT (lives in the learner's project dir), NOT global — so a new
 # folder starts fresh at Step 1 instead of inheriting another project's progress.
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.reactor-dojo"

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "state_dir": ".demonkey",
+  "modality": "code",
+  "initial_mode": "local-jailed",
+  "initial_spine": "workspace/echo.rb",
+  "hooks": {
+    "session_context": "hooks/session-context.txt",
+    "title_prefix": "demonkey",
+    "setup_context": "hooks/setup-context.txt",
+    "command_warnings": [
+      {
+        "command": "ruby",
+        "message": "Ruby not found on PATH so the servers cannot run until installed. "
+      }
+    ],
+    "setup_complete_any": [
+      [
+        {
+          "kind": "file",
+          "path": ".setup_done",
+          "base": "state"
+        }
+      ],
+      [
+        {
+          "kind": "dir",
+          "path": "vendor/bundle"
+        },
+        {
+          "kind": "file",
+          "path": "docs/INDEX.md"
+        }
+      ]
+    ]
+  }
+}

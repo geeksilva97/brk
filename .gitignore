@@ -1,4 +1,8 @@
-# Node
+# Rust
+/target/
+/bin/brk
+
+# Node (legacy compatibility tests)
 node_modules/
 
 # Per-dojo runtime state created in a learner's project dir (belt-and-suspenders;

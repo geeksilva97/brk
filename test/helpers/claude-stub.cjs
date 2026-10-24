@@ -12,6 +12,7 @@ if (log) {
     argv,
     cwd: process.cwd(),
     promptSuggest: process.env.CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION ?? null,
+    runtime: process.env.BRK_RUNTIME_BIN ?? null,
   };
   fs.appendFileSync(log, JSON.stringify(rec) + '\n');
 }

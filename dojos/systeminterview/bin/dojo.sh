@@ -15,6 +15,11 @@
 #   dojo.sh status              -> print progress.json
 set -uo pipefail
 
+# Native sessions opt into the shared runtime; standalone plugins keep working.
+if [[ -n "${BRK_RUNTIME_BIN:-}" ]]; then
+  exec "$BRK_RUNTIME_BIN" state --plugin-root "${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}" "$@"
+fi
+
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.systeminterview"
 ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 PROGRESS="$DATA_DIR/progress.json"

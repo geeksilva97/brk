@@ -16,11 +16,12 @@ scales beyond this repo. No backend, no database, nothing published.
 
 **Auto-review (`brk run --watch`).** There is no supported way for an external watcher to push
 a turn into a running interactive session, so the tutor watches *itself*: `--watch` seeds a
-self-paced `/loop` (`src/lib/watch.js`) as the session's first message. On each wake it resolves
-the current spine via `dojo.sh spine`, gates on the file's mtime, and reviews only when it
-changed — staying in one shared conversation. It's dojo-agnostic, so every dojo (and any the
-forge generates) gets it for free. Cost note: each wake is a model turn; the dynamic interval
-stretches when idle to keep idle polls cheap.
+self-paced `/loop` (`rust/watch.txt`, checked against legacy `src/lib/watch.js`) as the
+session's first message. On each wake it resolves the current spine via `dojo.sh spine`,
+gates on the file's mtime, and reviews only when it changed — staying in one shared
+conversation. It works with code dojos that expose the spine helper; the native CLI rejects
+`--watch` for configured interview dojos. Cost note: each wake is a model turn; the dynamic
+interval stretches when idle to keep idle polls cheap.
 
 ## Registry-agnostic resolution
 
@@ -29,12 +30,20 @@ A **registry** is a git repo (or local dir) containing a `.claude-plugin/marketp
 - The **self registry** is this repo — it's already on disk next to the CLI, so the bundled
   dojos resolve with zero network.
 - **Extra registries** live in `~/.config/brk/registries` (one `git-url [name]` per line,
-  managed by `brk registry add/list/remove`). They're cloned/pulled into `~/.cache/brk/<name>/`
-  on demand.
+  managed by `brk registry add/list/remove`). They're cloned into `~/.cache/brk/<name>/`
+  on first use. Native commands reuse the existing cache offline; `brk update` explicitly
+  pulls changes. Legacy JavaScript still refreshes on access.
 
-`resolveDojo(name)` checks local registries first, then git ones; the first marketplace entry
-whose `name` matches wins, and its `source` (a relative path) gives the plugin dir. Listing and
-parsing is plain `JSON.parse` — no jq.
+Resolution checks the bundled registry first, then git registries; the first marketplace
+entry whose `name` matches wins, and its `source` (a relative path) gives the plugin dir.
+The native implementation validates registry aliases and confines source paths to the
+registry. JSON uses serde; the legacy CLI uses `JSON.parse` — neither needs jq.
+
+The native binary discovers bundled content through `BRK_HOME` or an ancestor of its actual
+executable path, never the current working directory or a compiled-in build-machine path.
+`install.sh` builds and atomically replaces `bin/brk` in this checkout, then symlinks it onto
+PATH. `brk update` refreshes content, not the compiled executable; re-run `install.sh` to
+rebuild. Prebuilt releases are not yet provided.
 
 This is the **scale hook**: any org publishes a `dojos`-shaped repo, and consumers
 `brk registry add <org>/<repo>` to run/install its dojos. Going broad later (public repos,
@@ -53,14 +62,41 @@ Every learner dojo ships the same invariants — the CLI only sets the belt-and-
 - **Offline guard** — denies `WebFetch`/`WebSearch`, external Bash egress (localhost allowed),
   and ad-hoc dependency installs. Work from the bundled docs.
 
+## Shared state migration
+
+Native `run` sessions export `BRK_RUNTIME_BIN` for plugins with `brk.json`. Their existing
+`bin/dojo.sh` entrypoints delegate to `brk state`; without that variable, they retain the
+standalone shell implementation. The native state path supports both code and interview
+TSV formats, preserves unknown JSON fields, locks read-modify-write operations and replaces
+progress atomically. SessionStart and title also delegate to Rust in native sessions;
+bootstrap uses the state lock and JSON output is serialized structurally. Their texts and
+checks live in hook templates and `brk.json`, without changing pedagogical content.
+Shell-only writers do not participate in that lock; avoid mixing old and native sessions
+on the same project while migration is underway. Guard/post-benchmark implementations and
+forge templates retain their previous behavior.
+
+These hooks remain tool-level heuristics, not an OS filesystem/network sandbox. Migrating
+their implementation or strengthening the isolation policy is separate work.
+
 ## Layout
 
 ```
-bin/brk.js           entry (the file install.sh symlinks)
-src/cli.js           command dispatch
-src/registry.js      registry config + resolution
-src/commands/*.js    run, install, list, update, registry, new, help
-src/lib/*.js         claude (spawn), git (fetch), marketplace (JSON), paths (XDG)
-<dojo>/              each bundled dojo plugin (demonkey, c10k-dojo, dojo-forge, …)
+Cargo.toml / Cargo.lock  native package and locked dependencies
+rust/main.rs            native entrypoint
+rust/cli.rs             command dispatch
+rust/state.rs           shared progress and curriculum table handling
+rust/hooks.rs           native SessionStart and title adapters
+rust/{paths,registry,marketplace,process}.rs   native adapters
+bin/brk                 built executable (install.sh symlinks this)
+bin/brk.js              legacy JavaScript entrypoint
+src/cli.js              legacy command dispatch
+src/registry.js         legacy registry config + resolution
+src/commands/*.js       legacy run, install, list, update, registry, new, help
+src/lib/*.js            legacy subprocess and manifest helpers
+dojos/<dojo>/brk.json    versioned native state configuration
+dojos/<dojo>/           bundled learner plugin
+dojo-forge/             authoring plugin (still template/agent-driven)
 .claude-plugin/marketplace.json   the self registry's catalog
 ```
+
+See [RUST-MIGRATION.md](RUST-MIGRATION.md) for the current scope and compatibility boundaries.

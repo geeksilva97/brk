@@ -16,6 +16,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      # No install step — the CLI has zero runtime/dev dependencies.
-      - name: Run tests
-        run: node --test
+      - name: Install Rust
+        run: rustup toolchain install 1.89.0 --profile minimal --component rustfmt --component clippy
+      - name: Rust format
+        run: cargo +1.89.0 fmt --check
+      - name: Rust lint
+        run: cargo +1.89.0 clippy --locked --all-targets -- -D warnings
+      - name: Native unit tests
+        run: cargo +1.89.0 test --locked
+      - name: Build native CLI
+        run: cargo +1.89.0 build --locked
+      - name: Native compatibility tests
+        run: BRK_TEST_BIN="$PWD/target/debug/brk" node --test test/*.test.js
+      - name: Legacy CLI and standalone fallback
+        run: node --test test/*.test.js

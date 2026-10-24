@@ -9,14 +9,24 @@ Nothing is published anywhere — the tool runs straight from this clone.
 
 ## Install the CLI
 
-You need `git`, `node` ≥ 18, and the `claude` CLI on your PATH.
+You need `git`, Rust/Cargo ≥ 1.89 to build the CLI, and the `claude` CLI on your PATH.
+The installed `brk` executable does not need Node. Individual dojos still need their
+teaching runtimes (Ruby or Node), and the compatibility test suite uses Node.
 
 ```bash
 gh repo clone geeksilva97/brk ~/.brk && ~/.brk/install.sh
 ```
 
-`install.sh` symlinks `brk` onto your PATH (`~/.local/bin` by default) and tells you if that
-dir isn't on your PATH yet. Re-run it any time to update (it `git pull`s and re-links).
+`install.sh` builds the native executable, installs it at `bin/brk` in this checkout,
+and symlinks it onto your PATH (`~/.local/bin` by default). It tells you if that dir isn't
+on your PATH yet. Re-run it to update both executable and content (pull, build, re-link).
+`brk update` refreshes registry content only; it reminds you to rebuild the executable.
+Keep the checkout beside the installed binary, or set `BRK_HOME` to its new location.
+
+The Rust migration is incremental: native sessions use shared progress tracking and
+structured SessionStart/title hooks, while standalone plugin sessions retain the shell
+implementation. See the
+[migration notes](docs/RUST-MIGRATION.md) for compatibility boundaries.
 
 ## Use it
 
@@ -25,7 +35,7 @@ brk list                            # what's available
 brk run demonkey ./my-workshop      # start now, in ./my-workshop — nothing installed
 brk run --watch demonkey ./my-ws    # ...and auto-review your code every time you save
 brk install demonkey                # persistent: /demonkey:start works in any claude session
-brk update                          # pull the latest tool + dojos
+brk update                          # refresh registry content; re-run install.sh for the CLI
 ```
 
 - **`brk run`** is the quickest way in: it launches Claude with the dojo loaded, offline jail
@@ -63,8 +73,10 @@ dojos/
   loopcraft/          # AI agent loop dojo
   systeminterview/    # System design interview dojo
 dojo-forge/           # Meta-plugin: generates new dojos
-src/                  # brk CLI source
-bin/brk.js            # CLI entry point
+rust/                 # Native CLI and shared state runtime
+src/                  # Legacy JavaScript CLI (compatibility reference)
+bin/brk               # Native executable built by install.sh
+bin/brk.js            # Legacy CLI entry point
 docs/ARCHITECTURE.md  # How it all fits together
 ```
 
@@ -185,8 +197,11 @@ the lesson. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how it all fi
 ## Running the tests
 
 ```bash
-node --test                              # the whole suite
-node --test test/cli.test.js             # one file
+cargo test --locked                    # native unit tests
+cargo build --locked                   # executable used by compatibility tests
+BRK_TEST_BIN="$PWD/target/debug/brk" node --test test/*.test.js
+node --test test/*.test.js              # legacy CLI + standalone plugin contracts
+BRK_TEST_BIN="$PWD/target/debug/brk" node --test test/cli.test.js
 ```
 
 The suite never launches a real Claude session: a stub `claude` on `PATH` records the exact

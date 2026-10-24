@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "state_dir": ".replicant",
+  "modality": "code",
+  "initial_mode": "local-jailed",
+  "initial_spine": "workspace/node.rb",
+  "hooks": {
+    "session_context": "hooks/session-context.txt",
+    "title_prefix": "replicant",
+    "setup_context": "hooks/setup-context.txt",
+    "command_warnings": [
+      {
+        "command": "ruby",
+        "message": "Ruby not found on PATH. "
+      },
+      {
+        "command": "sqlite3",
+        "message": "sqlite3 CLI not found (used to inspect databases and checksum them). "
+      }
+    ],
+    "setup_complete_any": [
+      [
+        {
+          "kind": "file",
+          "path": ".setup_done",
+          "base": "state"
+        }
+      ],
+      [
+        {
+          "kind": "file",
+          "path": "docs/INDEX.md"
+        },
+        {
+          "kind": "dir",
+          "path": "workspace"
+        }
+      ]
+    ]
+  }
+}

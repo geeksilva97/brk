@@ -1,0 +1,2 @@
+# Setup prefixes retain the original separator space before session context.
+dojos/*/hooks/setup-context.txt whitespace=-blank-at-eol

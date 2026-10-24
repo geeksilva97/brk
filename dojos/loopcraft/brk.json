@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "state_dir": ".loopcraft",
+  "modality": "code",
+  "initial_mode": "local-jailed",
+  "initial_spine": "workspace/agent.ts",
+  "hooks": {
+    "session_context": "hooks/session-context.txt",
+    "title_prefix": "loopcraft",
+    "setup_context": "hooks/setup-context.txt",
+    "command_warnings": [
+      {
+        "command": "node",
+        "message": "Node.js not found on PATH so the agent cannot run until installed. "
+      },
+      {
+        "command": "ollama",
+        "message": "Ollama not found on PATH. Install it from https://ollama.ai. "
+      }
+    ],
+    "setup_complete_any": [
+      [
+        {
+          "kind": "file",
+          "path": ".setup_done",
+          "base": "state"
+        }
+      ],
+      [
+        {
+          "kind": "dir",
+          "path": "workspace"
+        },
+        {
+          "kind": "file",
+          "path": "workspace/utils.ts"
+        },
+        {
+          "kind": "file",
+          "path": "workspace/Modelfile"
+        }
+      ]
+    ]
+  }
+}

@@ -28,7 +28,7 @@ export function makeFixtureRegistry(parentDir, { name = 'fakereg', dojo = 'mini-
   git(['init', '-q', '-b', 'main']);
   git(['config', 'user.email', 'test@example.com']);
   git(['config', 'user.name', 'Test']);
-  git(['add', '-A']);
+  git(['add', '--', '.claude-plugin/marketplace.json', `${dojo}/.claude-plugin/plugin.json`]);
   git(['commit', '-q', '-m', 'fixture registry']);
   return { repo, name, dojo };
 }

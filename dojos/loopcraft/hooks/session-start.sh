@@ -4,6 +4,11 @@
 # project's .loopcraft/ dir) so progress is scoped to the folder you're in.
 set -uo pipefail
 
+if [[ -n "${BRK_RUNTIME_BIN:-}" ]]; then
+  ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+  exec "$BRK_RUNTIME_BIN" hook session-start --plugin-root "$ROOT"
+fi
+
 DATA_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.loopcraft"
 ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 PROGRESS="$DATA_DIR/progress.json"

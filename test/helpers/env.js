@@ -37,6 +37,8 @@ export function makeEnv() {
   delete env.BRK_CLAUDE_BIN;
   delete env.BRK_STUB_INSTALLED;
   delete env.BRK_STUB_EXIT;
+  delete env.BRK_HOME;
+  delete env.BRK_RUNTIME_BIN;
 
   return {
     dir,
@@ -55,7 +57,8 @@ export function makeEnv() {
 
 // Run the CLI as a child process with the sandbox env. Extra env merges last.
 export function runCli(args, env, extraEnv = {}) {
-  const r = spawnSync(process.execPath, [CLI, ...args], {
+  const native = process.env.BRK_TEST_BIN;
+  const r = spawnSync(native || process.execPath, native ? args : [CLI, ...args], {
     encoding: 'utf8',
     env: { ...env, ...extraEnv },
   });
