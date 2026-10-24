@@ -71,8 +71,29 @@ test('install.sh builds, atomically installs, and links a relocated native CLI',
   assert.match(help.stdout, /USAGE/);
   const registry = spawnSync(link, ['registry', 'list'], { encoding: 'utf8', env, cwd: home });
   assert.equal(registry.status, 0, registry.stderr);
-  assert.ok(registry.stdout.includes(checkout), registry.stdout);
+  assert.ok(registry.stdout.includes(fs.realpathSync(checkout)), registry.stdout);
   assert.ok(!registry.stdout.includes(REPO_ROOT), 'must not use the build-time checkout');
+});
+
+test('install.sh supports a checkout reached through a directory symlink', { skip }, () => {
+  const physicalCheckout = fs.realpathSync(checkout);
+  const alias = path.join(home, 'checkout alias');
+  fs.symlinkSync(checkout, alias, 'dir');
+  checkout = alias;
+  env.BRK_INSTALL_CHECKOUT = alias;
+  const installed = path.join(physicalCheckout, 'bin', 'brk');
+  const link = path.join(binDir, 'brk');
+
+  const result = install();
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.realpathSync(link), installed);
+  const registry = spawnSync(link, ['registry', 'list'], { encoding: 'utf8', env, cwd: home });
+  assert.equal(registry.status, 0, registry.stderr);
+  assert.ok(registry.stdout.includes(physicalCheckout), registry.stdout);
+  const before = fs.readFileSync(installed);
+  assert.notEqual(install({ BRK_INSTALL_FAIL: '1' }).status, 0);
+  assert.equal(fs.realpathSync(link), installed);
+  assert.deepEqual(fs.readFileSync(installed), before);
 });
 
 test('failed build preserves the installed executable and link', { skip }, () => {
@@ -82,6 +103,6 @@ test('failed build preserves the installed executable and link', { skip }, () =>
   const r = install({ BRK_INSTALL_FAIL: '1' });
   assert.notEqual(r.status, 0);
   assert.deepEqual(fs.readFileSync(installed), before);
-  assert.equal(fs.realpathSync(path.join(binDir, 'brk')), installed);
+  assert.equal(fs.realpathSync(path.join(binDir, 'brk')), fs.realpathSync(installed));
   assert.deepEqual(fs.readdirSync(path.join(checkout, 'bin')), ['brk']);
 });

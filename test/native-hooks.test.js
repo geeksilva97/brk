@@ -11,7 +11,9 @@ const skip = !binary || process.platform === 'win32';
 const dojos = ['demonkey', 'c10k-dojo', 'reactor-dojo', 'replicant', 'loopcraft', 'systeminterview'];
 
 function sandbox(t) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'brk-hooks-'));
+  // Compare hook text using one physical path: macOS TMPDIR may start with /var,
+  // while the native runtime canonicalizes the same directory to /private/var.
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'brk-hooks-')));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   return root;
 }
@@ -49,6 +51,25 @@ for (const dojo of dojos) {
     assert.deepEqual(JSON.parse(hook(dojo, project, 'session-start', true).stdout), JSON.parse(hook(dojo, project, 'session-start', false).stdout));
   });
 }
+
+test('native SessionStart resolves a symlinked project to the same state and context', { skip }, (t) => {
+  const root = sandbox(t);
+  const project = path.join(root, 'physical project');
+  const alias = path.join(root, 'project alias');
+  fs.mkdirSync(project);
+  fs.symlinkSync(project, alias, 'dir');
+
+  const native = hook('replicant', alias, 'session-start', true);
+  assert.equal(native.status, 0, native.stderr);
+  const legacy = hook('replicant', project, 'session-start', false);
+  assert.equal(legacy.status, 0, legacy.stderr);
+  assert.deepEqual(JSON.parse(native.stdout), JSON.parse(legacy.stdout));
+  assert.equal(
+    fs.realpathSync(path.join(alias, '.replicant', 'progress.json')),
+    path.join(project, '.replicant', 'progress.json'),
+  );
+  assert.equal(hook('replicant', alias, 'title', true).stdout, '');
+});
 
 test('native hooks read top-level state and safely serialize quotes and backslashes', { skip }, (t) => {
   const root = sandbox(t);
